@@ -236,6 +236,110 @@
       font-size: 17px;
       font-weight: 700;
     }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .tool-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      cursor: pointer;
+    }
+    .tool-card i { font-size: 24px; color: var(--blue); }
+    .tool-card span {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-top: 8px;
+    }
+    .tool-modal {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4,44,83,0.45);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .tool-modal.active { display: flex; }
+    .tool-modal-card {
+      background: var(--white);
+      border-radius: 16px;
+      width: 100%;
+      max-height: 90%;
+      overflow-y: auto;
+      padding: 18px;
+    }
+    .tool-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .tool-modal-title { font-size: 16px; font-weight: 700; color: var(--navy); }
+    .tool-modal-body { font-size: 14px; color: var(--darkGray); }
+    .tool-field { margin-bottom: 12px; }
+    .tool-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--darkGray);
+      margin-bottom: 4px;
+    }
+    .tool-field input, .tool-field select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 10px;
+      font-size: 14px;
+      color: var(--navy);
+    }
+    .tool-button {
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 11px;
+      font-size: 14px;
+      font-weight: 700;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    .tool-result {
+      background: var(--lightBlue);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--navy);
+    }
+    .tool-result strong { font-size: 18px; }
+    .tool-note {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 8px;
+    }
+    .compat-result-ok { color: var(--green); font-weight: 700; }
+    .compat-result-bad { color: var(--red); font-weight: 700; }
+    .param-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .param-row label { font-size: 13px; color: var(--darkGray); flex: 1; }
+    .param-status { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 8px; }
+    .status-ok { background: var(--greenLight); color: var(--greenDark); }
+    .status-warn { background: #FAEEDA; color: #633806; }
+    .status-bad { background: #FCEBEB; color: #791F1F; }
     .section-label {
       font-size: 14px;
       font-weight: 700;
@@ -577,6 +681,27 @@
         <div class="banner-track" id="banner-track"></div>
       </div>
       <div class="banner-dots" id="banner-dots"></div>
+      <div id="tools-section" style="display:none;">
+        <p class="section-label">Herramientas</p>
+        <div class="tools-grid">
+          <div class="tool-card" onclick="openTool('litros')">
+            <i class="ti ti-ruler-2"></i>
+            <span>Litros del acuario</span>
+          </div>
+          <div class="tool-card" onclick="openTool('compatibilidad')">
+            <i class="ti ti-fish"></i>
+            <span>Compatibilidad</span>
+          </div>
+          <div class="tool-card" onclick="openTool('parametros')">
+            <i class="ti ti-droplet"></i>
+            <span>Parámetros</span>
+          </div>
+          <div class="tool-card" onclick="openTool('cambioAgua')">
+            <i class="ti ti-bell"></i>
+            <span>Cambio de agua</span>
+          </div>
+        </div>
+      </div>
       <p class="section-label">Categorías</p>
       <div class="categories-grid" id="categories-grid"></div>
       <div class="section-header-row">
@@ -628,6 +753,18 @@
       <i class="ti ti-brand-whatsapp" style="font-size:28px; color:white;"></i>
     </a>
     <p class="footer-sig">Creada con amor - Nicolas Genco</p>
+  </div>
+
+  <div id="tool-modal" class="tool-modal">
+    <div class="tool-modal-card">
+      <div class="tool-modal-header">
+        <p id="tool-modal-title" class="tool-modal-title"></p>
+        <button class="icon-btn" onclick="closeTool()" aria-label="Cerrar">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+      <div id="tool-modal-body" class="tool-modal-body"></div>
+    </div>
   </div>
 
 </div>
@@ -707,6 +844,7 @@ function enterWorld(world) {
   activeCategory = null;
   document.getElementById('screen-hub').classList.remove('active');
   document.getElementById('screen-main').classList.add('active');
+  document.getElementById('tools-section').style.display = world === 'acuariofilia' ? 'block' : 'none';
   renderHome();
   renderCategories();
   renderBanner();
@@ -936,6 +1074,157 @@ function renderSaved() {
     empty.style.display = 'none';
     grid.innerHTML = list.map(p => productCardHTML(p)).join('');
   }
+}
+
+// ══════════════════════════════════════════════
+// HERRAMIENTAS DE ACUARIOFILIA
+// ══════════════════════════════════════════════
+
+const FISH_COMPATIBILITY = {
+  guppy: { name: 'Guppy', temperament: 'pacifico', water: 'dulce' },
+  neon: { name: 'Tetra Neón', temperament: 'pacifico', water: 'dulce' },
+  escalar: { name: 'Escalar', temperament: 'semiagresivo', water: 'dulce' },
+  discus: { name: 'Discus', temperament: 'pacifico', water: 'dulce' },
+  betta: { name: 'Betta', temperament: 'territorial', water: 'dulce' },
+  cíclido: { name: 'Cíclido africano', temperament: 'agresivo', water: 'dulce' },
+  goldfish: { name: 'Pez dorado', temperament: 'pacifico', water: 'fria' },
+  corydora: { name: 'Corydora', temperament: 'pacifico', water: 'dulce' },
+};
+
+function openTool(tool) {
+  const titles = {
+    litros: 'Calculadora de litros',
+    compatibilidad: 'Compatibilidad entre especies',
+    parametros: 'Control de parámetros',
+    cambioAgua: 'Recordatorio de cambio de agua',
+  };
+  document.getElementById('tool-modal-title').textContent = titles[tool] || '';
+  document.getElementById('tool-modal-body').innerHTML = TOOL_BODIES[tool]();
+  document.getElementById('tool-modal').classList.add('active');
+}
+
+function closeTool() {
+  document.getElementById('tool-modal').classList.remove('active');
+}
+
+const TOOL_BODIES = {
+  litros: () => `
+    <p style="margin-bottom:12px;">Ingresá las medidas internas de tu acuario en centímetros.</p>
+    <div class="tool-field"><label>Largo (cm)</label><input type="number" id="litros-largo" placeholder="Ej: 100" /></div>
+    <div class="tool-field"><label>Ancho (cm)</label><input type="number" id="litros-ancho" placeholder="Ej: 40" /></div>
+    <div class="tool-field"><label>Alto (cm)</label><input type="number" id="litros-alto" placeholder="Ej: 50" /></div>
+    <button class="tool-button" onclick="calcularLitros()">Calcular</button>
+    <div id="litros-resultado"></div>
+  `,
+  compatibilidad: () => `
+    <p style="margin-bottom:12px;">Elegí dos especies para ver si conviven bien en el mismo acuario.</p>
+    <div class="tool-field">
+      <label>Especie 1</label>
+      <select id="compat-a">${fishOptions()}</select>
+    </div>
+    <div class="tool-field">
+      <label>Especie 2</label>
+      <select id="compat-b">${fishOptions()}</select>
+    </div>
+    <button class="tool-button" onclick="calcularCompatibilidad()">Verificar</button>
+    <div id="compat-resultado"></div>
+    <p class="tool-note">Resultado orientativo. Siempre confirmá con un asesor antes de mezclar especies.</p>
+  `,
+  parametros: () => `
+    <p style="margin-bottom:12px;">Ingresá los valores medidos para ver si están en rango saludable.</p>
+    <div class="tool-field"><label>PH (rango ideal 6.5 - 7.5)</label><input type="number" step="0.1" id="param-ph" placeholder="Ej: 7.0" /></div>
+    <div class="tool-field"><label>Amoníaco mg/L (ideal 0)</label><input type="number" step="0.1" id="param-amoniaco" placeholder="Ej: 0" /></div>
+    <div class="tool-field"><label>Nitritos mg/L (ideal 0)</label><input type="number" step="0.1" id="param-nitritos" placeholder="Ej: 0" /></div>
+    <button class="tool-button" onclick="calcularParametros()">Evaluar</button>
+    <div id="param-resultado"></div>
+  `,
+  cambioAgua: () => `
+    <p style="margin-bottom:12px;">Configurá cada cuánto querés cambiar el agua y te avisamos.</p>
+    <div class="tool-field">
+      <label>Frecuencia recomendada</label>
+      <select id="cambio-frecuencia">
+        <option value="7">Cada 7 días</option>
+        <option value="14" selected>Cada 14 días</option>
+        <option value="21">Cada 21 días</option>
+        <option value="30">Cada 30 días</option>
+      </select>
+    </div>
+    <button class="tool-button" onclick="calcularCambioAgua()">Calcular próxima fecha</button>
+    <div id="cambio-resultado"></div>
+    <p class="tool-note">Este recordatorio es solo informativo dentro de la app; no envía notificaciones automáticas.</p>
+  `,
+};
+
+function fishOptions() {
+  return Object.keys(FISH_COMPATIBILITY)
+    .map((key) => `<option value="${key}">${FISH_COMPATIBILITY[key].name}</option>`)
+    .join('');
+}
+
+function calcularLitros() {
+  const largo = Number(document.getElementById('litros-largo').value) || 0;
+  const ancho = Number(document.getElementById('litros-ancho').value) || 0;
+  const alto = Number(document.getElementById('litros-alto').value) || 0;
+  const litros = (largo * ancho * alto) / 1000;
+  const el = document.getElementById('litros-resultado');
+  if (largo <= 0 || ancho <= 0 || alto <= 0) {
+    el.innerHTML = `<div class="tool-result">Completá las tres medidas para calcular.</div>`;
+    return;
+  }
+  el.innerHTML = `<div class="tool-result">Volumen aproximado: <strong>${litros.toFixed(1)} litros</strong></div>`;
+}
+
+function calcularCompatibilidad() {
+  const a = document.getElementById('compat-a').value;
+  const b = document.getElementById('compat-b').value;
+  const fishA = FISH_COMPATIBILITY[a];
+  const fishB = FISH_COMPATIBILITY[b];
+  const el = document.getElementById('compat-resultado');
+
+  if (a === b) {
+    el.innerHTML = `<div class="tool-result">Elegí dos especies distintas para comparar.</div>`;
+    return;
+  }
+  if (fishA.water !== fishB.water) {
+    el.innerHTML = `<div class="tool-result"><span class="compat-result-bad">No compatibles.</span> ${fishA.name} necesita agua ${fishA.water === 'fria' ? 'fría' : 'cálida'} y ${fishB.name} agua ${fishB.water === 'fria' ? 'fría' : 'cálida'}.</div>`;
+    return;
+  }
+  const agresivos = ['agresivo', 'territorial'];
+  if (agresivos.includes(fishA.temperament) || agresivos.includes(fishB.temperament)) {
+    el.innerHTML = `<div class="tool-result"><span class="compat-result-bad">Riesgo de conflicto.</span> ${fishA.name} y ${fishB.name} pueden no convivir bien por temperamento.</div>`;
+    return;
+  }
+  el.innerHTML = `<div class="tool-result"><span class="compat-result-ok">Compatibles.</span> ${fishA.name} y ${fishB.name} suelen convivir bien en el mismo acuario.</div>`;
+}
+
+function calcularParametros() {
+  const ph = Number(document.getElementById('param-ph').value);
+  const amoniaco = Number(document.getElementById('param-amoniaco').value);
+  const nitritos = Number(document.getElementById('param-nitritos').value);
+
+  const phStatus = ph >= 6.5 && ph <= 7.5 ? 'ok' : (ph >= 6 && ph <= 8 ? 'warn' : 'bad');
+  const amoniacoStatus = amoniaco === 0 ? 'ok' : (amoniaco <= 0.25 ? 'warn' : 'bad');
+  const nitritosStatus = nitritos === 0 ? 'ok' : (nitritos <= 0.25 ? 'warn' : 'bad');
+
+  const labels = { ok: 'Normal', warn: 'Atención', bad: 'Riesgo' };
+
+  document.getElementById('param-resultado').innerHTML = `
+    <div class="param-row"><label>PH</label><span class="param-status status-${phStatus}">${labels[phStatus]}</span></div>
+    <div class="param-row"><label>Amoníaco</label><span class="param-status status-${amoniacoStatus}">${labels[amoniacoStatus]}</span></div>
+    <div class="param-row"><label>Nitritos</label><span class="param-status status-${nitritosStatus}">${labels[nitritosStatus]}</span></div>
+    ${[phStatus, amoniacoStatus, nitritosStatus].includes('bad') ? '<p class="tool-note" style="color:var(--red);">Valores en riesgo: te recomendamos un cambio de agua parcial y consultar en el local.</p>' : ''}
+  `;
+}
+
+function calcularCambioAgua() {
+  const dias = Number(document.getElementById('cambio-frecuencia').value);
+  const hoy = new Date();
+  const proxima = new Date(hoy);
+  proxima.setDate(hoy.getDate() + dias);
+  const formato = proxima.toLocaleDateString('es-AR', { day: 'numeric', month: 'long' });
+  document.getElementById('cambio-resultado').innerHTML = `
+    <div class="tool-result">Próximo cambio de agua sugerido: <strong>${formato}</strong></div>
+  `;
 }
 
 // ══════════════════════════════════════════════
