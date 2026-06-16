@@ -542,11 +542,11 @@ const SETTINGS = {
 };
 
 const CAT_ICONS = {
-  canas: 'ti-fish-hook', anzuelos: 'ti-anchor', mojarras: 'ti-fish', tanzas: 'ti-line',
-  senuelos: 'ti-target', accesorios: 'ti-tool', camping: 'ti-tent', ofertas: 'ti-tag',
-  peces: 'ti-fish', acuarios: 'ti-box', acc_acuario: 'ti-droplet', filtracion: 'ti-filter',
-  iluminacion: 'ti-bulb', alimentacion_pez: 'ti-bowl',
+  canas: 'ti-ripple', anzuelos: 'ti-anchor', mojarras: 'ti-fish',
+  tanzas: 'ti-line', senuelos: 'ti-target', accesorios: 'ti-tool',
+  camping: 'ti-tent', ofertas: 'ti-tag',
 };
+
 const CATEGORIES = [
   { id: 'canas', name: 'Cañas' },
   { id: 'anzuelos', name: 'Anzuelos' },
@@ -565,7 +565,7 @@ const CATEGORIES = [
 ];
 
 const PRODUCTS = [
-{ id: '2', name: 'Discus', brand: '', category: 'peces', price: 0, stock: 99, featured: true, offer: false, img: 'imagenes/discus.jpg' },
+  { id: '2', name: 'Discus', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/discus.jpg' },
   { id: '1', name: 'Medida de Mojarras Medianas', brand: '', category: 'mojarras', price: 6000, stock: 99, featured: true, offer: false },
 ];
 
@@ -699,30 +699,6 @@ function productCardHTML(p) {
         <div class="product-name">${p.name}</div>
         <div class="product-brand">${p.brand}</div>
         ${priceHTML}
-        <div class="${lowStock ? 'low-stock' : 'in-stock'}">${lowStock ? `Quedan ${p.stock}` : 'En stock'}</div>
-        <button class="btn-buy" onclick="addToCart('${p.id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Comprar</button>
-      </div>
-    </div>
-  `;
-}
-  const icon = CAT_ICONS[p.category] || 'ti-box';
-  const isSaved = !!saved[p.id];
-  const lowStock = p.stock > 0 && p.stock <= 3;
-  return `
-    <div class="product-card">
-      <div class="product-icon-wrap">
-        ${p.offer ? '<span class="offer-badge">Oferta</span>' : ''}
-        <button class="save-btn ${isSaved ? 'saved' : ''}" onclick="toggleSaved('${p.id}')" aria-label="Guardar">
-          <i class="ti ${isSaved ? 'ti-bookmark-filled' : 'ti-bookmark'}"></i>
-        </button>
-        <div class="product-icon-circle">
-          <i class="ti ${icon}"></i>
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-name">${p.name}</div>
-        <div class="product-brand">${p.brand}</div>
-        <div class="product-price">${fmt(p.price)}</div>
         <div class="${lowStock ? 'low-stock' : 'in-stock'}">${lowStock ? `Quedan ${p.stock}` : 'En stock'}</div>
         <button class="btn-buy" onclick="addToCart('${p.id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Comprar</button>
       </div>
