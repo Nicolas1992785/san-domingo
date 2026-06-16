@@ -779,6 +779,13 @@
       </div>
     </div>
     <div class="cart-footer" id="cart-footer" style="display:none;">
+      <div class="tool-field" style="margin-bottom:12px;">
+        <label>Zona de envío</label>
+        <select id="envio-zona">
+          <option value="gran-mendoza">Dentro del Gran Mendoza (envío gratis)</option>
+          <option value="fuera">Fuera del Gran Mendoza (envío con adicional)</option>
+        </select>
+      </div>
       <div class="total-row">
         <span class="total-label">Total</span>
         <span class="total-value" id="cart-total">$0</span>
@@ -1213,7 +1220,11 @@ function checkout() {
     const p = PRODUCTS.find(x => x.id === id);
     return `- ${p.name} x${cart[id]} (${fmt(p.price * cart[id])})`;
   });
-  const msg = `Hola ${SETTINGS.businessName}.\nQuiero realizar el siguiente pedido:\n\n${lines.join('\n')}\n\nTotal: ${fmt(total)}\nSeña requerida (40%): ${fmt(sena)}\nAlias MP: roka33.mp\n\nUna vez transferida la seña confirmo el pedido.`;
+  const zona = document.getElementById('envio-zona').value;
+  const envioTexto = zona === 'fuera'
+    ? 'Fuera del Gran Mendoza (envío con adicional a coordinar)'
+    : 'Dentro del Gran Mendoza (envío gratis)';
+  const msg = `Hola ${SETTINGS.businessName}.\nQuiero realizar el siguiente pedido:\n\n${lines.join('\n')}\n\nTotal: ${fmt(total)}\nSeña requerida (40%): ${fmt(sena)}\nAlias MP: roka33.mp\n\nZona de envío: ${envioTexto}\n\nUna vez transferida la seña confirmo el pedido.`;
   window.open(`https://wa.me/${SETTINGS.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
