@@ -68,6 +68,43 @@
       justify-content: center;
       gap: 0;
       padding: 40px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .splash-logo-wrap {
+      position: relative;
+      z-index: 2;
+      animation: splashLogoIn 0.8s ease-out;
+    }
+    .splash-fish {
+      animation: swimFish 3.2s ease-in-out infinite;
+      transform-origin: 50% 50%;
+    }
+    @keyframes splashLogoIn {
+      0% { opacity: 0; transform: scale(0.7) translateY(12px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes swimFish {
+      0%, 100% { transform: translateX(-4px) rotate(-3deg); }
+      50% { transform: translateX(4px) rotate(3deg); }
+    }
+    .splash-title, .splash-subtitle, .splash-address, .btn-enter {
+      position: relative;
+      z-index: 2;
+    }
+    .splash-bubble {
+      position: absolute;
+      bottom: -20px;
+      border-radius: 50%;
+      background: var(--lightBlue);
+      opacity: 0.7;
+      animation: bubbleRise linear infinite;
+      z-index: 1;
+    }
+    @keyframes bubbleRise {
+      0% { transform: translateY(0) translateX(0); opacity: 0.7; }
+      90% { opacity: 0.5; }
+      100% { transform: translateY(-720px) translateX(var(--drift, 0px)); opacity: 0; }
     }
     #screen-splash svg { margin-bottom: 20px; }
     .splash-title {
@@ -690,20 +727,27 @@
 <div id="app">
 
   <div id="screen-splash" class="screen active">
-    <svg viewBox="0 0 100 100" width="90" height="90">
-      <circle cx="50" cy="50" r="48" fill="#E6F1FB"/>
-      <path d="M18 50 C 28 32 60 30 78 42 C 66 47 60 50 78 58 C 60 70 28 68 18 50 Z" fill="#185FA5"/>
-      <circle cx="32" cy="46" r="3" fill="#042C53"/>
-      <path d="M78 42 L88 36 M78 58 L88 64" stroke="#042C53" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-    </svg>
+    <div class="splash-bubble" style="width:14px; height:14px; left:18%; animation-duration:6s; animation-delay:0s; --drift:10px;"></div>
+    <div class="splash-bubble" style="width:9px; height:9px; left:32%; animation-duration:4.5s; animation-delay:1.2s; --drift:-8px;"></div>
+    <div class="splash-bubble" style="width:18px; height:18px; left:68%; animation-duration:7s; animation-delay:0.6s; --drift:-12px;"></div>
+    <div class="splash-bubble" style="width:11px; height:11px; left:80%; animation-duration:5s; animation-delay:2s; --drift:14px;"></div>
+    <div class="splash-bubble" style="width:7px; height:7px; left:50%; animation-duration:4s; animation-delay:2.6s; --drift:6px;"></div>
+    <div class="splash-logo-wrap">
+      <svg class="splash-fish" viewBox="0 0 100 100" width="90" height="90">
+        <circle cx="50" cy="50" r="48" fill="#E6F1FB"/>
+        <path d="M18 50 C 28 32 60 30 78 42 C 66 47 60 50 78 58 C 60 70 28 68 18 50 Z" fill="#185FA5"/>
+        <circle cx="32" cy="46" r="3" fill="#042C53"/>
+        <path d="M78 42 L88 36 M78 58 L88 64" stroke="#042C53" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
     <p class="splash-title">SAN DOMINGO</p>
     <p class="splash-subtitle">ARTÍCULOS PARA LA PESCA</p>
-    <a href="https://maps.google.com/?q=Chacabuco+711+y+Congreso,+Rodeo+de+la+Cruz,+Guaymallén,+Mendoza" target="_blank" style="display:flex; align-items:center; gap:6px; color:var(--blue); font-size:13px; margin-bottom:28px; text-decoration:none;">
+    <a href="https://maps.google.com/?q=Chacabuco+711+y+Congreso,+Rodeo+de+la+Cruz,+Guaymallén,+Mendoza" target="_blank" class="splash-address" style="display:flex; align-items:center; gap:6px; color:var(--blue); font-size:13px; margin-bottom:28px; text-decoration:none;">
       <i class="ti ti-map-pin" style="font-size:16px;"></i>
       Chacabuco 711 y Congreso, Rodeo de la Cruz
     </a>
     <button class="btn-enter" onclick="checkIdentidad()">Entrar</button>
-    <button id="install-btn" onclick="installApp()" style="display:none; align-items:center; gap:6px; background:none; border:none; color:var(--blue); font-size:13px; font-weight:600; margin-top:16px; cursor:pointer;">
+    <button id="install-btn" onclick="installApp()" style="display:none; align-items:center; gap:6px; background:none; border:none; color:var(--blue); font-size:13px; font-weight:600; margin-top:16px; cursor:pointer; position:relative; z-index:2;">
       <i class="ti ti-download"></i> Instalar app en mi celular
     </button>
   </div>
