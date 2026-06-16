@@ -203,6 +203,39 @@
     .banner-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; }
     .banner-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
     .banner-dot.active { background: var(--blue); }
+    .hub-card {
+      position: relative;
+      height: 160px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 14px;
+      cursor: pointer;
+      background: var(--lightBlue);
+    }
+    .hub-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hub-card-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hub-card-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(4,44,83,0.8));
+      color: white;
+      padding: 30px 16px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 17px;
+      font-weight: 700;
+    }
     .section-label {
       font-size: 14px;
       font-weight: 700;
@@ -469,17 +502,52 @@
       <i class="ti ti-map-pin" style="font-size:16px;"></i>
       Chacabuco 711 y Congreso, Rodeo de la Cruz
     </a>
-    <button class="btn-enter" onclick="showMain()">Entrar</button>
+    <button class="btn-enter" onclick="goToHub()">Entrar</button>
     <button id="install-btn" onclick="installApp()" style="display:none; align-items:center; gap:6px; background:none; border:none; color:var(--blue); font-size:13px; font-weight:600; margin-top:16px; cursor:pointer;">
       <i class="ti ti-download"></i> Instalar app en mi celular
     </button>
+  </div>
+
+  <div id="screen-hub" class="screen" style="flex-direction:column;">
+    <div class="header" style="border-bottom:none;">
+      <div class="header-top" style="margin-bottom:0;">
+        <svg viewBox="0 0 100 100" width="28" height="28">
+          <circle cx="50" cy="50" r="48" fill="#E6F1FB"/>
+          <path d="M18 50 C 28 32 60 30 78 42 C 66 47 60 50 78 58 C 60 70 28 68 18 50 Z" fill="#185FA5"/>
+          <circle cx="32" cy="46" r="3" fill="#042C53"/>
+        </svg>
+        <div class="header-text-block">
+          <div class="header-title">San Domingo</div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <p class="section-label">¿Qué estás buscando?</p>
+      <div class="hub-card" onclick="enterWorld('acuariofilia')">
+        <img src="imagenes/acuario.jpg" alt="Acuariofilia" />
+        <div class="hub-card-overlay">
+          <i class="ti ti-fish" style="font-size:22px;"></i>
+          <span>Acuariofilia</span>
+        </div>
+      </div>
+      <div class="hub-card" onclick="enterWorld('pesca')">
+        <div class="hub-card-placeholder">
+          <i class="ti ti-anchor" style="font-size:34px; color:#185FA5;"></i>
+        </div>
+        <div class="hub-card-overlay">
+          <i class="ti ti-anchor" style="font-size:22px;"></i>
+          <span>Pesca</span>
+        </div>
+      </div>
+    </div>
+    <p class="footer-sig">Creada con amor - Nicolas Genco</p>
   </div>
 
   <div id="screen-main" class="screen" style="flex-direction:column;">
 
     <div class="header">
       <div class="header-top">
-        <button class="icon-btn" onclick="goToSplash()" aria-label="Volver al inicio">
+        <button class="icon-btn" onclick="goToHub()" aria-label="Volver al inicio">
           <i class="ti ti-home"></i>
         </button>
         <svg viewBox="0 0 100 100" width="28" height="28">
@@ -592,8 +660,14 @@ const CATEGORIES = [
   { id: 'acc_acuario', name: 'Acc. Acuario' },
   { id: 'filtracion', name: 'Filtración' },
   { id: 'iluminacion', name: 'Iluminación' },
-  { id: 'alimentacion_pez', name: 'Alimento p/Peces' },
 ];
+
+const WORLD_CATEGORIES = {
+  acuariofilia: ['peces', 'acuarios', 'acc_acuario', 'filtracion', 'iluminacion', 'alimentacion_pez'],
+  pesca: ['canas', 'anzuelos', 'mojarras', 'tanzas', 'senuelos', 'accesorios', 'camping', 'ofertas'],
+};
+
+let currentWorld = null;
 
 const PRODUCTS = [
   { id: '2', name: 'Discus', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/discus.jpg' },
@@ -618,11 +692,20 @@ function totalPrice() {
 
 function goToSplash() {
   document.getElementById('screen-main').classList.remove('active');
+  document.getElementById('screen-hub').classList.remove('active');
   document.getElementById('screen-splash').classList.add('active');
 }
 
-function showMain() {
+function goToHub() {
   document.getElementById('screen-splash').classList.remove('active');
+  document.getElementById('screen-main').classList.remove('active');
+  document.getElementById('screen-hub').classList.add('active');
+}
+
+function enterWorld(world) {
+  currentWorld = world;
+  activeCategory = null;
+  document.getElementById('screen-hub').classList.remove('active');
   document.getElementById('screen-main').classList.add('active');
   renderHome();
   renderCategories();
@@ -650,6 +733,14 @@ const BANNER_SLIDES = [
 ];
 
 function renderBanner() {
+  const wrap = document.querySelector('.banner-carousel').parentElement;
+  if (currentWorld !== 'acuariofilia') {
+    document.getElementById('banner-carousel').style.display = 'none';
+    document.getElementById('banner-dots').style.display = 'none';
+    return;
+  }
+  document.getElementById('banner-carousel').style.display = 'flex';
+  document.getElementById('banner-dots').style.display = 'flex';
   const track = document.getElementById('banner-track');
   const dots = document.getElementById('banner-dots');
   track.innerHTML = BANNER_SLIDES.map(s => `
@@ -667,8 +758,10 @@ function renderBanner() {
 }
 
 function renderCategories() {
+  const ids = WORLD_CATEGORIES[currentWorld] || [];
+  const cats = CATEGORIES.filter(c => ids.includes(c.id));
   const grid = document.getElementById('categories-grid');
-  grid.innerHTML = CATEGORIES.map(cat => `
+  grid.innerHTML = cats.map(cat => `
     <div class="category-card" onclick="filterByCategory('${cat.id}')">
       <i class="ti ${CAT_ICONS[cat.id] || 'ti-box'}"></i>
       ${cat.name}
@@ -690,7 +783,8 @@ function clearFilter() {
 
 function renderHome() {
   const query = document.getElementById('search-input').value.trim().toLowerCase();
-  let list = PRODUCTS.filter(p => p.stock > 0);
+  const worldIds = WORLD_CATEGORIES[currentWorld] || [];
+  let list = PRODUCTS.filter(p => p.stock > 0 && worldIds.includes(p.category));
   let title = 'Destacados';
 
   if (query) {
