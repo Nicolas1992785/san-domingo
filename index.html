@@ -631,6 +631,37 @@
       gap: 6px;
     }
     .btn-buy:active { opacity: 0.85; }
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--blue);
+      border-radius: 10px;
+      padding: 4px;
+      width: 100%;
+    }
+    .qty-stepper-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qty-stepper-btn:active { background: rgba(255,255,255,0.35); }
+    .qty-stepper-num {
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      flex: 1;
+      text-align: center;
+    }
 
     .empty-state {
       text-align: center;
@@ -1532,6 +1563,16 @@ function productCardHTML(p) {
   const imageHTML = p.img
     ? `<img src="${p.img}" alt="${p.name}" style="width:100%; height:100%; object-fit:cover;" />`
     : `<div class="product-icon-circle"><i class="ti ${icon}"></i></div>`;
+  const qtyInCart = cart[p.id] || 0;
+  const buyControlHTML = qtyInCart > 0
+    ? `
+      <div class="qty-stepper" id="stepper-${p.id}">
+        <button class="qty-stepper-btn" onclick="changeQty('${p.id}',-1); refreshCardStepper('${p.id}')">−</button>
+        <span class="qty-stepper-num">${qtyInCart}</span>
+        <button class="qty-stepper-btn" onclick="changeQty('${p.id}',1); refreshCardStepper('${p.id}')">+</button>
+      </div>
+    `
+    : `<button class="btn-buy" onclick="addToCart('${p.id}'); refreshCardStepper('${p.id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Comprar</button>`;
   return `
     <div class="product-card">
       <div class="product-icon-wrap">
@@ -1546,10 +1587,25 @@ function productCardHTML(p) {
         <div class="product-brand">${p.brand}</div>
         ${priceHTML}
         <div class="${lowStock ? 'low-stock' : 'in-stock'}">${lowStock ? `Quedan ${p.stock}` : 'En stock'}</div>
-        <button class="btn-buy" onclick="addToCart('${p.id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Comprar</button>
+        <div id="buy-control-${p.id}">${buyControlHTML}</div>
       </div>
     </div>
   `;
+}
+
+function refreshCardStepper(id) {
+  const wrap = document.getElementById(`buy-control-${id}`);
+  if (!wrap) return;
+  const qty = cart[id] || 0;
+  wrap.innerHTML = qty > 0
+    ? `
+      <div class="qty-stepper" id="stepper-${id}">
+        <button class="qty-stepper-btn" onclick="changeQty('${id}',-1); refreshCardStepper('${id}')">−</button>
+        <span class="qty-stepper-num">${qty}</span>
+        <button class="qty-stepper-btn" onclick="changeQty('${id}',1); refreshCardStepper('${id}')">+</button>
+      </div>
+    `
+    : `<button class="btn-buy" onclick="addToCart('${id}'); refreshCardStepper('${id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Comprar</button>`;
 }
 
 function addToCart(id) {
