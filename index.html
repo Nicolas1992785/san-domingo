@@ -390,6 +390,34 @@
     .clima-desc { font-size: 13px; color: var(--gray); margin-top: 2px; }
     .clima-detalle-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--darkGray); padding: 7px 0; border-bottom: 1px solid var(--border); }
     .clima-detalle-row:last-child { border-bottom: none; }
+    .acuario-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .acuario-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .acuario-nombre { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .acuario-detalle { font-size: 12px; color: var(--darkGray); margin-top: 4px; }
+    .acuario-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .acuario-actions button {
+      flex: 1;
+      border: 1px solid var(--border);
+      background: var(--white);
+      border-radius: 8px;
+      padding: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy);
+      cursor: pointer;
+    }
     .section-label {
       font-size: 14px;
       font-weight: 700;
@@ -909,6 +937,7 @@ let currentWorld = null;
 
 const WORLD_TOOLS = {
   acuariofilia: [
+    { id: 'misAcuarios', icon: 'ti-fish-bone', label: 'Mis acuarios' },
     { id: 'litros', icon: 'ti-ruler-2', label: 'Litros del acuario' },
     { id: 'compatibilidad', icon: 'ti-fish', label: 'Compatibilidad' },
     { id: 'parametros', icon: 'ti-droplet', label: 'Parámetros' },
@@ -933,7 +962,6 @@ function renderTools() {
 
 const PRODUCTS = [
   { id: '2', name: 'Discus', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/discusredmap.jpg' },
-  { id: '5', name: 'Ciclido Polar Blue', brand: '', category: 'peces', price:0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/polarblue.jpg' },
   { id: '3', name: 'Escalar', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/escalar.jpg' },
   { id: '4', name: 'Tetra Neón', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/tetraneon.jpg' },
   { id: '1', name: 'Medida de Mojarras Medianas', brand: '', category: 'mojarras', price: 6000, stock: 99, featured: true, offer: false, img: 'imagenes/mojarras.png' },
@@ -1225,6 +1253,7 @@ const FISH_COMPATIBILITY = {
 
 function openTool(tool) {
   const titles = {
+    misAcuarios: 'Mis acuarios',
     litros: 'Calculadora de litros',
     compatibilidad: 'Compatibilidad entre especies',
     parametros: 'Control de parámetros',
@@ -1238,6 +1267,7 @@ function openTool(tool) {
   document.getElementById('tool-modal').classList.add('active');
   if (tool === 'clima') obtenerClima();
   if (tool === 'luna') calcularFaseLunar();
+  if (tool === 'misAcuarios') renderMisAcuarios();
 }
 
 function closeTool() {
@@ -1245,6 +1275,30 @@ function closeTool() {
 }
 
 const TOOL_BODIES = {
+  misAcuarios: () => `
+    <div id="misacuarios-lista"></div>
+    <div id="misacuarios-empty" class="empty-state" style="display:none;">
+      <i class="ti ti-fish-bone"></i>
+      <span>Todavía no registraste ningún acuario.</span>
+    </div>
+    <button class="tool-button" onclick="mostrarFormularioAcuario()">
+      <i class="ti ti-plus" style="margin-right:6px;"></i>Agregar acuario
+    </button>
+    <div id="acuario-form-wrap" style="display:none; margin-top:14px; border-top:1px solid var(--border); padding-top:14px;">
+      <input type="hidden" id="acuario-edit-id" />
+      <div class="tool-field"><label>Nombre del acuario</label><input type="text" id="acuario-nombre" placeholder="Ej: Acuario de la sala" /></div>
+      <div class="tool-field"><label>Litros</label><input type="number" id="acuario-litros" placeholder="Ej: 100" /></div>
+      <div class="tool-field"><label>Especies</label><input type="text" id="acuario-especies" placeholder="Ej: Discus, Tetra Neón" /></div>
+      <div class="tool-field"><label>Foto (opcional)</label><input type="file" id="acuario-foto" accept="image/*" /></div>
+      <div class="tool-field"><label>PH</label><input type="number" step="0.1" id="acuario-ph" placeholder="Ej: 7.0" /></div>
+      <div class="tool-field"><label>Amoníaco mg/L</label><input type="number" step="0.1" id="acuario-amoniaco" placeholder="Ej: 0" /></div>
+      <div class="tool-field"><label>Nitritos mg/L</label><input type="number" step="0.1" id="acuario-nitritos" placeholder="Ej: 0" /></div>
+      <div class="tool-field"><label>Último cambio de agua</label><input type="date" id="acuario-fecha" /></div>
+      <div class="tool-field"><label>Notas</label><input type="text" id="acuario-notas" placeholder="Notas libres" /></div>
+      <button class="tool-button" onclick="guardarAcuario()">Guardar</button>
+      <button class="tool-button" style="background:var(--gray); margin-top:8px;" onclick="ocultarFormularioAcuario()">Cancelar</button>
+    </div>
+  `,
   litros: () => `
     <p style="margin-bottom:12px;">Ingresá las medidas internas de tu acuario en centímetros.</p>
     <div class="tool-field"><label>Largo (cm)</label><input type="number" id="litros-largo" placeholder="Ej: 100" /></div>
@@ -1471,6 +1525,128 @@ async function obtenerClima() {
   } catch (e) {
     el.innerHTML = `<p class="tool-note">No se pudo obtener el pronóstico. Revisá tu conexión a internet.</p>`;
   }
+}
+
+// ══════════════════════════════════════════════
+// MIS ACUARIOS (guardado local en el celular)
+// ══════════════════════════════════════════════
+
+const ACUARIOS_KEY = 'sandomingo_mis_acuarios';
+
+function getMisAcuarios() {
+  try {
+    return JSON.parse(localStorage.getItem(ACUARIOS_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function setMisAcuarios(lista) {
+  localStorage.setItem(ACUARIOS_KEY, JSON.stringify(lista));
+}
+
+function mostrarFormularioAcuario(id) {
+  document.getElementById('acuario-form-wrap').style.display = 'block';
+  document.getElementById('acuario-edit-id').value = '';
+  ['nombre','litros','especies','ph','amoniaco','nitritos','fecha','notas'].forEach(f => {
+    document.getElementById(`acuario-${f}`).value = '';
+  });
+
+  if (id) {
+    const acuario = getMisAcuarios().find(a => a.id === id);
+    if (acuario) {
+      document.getElementById('acuario-edit-id').value = id;
+      document.getElementById('acuario-nombre').value = acuario.nombre || '';
+      document.getElementById('acuario-litros').value = acuario.litros || '';
+      document.getElementById('acuario-especies').value = acuario.especies || '';
+      document.getElementById('acuario-ph').value = acuario.ph || '';
+      document.getElementById('acuario-amoniaco').value = acuario.amoniaco || '';
+      document.getElementById('acuario-nitritos').value = acuario.nitritos || '';
+      document.getElementById('acuario-fecha').value = acuario.fecha || '';
+      document.getElementById('acuario-notas').value = acuario.notas || '';
+    }
+  }
+}
+
+function ocultarFormularioAcuario() {
+  document.getElementById('acuario-form-wrap').style.display = 'none';
+}
+
+function guardarAcuario() {
+  const nombre = document.getElementById('acuario-nombre').value.trim();
+  if (!nombre) {
+    alert('Ingresá un nombre para el acuario.');
+    return;
+  }
+
+  const editId = document.getElementById('acuario-edit-id').value;
+  const fotoInput = document.getElementById('acuario-foto');
+
+  const datosBase = {
+    nombre,
+    litros: document.getElementById('acuario-litros').value,
+    especies: document.getElementById('acuario-especies').value.trim(),
+    ph: document.getElementById('acuario-ph').value,
+    amoniaco: document.getElementById('acuario-amoniaco').value,
+    nitritos: document.getElementById('acuario-nitritos').value,
+    fecha: document.getElementById('acuario-fecha').value,
+    notas: document.getElementById('acuario-notas').value.trim(),
+  };
+
+  function guardarConFoto(fotoBase64) {
+    let lista = getMisAcuarios();
+    if (editId) {
+      lista = lista.map(a => a.id === editId ? { ...a, ...datosBase, foto: fotoBase64 !== undefined ? fotoBase64 : a.foto } : a);
+    } else {
+      lista.push({ id: 'a_' + Date.now(), ...datosBase, foto: fotoBase64 || null });
+    }
+    setMisAcuarios(lista);
+    ocultarFormularioAcuario();
+    renderMisAcuarios();
+  }
+
+  if (fotoInput.files && fotoInput.files.length > 0) {
+    const reader = new FileReader();
+    reader.onload = () => guardarConFoto(reader.result);
+    reader.readAsDataURL(fotoInput.files[0]);
+  } else {
+    guardarConFoto(undefined);
+  }
+}
+
+function eliminarAcuario(id) {
+  if (!confirm('¿Eliminar este acuario de tu lista?')) return;
+  setMisAcuarios(getMisAcuarios().filter(a => a.id !== id));
+  renderMisAcuarios();
+}
+
+function renderMisAcuarios() {
+  const lista = getMisAcuarios();
+  const cont = document.getElementById('misacuarios-lista');
+  const empty = document.getElementById('misacuarios-empty');
+
+  if (lista.length === 0) {
+    cont.innerHTML = '';
+    empty.style.display = 'flex';
+    return;
+  }
+
+  empty.style.display = 'none';
+  cont.innerHTML = lista.map(a => `
+    <div class="acuario-card">
+      ${a.foto ? `<img src="${a.foto}" alt="${a.nombre}" />` : ''}
+      <p class="acuario-nombre">${a.nombre}</p>
+      ${a.litros ? `<p class="acuario-detalle">Litros: ${a.litros}</p>` : ''}
+      ${a.especies ? `<p class="acuario-detalle">Especies: ${a.especies}</p>` : ''}
+      ${a.ph || a.amoniaco || a.nitritos ? `<p class="acuario-detalle">PH: ${a.ph || '-'} · Amoníaco: ${a.amoniaco || '-'} · Nitritos: ${a.nitritos || '-'}</p>` : ''}
+      ${a.fecha ? `<p class="acuario-detalle">Último cambio de agua: ${a.fecha}</p>` : ''}
+      ${a.notas ? `<p class="acuario-detalle">${a.notas}</p>` : ''}
+      <div class="acuario-actions">
+        <button onclick="mostrarFormularioAcuario('${a.id}')"><i class="ti ti-edit" style="margin-right:4px;"></i>Editar</button>
+        <button onclick="eliminarAcuario('${a.id}')"><i class="ti ti-trash" style="margin-right:4px;"></i>Eliminar</button>
+      </div>
+    </div>
+  `).join('');
 }
 
 // ══════════════════════════════════════════════
