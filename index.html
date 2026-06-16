@@ -458,6 +458,9 @@
           <circle cx="32" cy="46" r="3" fill="#042C53"/>
         </svg>
         <div>
+          <button class="icon-btn" onclick="goToSplash()" aria-label="Volver al inicio" style="padding:6px 6px 6px 0;">
+  <i class="ti ti-home"></i>
+</button>
           <div class="header-title">San Domingo</div>
           <a href="https://maps.google.com/?q=Chacabuco+711+y+Congreso,+Rodeo+de+la+Cruz,+Guaymallén,+Mendoza" target="_blank" style="font-size:10px; color:var(--blue); text-decoration:none; display:flex; align-items:center; gap:3px;">
             <i class="ti ti-map-pin" style="font-size:11px;"></i> Rodeo de la Cruz, Guaymallén
@@ -594,7 +597,11 @@ function totalPrice() {
 // ══════════════════════════════════════════════
 // NAVEGACIÓN
 // ══════════════════════════════════════════════
-function showMain() {
+function goToSplash() {
+  document.getElementById('screen-main').classList.remove('active');
+  document.getElementById('screen-splash').classList.add('active');
+}
+  function showMain() {
   document.getElementById('screen-splash').classList.remove('active');
   document.getElementById('screen-main').classList.add('active');
   renderHome();
