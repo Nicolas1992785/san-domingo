@@ -737,6 +737,10 @@
         <p id="admin-login-msg" class="tool-note"></p>
       </div>
       <div id="admin-panel-wrap" style="display:none;">
+        <div class="tool-result" style="text-align:center; margin-bottom:16px;">
+          <p style="font-size:13px; color:var(--gray); margin-bottom:4px;">Usuarios en la app ahora</p>
+          <strong id="admin-usuarios-vivo" style="font-size:32px;">-</strong>
+        </div>
         <div class="tool-field"><label>WhatsApp del cliente</label><input type="tel" id="admin-whatsapp" placeholder="Ej: 2616109829" /></div>
         <button class="tool-button" onclick="buscarClienteAdmin()">Buscar cliente</button>
         <div id="admin-cliente-resultado"></div>
@@ -972,6 +976,33 @@ const SUPABASE_URL = 'https://ruxxatzwgqqjgdfnahir.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_36MZSCr4-wtDHCXht_f2GQ_2uMhZPNK';
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
+// ══════════════════════════════════════════════
+// PRESENCIA EN VIVO (sin datos personales)
+// ══════════════════════════════════════════════
+
+const SESSION_KEY = 'sandomingo_session_id';
+
+function getSessionId() {
+  let id = sessionStorage.getItem(SESSION_KEY);
+  if (!id) {
+    id = 's_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    sessionStorage.setItem(SESSION_KEY, id);
+  }
+  return id;
+}
+
+async function avisarPresencia() {
+  if (!supabaseClient) return;
+  try {
+    await supabaseClient
+      .from('presencia')
+      .upsert({ session_id: getSessionId(), ultima_actividad: new Date().toISOString() });
+  } catch (e) {}
+}
+
+avisarPresencia();
+setInterval(avisarPresencia, 20000);
+
 const USUARIO_KEY = 'sandomingo_usuario';
 
 function getUsuarioLocal() {
@@ -1136,9 +1167,22 @@ function loginAdmin() {
   if (pass === ADMIN_PASSWORD) {
     document.getElementById('admin-login-wrap').style.display = 'none';
     document.getElementById('admin-panel-wrap').style.display = 'block';
+    cargarUsuariosVivo();
+    setInterval(cargarUsuariosVivo, 15000);
   } else {
     msgEl.textContent = 'Contraseña incorrecta.';
   }
+}
+
+async function cargarUsuariosVivo() {
+  if (!supabaseClient) return;
+  const limite = new Date(Date.now() - 60000).toISOString();
+  const { data, error } = await supabaseClient
+    .from('presencia')
+    .select('session_id')
+    .gte('ultima_actividad', limite);
+  const el = document.getElementById('admin-usuarios-vivo');
+  if (el && !error) el.textContent = data.length;
 }
 
 async function buscarClienteAdmin() {
