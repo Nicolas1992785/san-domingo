@@ -57,6 +57,21 @@
       }
     }
 
+    @media (display-mode: standalone), (display-mode: fullscreen) {
+      body { background: var(--lightGray); padding: 0; align-items: stretch; min-height: 100dvh; }
+      #app {
+        width: 100%;
+        max-width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    }
+
     #app {
       width: 390px;
       min-height: 844px;
