@@ -38,7 +38,6 @@
       #app { width: 100%; min-height: 100vh; border-radius: 0; box-shadow: none; }
     }
 
-    /* ── Contenedor tipo celular ── */
     #app {
       width: 390px;
       min-height: 844px;
@@ -51,13 +50,9 @@
       position: relative;
     }
 
-    /* ── Pantallas ── */
     .screen { display: none; flex-direction: column; flex: 1; }
     .screen.active { display: flex; }
 
-    /* ══════════════════════════════
-       SPLASH
-    ══════════════════════════════ */
     #screen-splash {
       background: var(--white);
       align-items: center;
@@ -91,14 +86,10 @@
     }
     .btn-enter:active { opacity: 0.85; }
 
-    /* ══════════════════════════════
-       MAIN LAYOUT
-    ══════════════════════════════ */
     #screen-main {
       flex-direction: column;
     }
 
-    /* Header */
     .header {
       background: var(--white);
       padding: 14px 16px 12px;
@@ -108,15 +99,23 @@
     .header-top {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       margin-bottom: 10px;
     }
     .header-title {
       font-size: 15px;
       font-weight: 700;
       color: var(--navy);
-      flex: 1;
     }
+    .header-address {
+      font-size: 10px;
+      color: var(--blue);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .header-text-block { flex: 1; min-width: 0; }
     .icon-btn {
       background: none;
       border: none;
@@ -127,6 +126,7 @@
       font-size: 22px;
       display: flex;
       align-items: center;
+      flex-shrink: 0;
     }
     .badge {
       position: absolute;
@@ -156,14 +156,12 @@
     }
     .search-input::placeholder { color: var(--gray); }
 
-    /* Content area */
     .content {
       flex: 1;
       overflow-y: auto;
       padding: 16px;
     }
 
-    /* Section label */
     .section-label {
       font-size: 14px;
       font-weight: 700;
@@ -186,7 +184,6 @@
       border: none;
     }
 
-    /* Categories grid */
     .categories-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -209,14 +206,12 @@
     .category-card i { color: var(--blue); font-size: 18px; }
     .category-card:active { opacity: 0.8; }
 
-    /* Products grid */
     .products-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
-    /* Product card */
     .product-card {
       background: var(--white);
       border: 1px solid var(--border);
@@ -265,6 +260,7 @@
       cursor: pointer;
       font-size: 14px;
       color: var(--gray);
+      z-index: 5;
     }
     .save-btn.saved { color: var(--blue); }
     .product-info { padding: 10px; }
@@ -281,7 +277,6 @@
     }
     .product-brand { font-size: 11px; color: var(--gray); margin-top: 2px; }
     .product-price { font-size: 20px; font-weight: 700; color: var(--blue); margin-top: 4px; }
-    .product-price { font-size: 16px; font-weight: 700; color: var(--navy); margin-top: 4px; }
     .in-stock { font-size: 11px; color: var(--gray); margin-top: 2px; margin-bottom: 8px; }
     .low-stock { font-size: 11px; color: var(--red); font-weight: 600; margin-top: 2px; margin-bottom: 8px; }
     .btn-buy {
@@ -301,7 +296,6 @@
     }
     .btn-buy:active { opacity: 0.85; }
 
-    /* Empty state */
     .empty-state {
       text-align: center;
       padding: 40px 16px;
@@ -314,9 +308,6 @@
     }
     .empty-state i { font-size: 32px; }
 
-    /* ══════════════════════════════
-       CART
-    ══════════════════════════════ */
     .cart-item {
       background: var(--white);
       border: 1px solid var(--border);
@@ -384,9 +375,6 @@
     }
     .btn-checkout:active { opacity: 0.85; }
 
-    /* ══════════════════════════════
-       TAB BAR
-    ══════════════════════════════ */
     .tab-bar {
       background: var(--white);
       border-top: 1px solid var(--border);
@@ -410,7 +398,6 @@
     .tab-item i { font-size: 20px; }
     .tab-item.active { color: var(--blue); }
 
-    /* Footer signature */
     .footer-sig {
       text-align: center;
       font-size: 10px;
@@ -421,7 +408,6 @@
       flex-shrink: 0;
     }
 
-    /* Scrollbar hide */
     .content::-webkit-scrollbar { display: none; }
   </style>
 </head>
@@ -429,7 +415,6 @@
 
 <div id="app">
 
-  <!-- ══ SPLASH ══ -->
   <div id="screen-splash" class="screen active">
     <svg viewBox="0 0 100 100" width="90" height="90">
       <circle cx="50" cy="50" r="48" fill="#E6F1FB"/>
@@ -446,23 +431,21 @@
     <button class="btn-enter" onclick="showMain()">Entrar</button>
   </div>
 
-  <!-- ══ MAIN ══ -->
   <div id="screen-main" class="screen" style="flex-direction:column;">
 
-    <!-- Header -->
     <div class="header">
       <div class="header-top">
+        <button class="icon-btn" onclick="goToSplash()" aria-label="Volver al inicio">
+          <i class="ti ti-home"></i>
+        </button>
         <svg viewBox="0 0 100 100" width="28" height="28">
           <circle cx="50" cy="50" r="48" fill="#E6F1FB"/>
           <path d="M18 50 C 28 32 60 30 78 42 C 66 47 60 50 78 58 C 60 70 28 68 18 50 Z" fill="#185FA5"/>
           <circle cx="32" cy="46" r="3" fill="#042C53"/>
         </svg>
-        <div>
-          <button class="icon-btn" onclick="goToSplash()" aria-label="Volver al inicio" style="padding:6px 6px 6px 0;">
-  <i class="ti ti-home"></i>
-</button>
+        <div class="header-text-block">
           <div class="header-title">San Domingo</div>
-          <a href="https://maps.google.com/?q=Chacabuco+711+y+Congreso,+Rodeo+de+la+Cruz,+Guaymallén,+Mendoza" target="_blank" style="font-size:10px; color:var(--blue); text-decoration:none; display:flex; align-items:center; gap:3px;">
+          <a href="https://maps.google.com/?q=Chacabuco+711+y+Congreso,+Rodeo+de+la+Cruz,+Guaymallén,+Mendoza" target="_blank" class="header-address">
             <i class="ti ti-map-pin" style="font-size:11px;"></i> Rodeo de la Cruz, Guaymallén
           </a>
         </div>
@@ -477,7 +460,6 @@
       <input class="search-input" id="search-input" type="search" placeholder="Buscar por nombre, marca o categoría" oninput="renderHome()" />
     </div>
 
-    <!-- Tab contents -->
     <div id="tab-home" class="content">
       <p class="section-label">Categorías</p>
       <div class="categories-grid" id="categories-grid"></div>
@@ -514,7 +496,6 @@
       </div>
     </div>
 
-    <!-- Tab bar -->
     <div class="tab-bar">
       <button class="tab-item active" id="tab-btn-home" onclick="showTab('home')">
         <i class="ti ti-grid-dots"></i> Catálogo
@@ -536,18 +517,17 @@
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-// CONFIGURACIÓN
-// ══════════════════════════════════════════════
 const SETTINGS = {
   businessName: 'San Domingo',
   whatsapp: '5492616109829',
 };
 
 const CAT_ICONS = {
-  canas: 'ti-ripple', anzuelos: 'ti-anchor', mojarras: 'ti-fish',
+  canas: 'ti-fish-hook', anzuelos: 'ti-anchor', mojarras: 'ti-fish',
   tanzas: 'ti-line', senuelos: 'ti-target', accesorios: 'ti-tool',
   camping: 'ti-tent', ofertas: 'ti-tag',
+  peces: 'ti-fish', acuarios: 'ti-box', acc_acuario: 'ti-droplet', filtracion: 'ti-filter',
+  iluminacion: 'ti-bulb', alimentacion_pez: 'ti-bowl',
 };
 
 const CATEGORIES = [
@@ -571,19 +551,13 @@ const PRODUCTS = [
   { id: '2', name: 'Discus', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/discus.jpg' },
   { id: '3', name: 'Escalar', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/escalar.jpg' },
   { id: '4', name: 'Tetra Neón', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/tetraneon.jpg' },
-{ id: '1', name: 'Medida de Mojarras Medianas', brand: '', category: 'mojarras', price: 6000, stock: 99, featured: true, offer: false, img: 'imagenes/mojarras.png' },
+  { id: '1', name: 'Medida de Mojarras Medianas', brand: '', category: 'mojarras', price: 6000, stock: 99, featured: true, offer: false, img: 'imagenes/mojarras.png' },
 ];
 
-// ══════════════════════════════════════════════
-// ESTADO
-// ══════════════════════════════════════════════
-let cart = {};   // { id: qty }
-let saved = {};  // { id: true }
+let cart = {};
+let saved = {};
 let activeCategory = null;
 
-// ══════════════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════════════
 const fmt = n => '$' + Number(n).toLocaleString('es-AR');
 
 function totalItems() { return Object.values(cart).reduce((a,b)=>a+b,0); }
@@ -594,14 +568,12 @@ function totalPrice() {
   }, 0);
 }
 
-// ══════════════════════════════════════════════
-// NAVEGACIÓN
-// ══════════════════════════════════════════════
 function goToSplash() {
   document.getElementById('screen-main').classList.remove('active');
   document.getElementById('screen-splash').classList.add('active');
 }
-  function showMain() {
+
+function showMain() {
   document.getElementById('screen-splash').classList.remove('active');
   document.getElementById('screen-main').classList.add('active');
   renderHome();
@@ -622,9 +594,6 @@ function showTab(tab) {
   if (tab === 'home') renderHome();
 }
 
-// ══════════════════════════════════════════════
-// CATEGORÍAS
-// ══════════════════════════════════════════════
 function renderCategories() {
   const grid = document.getElementById('categories-grid');
   grid.innerHTML = CATEGORIES.map(cat => `
@@ -647,9 +616,6 @@ function clearFilter() {
   renderHome();
 }
 
-// ══════════════════════════════════════════════
-// PRODUCTOS
-// ══════════════════════════════════════════════
 function renderHome() {
   const query = document.getElementById('search-input').value.trim().toLowerCase();
   let list = PRODUCTS.filter(p => p.stock > 0);
@@ -715,9 +681,6 @@ function productCardHTML(p) {
   `;
 }
 
-// ══════════════════════════════════════════════
-// CARRITO
-// ══════════════════════════════════════════════
 function addToCart(id) {
   cart[id] = (cart[id] || 0) + 1;
   updateBadge();
@@ -790,9 +753,6 @@ function checkout() {
   window.open(`https://wa.me/${SETTINGS.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// ══════════════════════════════════════════════
-// FAVORITOS
-// ══════════════════════════════════════════════
 function toggleSaved(id) {
   if (saved[id]) delete saved[id]; else saved[id] = true;
   renderHome();
