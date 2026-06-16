@@ -358,6 +358,38 @@
     .foro-post-nombre { font-size: 13px; font-weight: 700; color: var(--navy); }
     .foro-post-fecha { font-size: 11px; color: var(--gray); margin-left: 6px; }
     .foro-post-desc { font-size: 13px; color: var(--darkGray); margin-top: 4px; }
+    .lugar-card {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .lugar-card i { font-size: 20px; color: var(--blue); margin-top: 2px; }
+    .lugar-nombre { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .lugar-badge {
+      display: inline-block;
+      background: var(--lightBlue);
+      color: var(--blue);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    .lugar-desc { font-size: 12px; color: var(--darkGray); margin-top: 2px; }
+    .luna-visual { text-align: center; padding: 10px 0; }
+    .luna-fase-nombre { font-size: 16px; font-weight: 700; color: var(--navy); margin-top: 10px; }
+    .luna-fase-desc { font-size: 12px; color: var(--gray); margin-top: 4px; }
+    .clima-actual { text-align: center; padding: 6px 0 16px; }
+    .clima-temp { font-size: 36px; font-weight: 700; color: var(--navy); }
+    .clima-desc { font-size: 13px; color: var(--gray); margin-top: 2px; }
+    .clima-detalle-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--darkGray); padding: 7px 0; border-bottom: 1px solid var(--border); }
+    .clima-detalle-row:last-child { border-bottom: none; }
     .section-label {
       font-size: 14px;
       font-weight: 700;
@@ -653,9 +685,7 @@
         </div>
       </div>
       <div class="hub-card" onclick="enterWorld('pesca')">
-        <div class="hub-card-placeholder">
-          <i class="ti ti-anchor" style="font-size:34px; color:#185FA5;"></i>
-        </div>
+        <img src="imagenes/pesca.jpg" alt="Pesca" />
         <div class="hub-card-overlay">
           <i class="ti ti-anchor" style="font-size:22px;"></i>
           <span>Pesca</span>
@@ -701,24 +731,7 @@
       <div class="banner-dots" id="banner-dots"></div>
       <div id="tools-section" style="display:none;">
         <p class="section-label">Herramientas</p>
-        <div class="tools-grid">
-          <div class="tool-card" onclick="openTool('litros')">
-            <i class="ti ti-ruler-2"></i>
-            <span>Litros del acuario</span>
-          </div>
-          <div class="tool-card" onclick="openTool('compatibilidad')">
-            <i class="ti ti-fish"></i>
-            <span>Compatibilidad</span>
-          </div>
-          <div class="tool-card" onclick="openTool('parametros')">
-            <i class="ti ti-droplet"></i>
-            <span>Parámetros</span>
-          </div>
-          <div class="tool-card" onclick="openTool('cambioAgua')">
-            <i class="ti ti-bell"></i>
-            <span>Cambio de agua</span>
-          </div>
-        </div>
+        <div class="tools-grid" id="tools-grid"></div>
       </div>
       <p class="section-label">Categorías</p>
       <div class="categories-grid" id="categories-grid"></div>
@@ -783,12 +796,51 @@
       </div>
     </div>
 
+    <div id="tab-bitacora" class="content" style="display:none; flex-direction:column;">
+      <p class="section-label">Bitácora de capturas</p>
+      <button class="tool-button" style="margin-bottom:14px;" onclick="abrirFormularioBitacora()">
+        <i class="ti ti-camera" style="margin-right:6px;"></i>Registrar una captura
+      </button>
+      <div id="bitacora-form-wrap" style="display:none; background:var(--white); border:1px solid var(--border); border-radius:14px; padding:14px; margin-bottom:14px;">
+        <div class="tool-field">
+          <label>Foto (opcional)</label>
+          <input type="file" id="bitacora-foto" accept="image/*" capture="environment" />
+        </div>
+        <div class="tool-field">
+          <label>Tu nombre o apodo</label>
+          <input type="text" id="bitacora-nombre" placeholder="Ej: Nahuel" />
+        </div>
+        <div class="tool-field">
+          <label>Lugar</label>
+          <input type="text" id="bitacora-lugar" placeholder="Ej: Dique Frías" />
+        </div>
+        <div class="tool-field">
+          <label>Especie</label>
+          <input type="text" id="bitacora-especie" placeholder="Ej: Pejerrey" />
+        </div>
+        <div class="tool-field">
+          <label>Notas (opcional)</label>
+          <input type="text" id="bitacora-notas" placeholder="Ej: Con señuelo, primeras horas de la mañana" />
+        </div>
+        <button class="tool-button" onclick="publicarBitacora()">Publicar</button>
+        <p id="bitacora-form-msg" class="tool-note"></p>
+      </div>
+      <div id="bitacora-lista"></div>
+      <div id="bitacora-empty" class="empty-state" style="display:none;">
+        <i class="ti ti-fish"></i>
+        <span>Todavía no hay capturas registradas. ¡Sé el primero en compartir la tuya!</span>
+      </div>
+    </div>
+
     <div class="tab-bar">
       <button class="tab-item active" id="tab-btn-home" onclick="showTab('home')">
         <i class="ti ti-grid-dots"></i> Catálogo
       </button>
       <button class="tab-item" id="tab-btn-foro" style="display:none;" onclick="showTab('foro')">
         <i class="ti ti-users"></i> Foro
+      </button>
+      <button class="tab-item" id="tab-btn-bitacora" style="display:none;" onclick="showTab('bitacora')">
+        <i class="ti ti-book"></i> Bitácora
       </button>
       <button class="tab-item" id="tab-btn-saved" onclick="showTab('saved')">
         <i class="ti ti-bookmark"></i> Guardados
@@ -855,6 +907,30 @@ const WORLD_CATEGORIES = {
 
 let currentWorld = null;
 
+const WORLD_TOOLS = {
+  acuariofilia: [
+    { id: 'litros', icon: 'ti-ruler-2', label: 'Litros del acuario' },
+    { id: 'compatibilidad', icon: 'ti-fish', label: 'Compatibilidad' },
+    { id: 'parametros', icon: 'ti-droplet', label: 'Parámetros' },
+    { id: 'cambioAgua', icon: 'ti-bell', label: 'Cambio de agua' },
+  ],
+  pesca: [
+    { id: 'clima', icon: 'ti-cloud', label: 'Clima y pronóstico' },
+    { id: 'luna', icon: 'ti-moon', label: 'Fase lunar' },
+    { id: 'lugares', icon: 'ti-map-pin', label: 'Lugares recomendados' },
+  ],
+};
+
+function renderTools() {
+  const tools = WORLD_TOOLS[currentWorld] || [];
+  document.getElementById('tools-grid').innerHTML = tools.map(t => `
+    <div class="tool-card" onclick="openTool('${t.id}')">
+      <i class="ti ${t.icon}"></i>
+      <span>${t.label}</span>
+    </div>
+  `).join('');
+}
+
 const PRODUCTS = [
   { id: '2', name: 'Discus', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/discus.jpg' },
   { id: '3', name: 'Escalar', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/escalar.jpg' },
@@ -893,8 +969,10 @@ function enterWorld(world) {
   activeCategory = null;
   document.getElementById('screen-hub').classList.remove('active');
   document.getElementById('screen-main').classList.add('active');
-  document.getElementById('tools-section').style.display = world === 'acuariofilia' ? 'block' : 'none';
+  document.getElementById('tools-section').style.display = 'block';
   document.getElementById('tab-btn-foro').style.display = world === 'acuariofilia' ? 'flex' : 'none';
+  document.getElementById('tab-btn-bitacora').style.display = world === 'pesca' ? 'flex' : 'none';
+  renderTools();
   showTab('home');
   renderHome();
   renderCategories();
@@ -902,7 +980,7 @@ function enterWorld(world) {
 }
 
 function showTab(tab) {
-  ['home','cart','saved','foro'].forEach(t => {
+  ['home','cart','saved','foro','bitacora'].forEach(t => {
     document.getElementById(`tab-${t}`).style.display = 'none';
     document.getElementById(`tab-btn-${t}`).classList.remove('active');
   });
@@ -914,6 +992,7 @@ function showTab(tab) {
   if (tab === 'cart') renderCart();
   if (tab === 'home') renderHome();
   if (tab === 'foro') renderForo();
+  if (tab === 'bitacora') renderBitacora();
 }
 
 const BANNER_SLIDES = [
@@ -1149,10 +1228,15 @@ function openTool(tool) {
     compatibilidad: 'Compatibilidad entre especies',
     parametros: 'Control de parámetros',
     cambioAgua: 'Recordatorio de cambio de agua',
+    clima: 'Clima y pronóstico',
+    luna: 'Fase lunar',
+    lugares: 'Lugares recomendados',
   };
   document.getElementById('tool-modal-title').textContent = titles[tool] || '';
   document.getElementById('tool-modal-body').innerHTML = TOOL_BODIES[tool]();
   document.getElementById('tool-modal').classList.add('active');
+  if (tool === 'clima') obtenerClima();
+  if (tool === 'luna') calcularFaseLunar();
 }
 
 function closeTool() {
@@ -1204,6 +1288,29 @@ const TOOL_BODIES = {
     <button class="tool-button" onclick="calcularCambioAgua()">Calcular próxima fecha</button>
     <div id="cambio-resultado"></div>
     <p class="tool-note">Este recordatorio es solo informativo dentro de la app; no envía notificaciones automáticas.</p>
+  `,
+  clima: () => `
+    <div id="clima-resultado">
+      <p class="tool-note">Buscando el pronóstico para Mendoza...</p>
+    </div>
+  `,
+  luna: () => `
+    <div id="luna-resultado"></div>
+  `,
+  lugares: () => `
+    <p style="margin-bottom:12px;">Algunos spots recomendados por pescadores de la zona.</p>
+    <div id="lugares-lista">
+      ${LUGARES_PESCA.map(l => `
+        <div class="lugar-card" style="${l.destacado ? 'border-color:var(--blue); border-width:2px;' : ''}">
+          <i class="ti ti-map-pin"></i>
+          <div>
+            <p class="lugar-nombre">${l.nombre} ${l.destacado ? '<span class="lugar-badge">Recomendado</span>' : ''}</p>
+            <p class="lugar-desc">${l.descripcion}</p>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <p class="tool-note">Recomendaciones generales. Verificá siempre permisos y vedas locales antes de salir.</p>
   `,
 };
 
@@ -1277,6 +1384,92 @@ function calcularCambioAgua() {
   document.getElementById('cambio-resultado').innerHTML = `
     <div class="tool-result">Próximo cambio de agua sugerido: <strong>${formato}</strong></div>
   `;
+}
+
+// ══════════════════════════════════════════════
+// HERRAMIENTAS DE PESCA
+// ══════════════════════════════════════════════
+
+const LUGARES_PESCA = [
+  { nombre: 'Embalse El Carrizal', descripcion: 'El preferido de nuestros clientes. Pejerrey y pejerrey trofeo, muy buena pesca durante todo el año.', destacado: true },
+  { nombre: 'Dique Frías', descripcion: 'Embalse cercano a Luján de Cuyo, conocido por pejerrey y siluro.' },
+  { nombre: 'Dique Potrerillos', descripcion: 'Buen lugar para pejerrey y trucha, especialmente en temporada de apertura.' },
+  { nombre: 'Río Mendoza', descripcion: 'Tramos con buena pesca de trucha en zonas altas y media montaña.' },
+  { nombre: 'Laguna del Diamante', descripcion: 'Pesca de trucha en entorno de alta montaña, San Carlos.' },
+];
+
+function calcularFaseLunar() {
+  const hoy = new Date();
+  const fecha = Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+  const lunaNueva = Date.UTC(2000, 0, 6, 18, 14);
+  const cicloLunar = 29.53058867;
+  const diasDesde = (fecha - lunaNueva) / (1000 * 60 * 60 * 24);
+  const cicloActual = ((diasDesde % cicloLunar) + cicloLunar) % cicloLunar;
+  const porcentaje = cicloActual / cicloLunar;
+
+  let fase, descripcion, icono;
+  if (porcentaje < 0.03 || porcentaje > 0.97) {
+    fase = 'Luna nueva'; icono = 'ti-circle'; descripcion = 'Poca luz nocturna, buena para pesca al amanecer y atardecer.';
+  } else if (porcentaje < 0.22) {
+    fase = 'Luna creciente'; icono = 'ti-moon-2'; descripcion = 'Actividad de peces en aumento, buen momento para salir.';
+  } else if (porcentaje < 0.28) {
+    fase = 'Cuarto creciente'; icono = 'ti-moon'; descripcion = 'Buena actividad de peces durante el día.';
+  } else if (porcentaje < 0.47) {
+    fase = 'Luna gibosa creciente'; icono = 'ti-moon'; descripcion = 'Actividad moderada, recomendable pescar al amanecer.';
+  } else if (porcentaje < 0.53) {
+    fase = 'Luna llena'; icono = 'ti-circle-filled'; descripcion = 'Mucha luz nocturna, ideal para pesca nocturna.';
+  } else if (porcentaje < 0.72) {
+    fase = 'Luna gibosa menguante'; icono = 'ti-moon'; descripcion = 'Buena actividad, especialmente al atardecer.';
+  } else if (porcentaje < 0.78) {
+    fase = 'Cuarto menguante'; icono = 'ti-moon'; descripcion = 'Actividad moderada durante el día.';
+  } else {
+    fase = 'Luna menguante'; icono = 'ti-moon-2'; descripcion = 'Actividad en descenso, mejor en horas de luz.';
+  }
+
+  document.getElementById('luna-resultado').innerHTML = `
+    <div class="luna-visual">
+      <i class="ti ${icono}" style="font-size:48px; color:var(--blue);"></i>
+      <p class="luna-fase-nombre">${fase}</p>
+      <p class="luna-fase-desc">${descripcion}</p>
+    </div>
+  `;
+}
+
+async function obtenerClima() {
+  const el = document.getElementById('clima-resultado');
+  try {
+    const lat = -33.0;
+    const lon = -68.85;
+    const resp = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=America%2FArgentina%2FMendoza`);
+    const data = await resp.json();
+    const actual = data.current_weather;
+    const hoyMax = data.daily.temperature_2m_max[0];
+    const hoyMin = data.daily.temperature_2m_min[0];
+    const lluvia = data.daily.precipitation_probability_max[0];
+
+    const codigosClima = {
+      0: 'Despejado', 1: 'Mayormente despejado', 2: 'Parcialmente nublado', 3: 'Nublado',
+      45: 'Niebla', 48: 'Niebla', 51: 'Llovizna débil', 53: 'Llovizna', 55: 'Llovizna intensa',
+      61: 'Lluvia débil', 63: 'Lluvia', 65: 'Lluvia intensa', 71: 'Nieve débil', 73: 'Nieve',
+      75: 'Nieve intensa', 80: 'Chubascos débiles', 81: 'Chubascos', 82: 'Chubascos intensos',
+      95: 'Tormenta', 96: 'Tormenta con granizo', 99: 'Tormenta fuerte',
+    };
+    const descripcion = codigosClima[actual.weathercode] || 'Variable';
+
+    el.innerHTML = `
+      <div class="clima-actual">
+        <div class="clima-temp">${Math.round(actual.temperature)}°C</div>
+        <div class="clima-desc">${descripcion}</div>
+      </div>
+      <div class="clima-detalle-row"><span>Máxima de hoy</span><span>${Math.round(hoyMax)}°C</span></div>
+      <div class="clima-detalle-row"><span>Mínima de hoy</span><span>${Math.round(hoyMin)}°C</span></div>
+      <div class="clima-detalle-row"><span>Viento</span><span>${Math.round(actual.windspeed)} km/h</span></div>
+      <div class="clima-detalle-row"><span>Probabilidad de lluvia</span><span>${lluvia}%</span></div>
+      <p class="tool-note">Pronóstico para la zona de Mendoza. Datos de Open-Meteo.</p>
+    `;
+  } catch (e) {
+    el.innerHTML = `<p class="tool-note">No se pudo obtener el pronóstico. Revisá tu conexión a internet.</p>`;
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -1385,6 +1578,112 @@ async function renderForo() {
           <span class="foro-post-nombre">${post.nombre}</span>
           <span class="foro-post-fecha">${fecha}</span>
           ${post.descripcion ? `<div class="foro-post-desc">${post.descripcion}</div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// BITÁCORA DE CAPTURAS (Supabase, sin login)
+// ══════════════════════════════════════════════
+
+function abrirFormularioBitacora() {
+  const wrap = document.getElementById('bitacora-form-wrap');
+  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+}
+
+async function publicarBitacora() {
+  const fotoInput = document.getElementById('bitacora-foto');
+  const nombre = document.getElementById('bitacora-nombre').value.trim();
+  const lugar = document.getElementById('bitacora-lugar').value.trim();
+  const especie = document.getElementById('bitacora-especie').value.trim();
+  const notas = document.getElementById('bitacora-notas').value.trim();
+  const msgEl = document.getElementById('bitacora-form-msg');
+
+  if (!nombre || !lugar || !especie) {
+    msgEl.textContent = 'Completá nombre, lugar y especie.';
+    return;
+  }
+  if (!supabaseClient) {
+    msgEl.textContent = 'No se pudo conectar con el servidor. Probá de nuevo más tarde.';
+    return;
+  }
+
+  let fotoUrl = null;
+  if (fotoInput.files && fotoInput.files.length > 0) {
+    msgEl.textContent = 'Subiendo foto...';
+    const file = fotoInput.files[0];
+    const ext = file.name.split('.').pop() || 'jpg';
+    const fileName = `bitacora_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error: uploadError } = await supabaseClient.storage.from('foro-fotos').upload(fileName, file);
+    if (uploadError) {
+      msgEl.textContent = 'No se pudo subir la foto. Intentá de nuevo.';
+      return;
+    }
+    const { data: publicUrlData } = supabaseClient.storage.from('foro-fotos').getPublicUrl(fileName);
+    fotoUrl = publicUrlData.publicUrl;
+  }
+
+  try {
+    msgEl.textContent = 'Publicando...';
+    const { error: insertError } = await supabaseClient
+      .from('bitacora_capturas')
+      .insert([{ nombre, lugar, especie, notas, foto_url: fotoUrl }]);
+
+    if (insertError) {
+      msgEl.textContent = 'No se pudo publicar. Intentá de nuevo.';
+      return;
+    }
+
+    msgEl.textContent = '¡Publicado!';
+    fotoInput.value = '';
+    document.getElementById('bitacora-nombre').value = '';
+    document.getElementById('bitacora-lugar').value = '';
+    document.getElementById('bitacora-especie').value = '';
+    document.getElementById('bitacora-notas').value = '';
+    setTimeout(() => {
+      document.getElementById('bitacora-form-wrap').style.display = 'none';
+      msgEl.textContent = '';
+    }, 1200);
+    renderBitacora();
+  } catch (e) {
+    msgEl.textContent = 'Ocurrió un error. Intentá de nuevo.';
+  }
+}
+
+async function renderBitacora() {
+  const lista = document.getElementById('bitacora-lista');
+  const empty = document.getElementById('bitacora-empty');
+
+  if (!supabaseClient) {
+    lista.innerHTML = '';
+    empty.style.display = 'flex';
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('bitacora_capturas')
+    .select('*')
+    .order('creado_en', { ascending: false })
+    .limit(50);
+
+  if (error || !data || data.length === 0) {
+    lista.innerHTML = '';
+    empty.style.display = 'flex';
+    return;
+  }
+
+  empty.style.display = 'none';
+  lista.innerHTML = data.map(post => {
+    const fecha = new Date(post.creado_en).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
+    return `
+      <div class="foro-post">
+        ${post.foto_url ? `<img src="${post.foto_url}" alt="Captura de ${post.nombre}" />` : ''}
+        <div class="foro-post-body">
+          <span class="foro-post-nombre">${post.especie} — ${post.lugar}</span>
+          <span class="foro-post-fecha">${fecha}</span>
+          <div class="foro-post-desc">Por ${post.nombre}${post.notas ? `. ${post.notas}` : ''}</div>
         </div>
       </div>
     `;
