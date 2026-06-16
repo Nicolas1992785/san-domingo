@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
   <title>San Domingo — Artículos para la Pesca</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon-192.png" />
@@ -39,12 +39,22 @@
       justify-content: center;
       align-items: flex-start;
       min-height: 100vh;
+      min-height: 100dvh;
       padding: 20px 0;
     }
 
     @media (max-width: 480px) {
-      body { background: var(--lightGray); padding: 0; align-items: stretch; }
-      #app { width: 100%; min-height: 100vh; border-radius: 0; box-shadow: none; }
+      body { background: var(--lightGray); padding: 0; align-items: stretch; min-height: 100dvh; }
+      #app {
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
     }
 
     #app {
