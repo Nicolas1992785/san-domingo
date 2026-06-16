@@ -170,6 +170,55 @@
       padding: 16px;
     }
 
+  .banner-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 10px;
+  margin-bottom: 8px;
+  scrollbar-width: none;
+}
+.banner-carousel::-webkit-scrollbar { display: none; }
+.banner-track {
+  display: flex;
+  gap: 10px;
+}
+.banner-slide {
+  scroll-snap-align: center;
+  flex-shrink: 0;
+  width: 100%;
+  height: 140px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  background: var(--lightBlue);
+}
+.banner-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.banner-slide .banner-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(4,44,83,0.75));
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 24px 12px 10px;
+}
+.banner-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.banner-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.banner-dot.active { background: var(--blue); }
     .section-label {
       font-size: 14px;
       font-weight: 700;
@@ -472,6 +521,10 @@
     </div>
 
     <div id="tab-home" class="content">
+    <div class="banner-carousel" id="banner-carousel">
+  <div class="banner-track" id="banner-track"></div>
+</div>
+<div class="banner-dots" id="banner-dots"></div>
       <p class="section-label">Categorías</p>
       <div class="categories-grid" id="categories-grid"></div>
       <div class="section-header-row">
@@ -590,7 +643,6 @@ function showMain() {
   renderHome();
   renderCategories();
 }
-
 function showTab(tab) {
   ['home','cart','saved'].forEach(t => {
     document.getElementById(`tab-${t}`).style.display = 'none';
@@ -605,7 +657,30 @@ function showTab(tab) {
   if (tab === 'home') renderHome();
 }
 
-function renderCategories() {
+const BANNER_SLIDES = [
+  { img: 'imagenes/discus.jpg', label: 'Discus disponibles' },
+  { img: 'imagenes/escalar.jpg', label: 'Escalares en stock' },
+  { img: 'imagenes/tetraneon.jpg', label: 'Tetra Neón' },
+];
+
+function renderBanner() {
+  const track = document.getElementById('banner-track');
+  const dots = document.getElementById('banner-dots');
+  track.innerHTML = BANNER_SLIDES.map(s => `
+    <div class="banner-slide">
+      <img src="${s.img}" alt="${s.label}" />
+      <div class="banner-label">${s.label}</div>
+    </div>
+  `).join('');
+  dots.innerHTML = BANNER_SLIDES.map((_, i) => `<div class="banner-dot ${i === 0 ? 'active' : ''}" data-i="${i}"></div>`).join('');
+
+  const carousel = document.getElementById('banner-carousel');
+  carousel.addEventListener('scroll', () => {
+    const i = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+    document.querySelectorAll('.banner-dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
+  });
+}
+  function renderCategories() {
   const grid = document.getElementById('categories-grid');
   grid.innerHTML = CATEGORIES.map(cat => `
     <div class="category-card" onclick="filterByCategory('${cat.id}')">
