@@ -204,6 +204,20 @@
     .banner-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; }
     .banner-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
     .banner-dot.active { background: var(--blue); }
+    .puntos-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--navy);
+      color: white;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+    .puntos-banner i:first-child { color: #FAC775; }
+    .puntos-banner-titulo { font-size: 13px; font-weight: 700; }
+    .puntos-banner-sub { font-size: 11px; opacity: 0.8; margin-top: 1px; }
     .hub-card {
       position: relative;
       height: 160px;
@@ -358,6 +372,10 @@
     .foro-post-nombre { font-size: 13px; font-weight: 700; color: var(--navy); }
     .foro-post-fecha { font-size: 11px; color: var(--gray); margin-left: 6px; }
     .foro-post-desc { font-size: 13px; color: var(--darkGray); margin-top: 4px; }
+    .comentarios-bloque { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px; }
+    .comentarios-lista { display: flex; flex-direction: column; gap: 5px; margin-bottom: 4px; }
+    .comentario-item { font-size: 12px; color: var(--darkGray); background: var(--lightGray); border-radius: 8px; padding: 6px 9px; }
+    .comentario-item strong { color: var(--navy); }
     .lugar-card {
       display: flex;
       gap: 10px;
@@ -684,10 +702,46 @@
       <i class="ti ti-map-pin" style="font-size:16px;"></i>
       Chacabuco 711 y Congreso, Rodeo de la Cruz
     </a>
-    <button class="btn-enter" onclick="goToHub()">Entrar</button>
+    <button class="btn-enter" onclick="checkIdentidad()">Entrar</button>
     <button id="install-btn" onclick="installApp()" style="display:none; align-items:center; gap:6px; background:none; border:none; color:var(--blue); font-size:13px; font-weight:600; margin-top:16px; cursor:pointer;">
       <i class="ti ti-download"></i> Instalar app en mi celular
     </button>
+  </div>
+
+  <div id="screen-registro" class="screen" style="align-items:center; justify-content:center; padding:40px 28px; background:var(--white);">
+    <i class="ti ti-user-circle" style="font-size:48px; color:var(--blue); margin-bottom:16px;"></i>
+    <p style="font-size:18px; font-weight:700; color:var(--navy); margin-bottom:6px; text-align:center;">¡Bienvenido!</p>
+    <p style="font-size:13px; color:var(--gray); margin-bottom:20px; text-align:center;">Decinos tu nombre y WhatsApp para guardar tus puntos y tus acuarios.</p>
+    <div class="tool-field" style="width:100%;"><label>Nombre</label><input type="text" id="registro-nombre" placeholder="Ej: Nahuel" /></div>
+    <div class="tool-field" style="width:100%;"><label>WhatsApp</label><input type="tel" id="registro-whatsapp" placeholder="Ej: 2616109829" /></div>
+    <div class="tool-field" style="width:100%;"><label>¿Alguien te invitó? (opcional)</label><input type="text" id="registro-codigo" placeholder="Código de invitación" /></div>
+    <button class="tool-button" onclick="registrarUsuario()">Continuar</button>
+    <p id="registro-msg" class="tool-note"></p>
+  </div>
+
+  <div id="screen-admin" class="screen" style="flex-direction:column; background:var(--white);">
+    <div class="header">
+      <div class="header-top">
+        <button class="icon-btn" onclick="goToSplash()" aria-label="Volver">
+          <i class="ti ti-arrow-left"></i>
+        </button>
+        <div class="header-text-block">
+          <div class="header-title">Panel - Sumar puntos</div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div id="admin-login-wrap">
+        <div class="tool-field"><label>Contraseña</label><input type="password" id="admin-password" placeholder="Contraseña del panel" /></div>
+        <button class="tool-button" onclick="loginAdmin()">Ingresar</button>
+        <p id="admin-login-msg" class="tool-note"></p>
+      </div>
+      <div id="admin-panel-wrap" style="display:none;">
+        <div class="tool-field"><label>WhatsApp del cliente</label><input type="tel" id="admin-whatsapp" placeholder="Ej: 2616109829" /></div>
+        <button class="tool-button" onclick="buscarClienteAdmin()">Buscar cliente</button>
+        <div id="admin-cliente-resultado"></div>
+      </div>
+    </div>
   </div>
 
   <div id="screen-hub" class="screen" style="flex-direction:column;">
@@ -757,6 +811,14 @@
         <div class="banner-track" id="banner-track"></div>
       </div>
       <div class="banner-dots" id="banner-dots"></div>
+      <div class="puntos-banner" onclick="openTool('misPuntos')">
+        <i class="ti ti-star" style="font-size:24px;"></i>
+        <div>
+          <p class="puntos-banner-titulo">Sumá puntos y ganá descuentos</p>
+          <p class="puntos-banner-sub">Publicá fotos, comentá e invitá amigos</p>
+        </div>
+        <i class="ti ti-chevron-right" style="margin-left:auto; font-size:18px;"></i>
+      </div>
       <div id="tools-section" style="display:none;">
         <p class="section-label">Herramientas</p>
         <div class="tools-grid" id="tools-grid"></div>
@@ -906,6 +968,225 @@
 </div>
 
 <script>
+const SUPABASE_URL = 'https://ruxxatzwgqqjgdfnahir.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_36MZSCr4-wtDHCXht_f2GQ_2uMhZPNK';
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+const USUARIO_KEY = 'sandomingo_usuario';
+
+function getUsuarioLocal() {
+  try {
+    return JSON.parse(localStorage.getItem(USUARIO_KEY));
+  } catch (e) {
+    return null;
+  }
+}
+
+function setUsuarioLocal(usuario) {
+  localStorage.setItem(USUARIO_KEY, JSON.stringify(usuario));
+}
+
+function generarCodigoInvitacion(nombre) {
+  const base = nombre.replace(/[^a-zA-Z]/g, '').toUpperCase().slice(0, 4) || 'AMIG';
+  return base + Math.floor(1000 + Math.random() * 9000);
+}
+
+function checkIdentidad() {
+  const usuario = getUsuarioLocal();
+  if (usuario && usuario.whatsapp) {
+    goToHub();
+  } else {
+    document.getElementById('screen-splash').classList.remove('active');
+    document.getElementById('screen-registro').classList.add('active');
+  }
+}
+
+async function registrarUsuario() {
+  const nombre = document.getElementById('registro-nombre').value.trim();
+  const whatsapp = document.getElementById('registro-whatsapp').value.trim().replace(/\D/g, '');
+  const codigoUsado = document.getElementById('registro-codigo').value.trim().toUpperCase();
+  const msgEl = document.getElementById('registro-msg');
+
+  if (!nombre || !whatsapp) {
+    msgEl.textContent = 'Completá tu nombre y WhatsApp.';
+    return;
+  }
+  if (!supabaseClient) {
+    msgEl.textContent = 'No se pudo conectar con el servidor. Probá de nuevo más tarde.';
+    return;
+  }
+
+  msgEl.textContent = 'Guardando...';
+
+  const { data: existente } = await supabaseClient
+    .from('usuarios')
+    .select('*')
+    .eq('whatsapp', whatsapp)
+    .maybeSingle();
+
+  if (existente) {
+    setUsuarioLocal(existente);
+    goToHub();
+    return;
+  }
+
+  const codigoPropio = generarCodigoInvitacion(nombre);
+  const nuevoUsuario = {
+    nombre,
+    whatsapp,
+    puntos: 0,
+    codigo_invitacion: codigoPropio,
+    invitado_por: codigoUsado || null,
+  };
+
+  const { data: creado, error } = await supabaseClient
+    .from('usuarios')
+    .insert([nuevoUsuario])
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    msgEl.textContent = 'No se pudo completar el registro. Intentá de nuevo.';
+    return;
+  }
+
+  if (codigoUsado) {
+    const { data: invitador } = await supabaseClient
+      .from('usuarios')
+      .select('*')
+      .eq('codigo_invitacion', codigoUsado)
+      .maybeSingle();
+    if (invitador) {
+      await supabaseClient
+        .from('usuarios')
+        .update({ puntos: (invitador.puntos || 0) + 50 })
+        .eq('whatsapp', invitador.whatsapp);
+    }
+  }
+
+  setUsuarioLocal(creado);
+  goToHub();
+}
+
+async function sumarPuntos(cantidad) {
+  const usuario = getUsuarioLocal();
+  if (!usuario || !supabaseClient) return;
+  const nuevoTotal = (usuario.puntos || 0) + cantidad;
+  await supabaseClient
+    .from('usuarios')
+    .update({ puntos: nuevoTotal })
+    .eq('whatsapp', usuario.whatsapp);
+  usuario.puntos = nuevoTotal;
+  setUsuarioLocal(usuario);
+}
+
+async function refrescarUsuarioLocal() {
+  const usuario = getUsuarioLocal();
+  if (!usuario || !supabaseClient) return;
+  const { data } = await supabaseClient
+    .from('usuarios')
+    .select('*')
+    .eq('whatsapp', usuario.whatsapp)
+    .maybeSingle();
+  if (data) setUsuarioLocal(data);
+}
+
+async function renderMisPuntos() {
+  await refrescarUsuarioLocal();
+  const usuario = getUsuarioLocal();
+  const el = document.getElementById('puntos-resultado');
+  if (!usuario) {
+    el.innerHTML = `<p class="tool-note">No pudimos encontrar tu usuario. Volvé al inicio de la app.</p>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="tool-result" style="text-align:center;">
+      <p style="font-size:13px; color:var(--gray); margin-bottom:4px;">Tenés acumulados</p>
+      <strong style="font-size:32px;">${usuario.puntos || 0} puntos</strong>
+    </div>
+    <p style="margin:14px 0 8px; font-size:13px; color:var(--darkGray);">Sumás puntos cuando:</p>
+    <p class="acuario-detalle">📷 Publicás una foto en el foro o la bitácora: +10</p>
+    <p class="acuario-detalle">💬 Dejás un comentario: +2</p>
+    <p class="acuario-detalle">🛒 Confirmás una compra: puntos a cargo del local</p>
+    <p class="acuario-detalle">🎁 Invitás a un amigo y se registra: +50</p>
+    <div class="tool-field" style="margin-top:14px;">
+      <label>Tu código de invitación</label>
+      <input type="text" value="${usuario.codigo_invitacion || ''}" readonly style="font-weight:700; text-align:center;" />
+    </div>
+    <p class="tool-note">Compartí tu código con amigos. Cuando se registren usándolo, ganás 50 puntos.</p>
+    <button class="tool-button" onclick="canjearPuntos()">Canjear mis puntos por un descuento</button>
+  `;
+}
+
+function canjearPuntos() {
+  const usuario = getUsuarioLocal();
+  const msg = `Hola San Domingo, quiero canjear mis puntos. Tengo ${usuario ? usuario.puntos : 0} puntos acumulados a nombre de ${usuario ? usuario.nombre : ''}.`;
+  window.open(`https://wa.me/5492616109829?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// ══════════════════════════════════════════════
+// PANEL DE ADMINISTRADOR (sumar puntos manualmente)
+// ══════════════════════════════════════════════
+
+const ADMIN_PASSWORD = 'sandomingo2026';
+
+function loginAdmin() {
+  const pass = document.getElementById('admin-password').value;
+  const msgEl = document.getElementById('admin-login-msg');
+  if (pass === ADMIN_PASSWORD) {
+    document.getElementById('admin-login-wrap').style.display = 'none';
+    document.getElementById('admin-panel-wrap').style.display = 'block';
+  } else {
+    msgEl.textContent = 'Contraseña incorrecta.';
+  }
+}
+
+async function buscarClienteAdmin() {
+  const whatsapp = document.getElementById('admin-whatsapp').value.trim().replace(/\D/g, '');
+  const cont = document.getElementById('admin-cliente-resultado');
+  if (!whatsapp || !supabaseClient) {
+    cont.innerHTML = `<p class="tool-note">Ingresá un WhatsApp válido.</p>`;
+    return;
+  }
+  const { data } = await supabaseClient
+    .from('usuarios')
+    .select('*')
+    .eq('whatsapp', whatsapp)
+    .maybeSingle();
+
+  if (!data) {
+    cont.innerHTML = `<p class="tool-note">No se encontró ningún cliente con ese WhatsApp.</p>`;
+    return;
+  }
+
+  cont.innerHTML = `
+    <div class="tool-result" style="margin-top:14px;">
+      <strong>${data.nombre}</strong><br/>
+      Puntos actuales: ${data.puntos || 0}
+    </div>
+    <div class="tool-field" style="margin-top:10px;">
+      <label>Puntos a sumar</label>
+      <input type="number" id="admin-puntos-sumar" placeholder="Ej: 20" />
+    </div>
+    <button class="tool-button" onclick="confirmarSumaAdmin('${data.whatsapp}')">Sumar puntos</button>
+    <p id="admin-suma-msg" class="tool-note"></p>
+  `;
+}
+
+async function confirmarSumaAdmin(whatsapp) {
+  const cantidad = Number(document.getElementById('admin-puntos-sumar').value);
+  const msgEl = document.getElementById('admin-suma-msg');
+  if (!cantidad || cantidad <= 0) {
+    msgEl.textContent = 'Ingresá una cantidad válida.';
+    return;
+  }
+  const { data } = await supabaseClient.from('usuarios').select('*').eq('whatsapp', whatsapp).maybeSingle();
+  if (!data) return;
+  const nuevoTotal = (data.puntos || 0) + cantidad;
+  await supabaseClient.from('usuarios').update({ puntos: nuevoTotal }).eq('whatsapp', whatsapp);
+  msgEl.textContent = `Listo. Nuevo total: ${nuevoTotal} puntos.`;
+}
+
 const SETTINGS = {
   businessName: 'San Domingo',
   whatsapp: '5492616109829',
@@ -944,6 +1225,7 @@ let currentWorld = null;
 
 const WORLD_TOOLS = {
   acuariofilia: [
+    { id: 'misPuntos', icon: 'ti-star', label: 'Mis puntos' },
     { id: 'misAcuarios', icon: 'ti-aquarium', label: 'Mis acuarios' },
     { id: 'litros', icon: 'ti-ruler-2', label: 'Litros del acuario' },
     { id: 'compatibilidad', icon: 'ti-fish', label: 'Compatibilidad' },
@@ -951,6 +1233,7 @@ const WORLD_TOOLS = {
     { id: 'cambioAgua', icon: 'ti-bell', label: 'Cambio de agua' },
   ],
   pesca: [
+    { id: 'misPuntos', icon: 'ti-star', label: 'Mis puntos' },
     { id: 'clima', icon: 'ti-cloud', label: 'Clima y pronóstico' },
     { id: 'luna', icon: 'ti-moon', label: 'Fase lunar' },
     { id: 'lugares', icon: 'ti-map-pin', label: 'Lugares recomendados' },
@@ -991,11 +1274,15 @@ function totalPrice() {
 function goToSplash() {
   document.getElementById('screen-main').classList.remove('active');
   document.getElementById('screen-hub').classList.remove('active');
+  document.getElementById('screen-registro').classList.remove('active');
+  document.getElementById('screen-admin').classList.remove('active');
   document.getElementById('screen-splash').classList.add('active');
 }
 
 function goToHub() {
   document.getElementById('screen-splash').classList.remove('active');
+  document.getElementById('screen-registro').classList.remove('active');
+  document.getElementById('screen-admin').classList.remove('active');
   document.getElementById('screen-main').classList.remove('active');
   document.getElementById('screen-hub').classList.add('active');
 }
@@ -1264,6 +1551,7 @@ const FISH_COMPATIBILITY = {
 
 function openTool(tool) {
   const titles = {
+    misPuntos: 'Mis puntos',
     misAcuarios: 'Mis acuarios',
     litros: 'Calculadora de litros',
     compatibilidad: 'Compatibilidad entre especies',
@@ -1279,6 +1567,7 @@ function openTool(tool) {
   if (tool === 'clima') obtenerClima();
   if (tool === 'luna') calcularFaseLunar();
   if (tool === 'misAcuarios') renderMisAcuarios();
+  if (tool === 'misPuntos') renderMisPuntos();
 }
 
 function closeTool() {
@@ -1286,6 +1575,9 @@ function closeTool() {
 }
 
 const TOOL_BODIES = {
+  misPuntos: () => `
+    <div id="puntos-resultado"></div>
+  `,
   misAcuarios: () => `
     <div id="misacuarios-lista"></div>
     <div id="misacuarios-empty" class="empty-state" style="display:none;">
@@ -1664,10 +1956,6 @@ function renderMisAcuarios() {
 // FORO DE ACUARIOS (Supabase, sin login)
 // ══════════════════════════════════════════════
 
-const SUPABASE_URL = 'https://ruxxatzwgqqjgdfnahir.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_36MZSCr4-wtDHCXht_f2GQ_2uMhZPNK';
-const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
-
 function abrirFormularioForo() {
   const wrap = document.getElementById('foro-form-wrap');
   wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
@@ -1720,10 +2008,11 @@ async function publicarForo() {
       return;
     }
 
-    msgEl.textContent = '¡Publicado!';
+    msgEl.textContent = '¡Publicado! +10 puntos';
     fotoInput.value = '';
     document.getElementById('foro-nombre').value = '';
     document.getElementById('foro-descripcion').value = '';
+    await sumarPuntos(10);
     setTimeout(() => {
       document.getElementById('foro-form-wrap').style.display = 'none';
       msgEl.textContent = '';
@@ -1766,10 +2055,12 @@ async function renderForo() {
           <span class="foro-post-nombre">${post.nombre}</span>
           <span class="foro-post-fecha">${fecha}</span>
           ${post.descripcion ? `<div class="foro-post-desc">${post.descripcion}</div>` : ''}
+          ${comentariosBloqueHTML('foro', post.id)}
         </div>
       </div>
     `;
   }).join('');
+  data.forEach(post => cargarComentarios('foro', post.id));
 }
 
 // ══════════════════════════════════════════════
@@ -1824,12 +2115,13 @@ async function publicarBitacora() {
       return;
     }
 
-    msgEl.textContent = '¡Publicado!';
+    msgEl.textContent = '¡Publicado! +10 puntos';
     fotoInput.value = '';
     document.getElementById('bitacora-nombre').value = '';
     document.getElementById('bitacora-lugar').value = '';
     document.getElementById('bitacora-especie').value = '';
     document.getElementById('bitacora-notas').value = '';
+    await sumarPuntos(10);
     setTimeout(() => {
       document.getElementById('bitacora-form-wrap').style.display = 'none';
       msgEl.textContent = '';
@@ -1872,10 +2164,71 @@ async function renderBitacora() {
           <span class="foro-post-nombre">${post.especie} — ${post.lugar}</span>
           <span class="foro-post-fecha">${fecha}</span>
           <div class="foro-post-desc">Por ${post.nombre}${post.notas ? `. ${post.notas}` : ''}</div>
+          ${comentariosBloqueHTML('bitacora', post.id)}
         </div>
       </div>
     `;
   }).join('');
+  data.forEach(post => cargarComentarios('bitacora', post.id));
+}
+
+// ══════════════════════════════════════════════
+// COMENTARIOS (foro y bitácora)
+// ══════════════════════════════════════════════
+
+function comentariosBloqueHTML(tipo, postId) {
+  const contId = `comentarios_${tipo}_${postId}`;
+  return `
+    <div class="comentarios-bloque">
+      <div id="${contId}" class="comentarios-lista"></div>
+      <div style="display:flex; gap:6px; margin-top:8px;">
+        <input type="text" id="input_${contId}" placeholder="Escribí un comentario..." style="flex:1; border:1px solid var(--border); border-radius:8px; padding:7px 9px; font-size:12px;" />
+        <button onclick="publicarComentario('${tipo}','${postId}')" style="background:var(--blue); color:white; border:none; border-radius:8px; padding:7px 12px; font-size:12px; font-weight:600; cursor:pointer;">Enviar</button>
+      </div>
+    </div>
+  `;
+}
+
+async function cargarComentarios(tipo, postId) {
+  if (!supabaseClient) return;
+  const { data } = await supabaseClient
+    .from('comentarios')
+    .select('*')
+    .eq('tipo', tipo)
+    .eq('post_id', postId)
+    .order('creado_en', { ascending: true });
+
+  const cont = document.getElementById(`comentarios_${tipo}_${postId}`);
+  if (!cont) return;
+  if (!data || data.length === 0) {
+    cont.innerHTML = '';
+    return;
+  }
+  cont.innerHTML = data.map(c => `
+    <div class="comentario-item"><strong>${c.nombre}:</strong> ${c.texto}</div>
+  `).join('');
+}
+
+async function publicarComentario(tipo, postId) {
+  const usuario = getUsuarioLocal();
+  if (!usuario) {
+    alert('Necesitás identificarte para comentar. Volvé al inicio de la app.');
+    return;
+  }
+  const inputId = `input_comentarios_${tipo}_${postId}`;
+  const input = document.getElementById(inputId);
+  const texto = input.value.trim();
+  if (!texto || !supabaseClient) return;
+
+  const { error } = await supabaseClient
+    .from('comentarios')
+    .insert([{ tipo, post_id: postId, whatsapp: usuario.whatsapp, nombre: usuario.nombre, texto }]);
+
+  if (!error) {
+    input.value = '';
+    await sumarPuntos(2);
+    cargarComentarios(tipo, postId);
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -1903,6 +2256,11 @@ function installApp() {
     const btn = document.getElementById('install-btn');
     if (btn) btn.style.display = 'none';
   });
+}
+
+if (new URLSearchParams(window.location.search).has('admin')) {
+  document.getElementById('screen-splash').classList.remove('active');
+  document.getElementById('screen-admin').classList.add('active');
 }
 </script>
 </body>
