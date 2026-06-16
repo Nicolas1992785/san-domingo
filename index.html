@@ -13,6 +13,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="San Domingo" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -340,6 +341,23 @@
     .status-ok { background: var(--greenLight); color: var(--greenDark); }
     .status-warn { background: #FAEEDA; color: #633806; }
     .status-bad { background: #FCEBEB; color: #791F1F; }
+    .foro-post {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .foro-post img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+    .foro-post-body { padding: 12px; }
+    .foro-post-nombre { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .foro-post-fecha { font-size: 11px; color: var(--gray); margin-left: 6px; }
+    .foro-post-desc { font-size: 13px; color: var(--darkGray); margin-top: 4px; }
     .section-label {
       font-size: 14px;
       font-weight: 700;
@@ -737,9 +755,40 @@
       </div>
     </div>
 
+    <div id="tab-foro" class="content" style="display:none; flex-direction:column;">
+      <p class="section-label">Foro de acuarios</p>
+      <button class="tool-button" style="margin-bottom:14px;" onclick="abrirFormularioForo()">
+        <i class="ti ti-camera" style="margin-right:6px;"></i>Compartir foto de mi acuario
+      </button>
+      <div id="foro-form-wrap" style="display:none; background:var(--white); border:1px solid var(--border); border-radius:14px; padding:14px; margin-bottom:14px;">
+        <div class="tool-field">
+          <label>Foto (tomá una con la cámara o elegí de tu galería)</label>
+          <input type="file" id="foro-foto" accept="image/*" capture="environment" />
+        </div>
+        <div class="tool-field">
+          <label>Tu nombre o apodo</label>
+          <input type="text" id="foro-nombre" placeholder="Ej: Nahuel" />
+        </div>
+        <div class="tool-field">
+          <label>Descripción (opcional)</label>
+          <input type="text" id="foro-descripcion" placeholder="Ej: Mi acuario de 100 litros" />
+        </div>
+        <button class="tool-button" onclick="publicarForo()">Publicar</button>
+        <p id="foro-form-msg" class="tool-note"></p>
+      </div>
+      <div id="foro-lista"></div>
+      <div id="foro-empty" class="empty-state" style="display:none;">
+        <i class="ti ti-photo"></i>
+        <span>Todavía no hay publicaciones. ¡Sé el primero en compartir tu acuario!</span>
+      </div>
+    </div>
+
     <div class="tab-bar">
       <button class="tab-item active" id="tab-btn-home" onclick="showTab('home')">
         <i class="ti ti-grid-dots"></i> Catálogo
+      </button>
+      <button class="tab-item" id="tab-btn-foro" style="display:none;" onclick="showTab('foro')">
+        <i class="ti ti-users"></i> Foro
       </button>
       <button class="tab-item" id="tab-btn-saved" onclick="showTab('saved')">
         <i class="ti ti-bookmark"></i> Guardados
@@ -845,13 +894,15 @@ function enterWorld(world) {
   document.getElementById('screen-hub').classList.remove('active');
   document.getElementById('screen-main').classList.add('active');
   document.getElementById('tools-section').style.display = world === 'acuariofilia' ? 'block' : 'none';
+  document.getElementById('tab-btn-foro').style.display = world === 'acuariofilia' ? 'flex' : 'none';
+  showTab('home');
   renderHome();
   renderCategories();
   renderBanner();
 }
 
 function showTab(tab) {
-  ['home','cart','saved'].forEach(t => {
+  ['home','cart','saved','foro'].forEach(t => {
     document.getElementById(`tab-${t}`).style.display = 'none';
     document.getElementById(`tab-btn-${t}`).classList.remove('active');
   });
@@ -862,6 +913,7 @@ function showTab(tab) {
   if (tab === 'saved') renderSaved();
   if (tab === 'cart') renderCart();
   if (tab === 'home') renderHome();
+  if (tab === 'foro') renderForo();
 }
 
 const BANNER_SLIDES = [
@@ -1225,6 +1277,118 @@ function calcularCambioAgua() {
   document.getElementById('cambio-resultado').innerHTML = `
     <div class="tool-result">Próximo cambio de agua sugerido: <strong>${formato}</strong></div>
   `;
+}
+
+// ══════════════════════════════════════════════
+// FORO DE ACUARIOS (Supabase, sin login)
+// ══════════════════════════════════════════════
+
+const SUPABASE_URL = 'https://ruxxatzwgqqjgdfnahir.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_36MZSCr4-wtDHCXht_f2GQ_2uMhZPNK';
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+function abrirFormularioForo() {
+  const wrap = document.getElementById('foro-form-wrap');
+  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+}
+
+async function publicarForo() {
+  const fotoInput = document.getElementById('foro-foto');
+  const nombre = document.getElementById('foro-nombre').value.trim();
+  const descripcion = document.getElementById('foro-descripcion').value.trim();
+  const msgEl = document.getElementById('foro-form-msg');
+
+  if (!fotoInput.files || fotoInput.files.length === 0) {
+    msgEl.textContent = 'Elegí o tomá una foto antes de publicar.';
+    return;
+  }
+  if (!nombre) {
+    msgEl.textContent = 'Ingresá tu nombre o apodo.';
+    return;
+  }
+  if (!supabaseClient) {
+    msgEl.textContent = 'No se pudo conectar con el servidor. Probá de nuevo más tarde.';
+    return;
+  }
+
+  msgEl.textContent = 'Subiendo foto...';
+  const file = fotoInput.files[0];
+  const ext = file.name.split('.').pop() || 'jpg';
+  const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+
+  try {
+    const { error: uploadError } = await supabaseClient.storage
+      .from('foro-fotos')
+      .upload(fileName, file);
+
+    if (uploadError) {
+      msgEl.textContent = 'No se pudo subir la foto. Intentá de nuevo.';
+      return;
+    }
+
+    const { data: publicUrlData } = supabaseClient.storage
+      .from('foro-fotos')
+      .getPublicUrl(fileName);
+
+    const { error: insertError } = await supabaseClient
+      .from('foro_posts')
+      .insert([{ nombre, descripcion, foto_url: publicUrlData.publicUrl }]);
+
+    if (insertError) {
+      msgEl.textContent = 'No se pudo publicar. Intentá de nuevo.';
+      return;
+    }
+
+    msgEl.textContent = '¡Publicado!';
+    fotoInput.value = '';
+    document.getElementById('foro-nombre').value = '';
+    document.getElementById('foro-descripcion').value = '';
+    setTimeout(() => {
+      document.getElementById('foro-form-wrap').style.display = 'none';
+      msgEl.textContent = '';
+    }, 1200);
+    renderForo();
+  } catch (e) {
+    msgEl.textContent = 'Ocurrió un error. Intentá de nuevo.';
+  }
+}
+
+async function renderForo() {
+  const lista = document.getElementById('foro-lista');
+  const empty = document.getElementById('foro-empty');
+
+  if (!supabaseClient) {
+    lista.innerHTML = '';
+    empty.style.display = 'flex';
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('foro_posts')
+    .select('*')
+    .order('creado_en', { ascending: false })
+    .limit(50);
+
+  if (error || !data || data.length === 0) {
+    lista.innerHTML = '';
+    empty.style.display = 'flex';
+    return;
+  }
+
+  empty.style.display = 'none';
+  lista.innerHTML = data.map(post => {
+    const fecha = new Date(post.creado_en).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
+    return `
+      <div class="foro-post">
+        <img src="${post.foto_url}" alt="Acuario de ${post.nombre}" />
+        <div class="foro-post-body">
+          <span class="foro-post-nombre">${post.nombre}</span>
+          <span class="foro-post-fecha">${fecha}</span>
+          ${post.descripcion ? `<div class="foro-post-desc">${post.descripcion}</div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 // ══════════════════════════════════════════════
