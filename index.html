@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>San Domingo — Artículos para la Pesca</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon-192.png" />
+  <link rel="apple-touch-icon" href="icon-180.png" />
+  <meta name="theme-color" content="#042C53" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="San Domingo" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -429,6 +437,9 @@
       Chacabuco 711 y Congreso, Rodeo de la Cruz
     </a>
     <button class="btn-enter" onclick="showMain()">Entrar</button>
+    <button id="install-btn" onclick="installApp()" style="display:none; align-items:center; gap:6px; background:none; border:none; color:var(--blue); font-size:13px; font-weight:600; margin-top:16px; cursor:pointer;">
+      <i class="ti ti-download"></i> Instalar app en mi celular
+    </button>
   </div>
 
   <div id="screen-main" class="screen" style="flex-direction:column;">
@@ -770,6 +781,33 @@ function renderSaved() {
     empty.style.display = 'none';
     grid.innerHTML = list.map(p => productCardHTML(p)).join('');
   }
+}
+
+// ══════════════════════════════════════════════
+// PWA: registrar service worker + botón instalar
+// ══════════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  const btn = document.getElementById('install-btn');
+  if (btn) btn.style.display = 'flex';
+});
+
+function installApp() {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(() => {
+    deferredInstallPrompt = null;
+    const btn = document.getElementById('install-btn');
+    if (btn) btn.style.display = 'none';
+  });
 }
 </script>
 </body>
