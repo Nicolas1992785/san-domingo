@@ -1589,13 +1589,15 @@ function showTab(tab) {
   if (tab === 'bitacora') renderBitacora();
 }
 
-const BANNER_SLIDES = [
-  { video: 'imagenes/banner-destacado.mp4' },
-];
+const BANNER_SLIDES_BY_WORLD = {
+  acuariofilia: [{ video: 'imagenes/banner-destacado.mp4' }],
+  pesca: [{ video: 'imagenes/pescando.mp4' }],
+};
 
 function renderBanner() {
   const wrap = document.querySelector('.banner-carousel').parentElement;
-  if (currentWorld !== 'acuariofilia') {
+  const slides = BANNER_SLIDES_BY_WORLD[currentWorld];
+  if (!slides) {
     document.getElementById('banner-carousel').style.display = 'none';
     document.getElementById('banner-dots').style.display = 'none';
     return;
@@ -1603,7 +1605,7 @@ function renderBanner() {
   document.getElementById('banner-carousel').style.display = 'flex';
   document.getElementById('banner-dots').style.display = 'none';
   const track = document.getElementById('banner-track');
-  track.innerHTML = BANNER_SLIDES.map(s => `
+  track.innerHTML = slides.map(s => `
     <div class="banner-slide">
       ${s.video
         ? `<video src="${s.video}" autoplay muted loop playsinline></video>`
