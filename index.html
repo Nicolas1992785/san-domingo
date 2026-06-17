@@ -1591,10 +1591,7 @@ function showTab(tab) {
 }
 
 const BANNER_SLIDES = [
-  { video: 'imagenes/banner-destacado.mp4', label: 'Mirá nuestro local' },
-  { img: 'imagenes/discusredmap.jpg', label: 'Discus disponibles' },
-  { img: 'imagenes/escalar.jpg', label: 'Escalares en stock' },
-  { img: 'imagenes/tetraneon.jpg', label: 'Tetra Neón' },
+  { video: 'imagenes/banner-destacado.mp4' },
 ];
 
 function renderBanner() {
@@ -1605,18 +1602,15 @@ function renderBanner() {
     return;
   }
   document.getElementById('banner-carousel').style.display = 'flex';
-  document.getElementById('banner-dots').style.display = 'flex';
+  document.getElementById('banner-dots').style.display = 'none';
   const track = document.getElementById('banner-track');
-  const dots = document.getElementById('banner-dots');
   track.innerHTML = BANNER_SLIDES.map(s => `
     <div class="banner-slide">
       ${s.video
         ? `<video src="${s.video}" autoplay muted loop playsinline></video>`
-        : `<img src="${s.img}" alt="${s.label}" />`}
-      <div class="banner-label">${s.label}</div>
+        : `<img src="${s.img}" alt="" />`}
     </div>
   `).join('');
-  dots.innerHTML = BANNER_SLIDES.map((_, i) => `<div class="banner-dot ${i === 0 ? 'active' : ''}" data-i="${i}"></div>`).join('');
   const carousel = document.getElementById('banner-carousel');
   carousel.addEventListener('scroll', () => {
     const i = Math.round(carousel.scrollLeft / carousel.offsetWidth);
@@ -1624,12 +1618,6 @@ function renderBanner() {
   });
 
   if (window.bannerAutoInterval) clearInterval(window.bannerAutoInterval);
-  window.bannerAutoInterval = setInterval(() => {
-    const totalSlides = BANNER_SLIDES.length;
-    const current = Math.round(carousel.scrollLeft / carousel.offsetWidth);
-    const next = (current + 1) % totalSlides;
-    carousel.scrollTo({ left: next * carousel.offsetWidth, behavior: 'smooth' });
-  }, 2500);
 }
 
 function renderCategories() {
