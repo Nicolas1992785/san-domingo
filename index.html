@@ -271,6 +271,7 @@
       background: var(--lightBlue);
     }
     .banner-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .banner-slide video { width: 100%; height: 100%; object-fit: cover; }
     .banner-slide .banner-label {
       position: absolute;
       bottom: 0; left: 0; right: 0;
@@ -1590,6 +1591,7 @@ function showTab(tab) {
 }
 
 const BANNER_SLIDES = [
+  { video: 'imagenes/banner-destacado.mp4', label: 'Mirá nuestro local' },
   { img: 'imagenes/discusredmap.jpg', label: 'Discus disponibles' },
   { img: 'imagenes/escalar.jpg', label: 'Escalares en stock' },
   { img: 'imagenes/tetraneon.jpg', label: 'Tetra Neón' },
@@ -1608,7 +1610,9 @@ function renderBanner() {
   const dots = document.getElementById('banner-dots');
   track.innerHTML = BANNER_SLIDES.map(s => `
     <div class="banner-slide">
-      <img src="${s.img}" alt="${s.label}" />
+      ${s.video
+        ? `<video src="${s.video}" autoplay muted loop playsinline></video>`
+        : `<img src="${s.img}" alt="${s.label}" />`}
       <div class="banner-label">${s.label}</div>
     </div>
   `).join('');
