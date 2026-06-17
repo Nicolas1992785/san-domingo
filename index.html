@@ -648,6 +648,29 @@
       gap: 6px;
     }
     .btn-buy:active { opacity: 0.85; }
+    .ver-info-link {
+      background: none;
+      border: none;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 0;
+      margin-bottom: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .pez-info-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .pez-info-row:last-of-type { border-bottom: none; }
+    .pez-info-row i { font-size: 20px; color: var(--blue); flex-shrink: 0; }
+    .pez-info-row strong { display: block; font-size: 12px; color: var(--navy); }
+    .pez-info-row span { display: block; font-size: 13px; color: var(--darkGray); margin-top: 1px; }
     .qty-stepper {
       display: flex;
       align-items: center;
@@ -1412,9 +1435,36 @@ function renderTools() {
 }
 
 const PRODUCTS = [
-  { id: '2', name: 'Discus', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/discusredmap.jpg' },
-  { id: '3', name: 'Escalar', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/escalar.jpg' },
-  { id: '4', name: 'Tetra Neón', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/tetraneon.jpg' },
+  { id: '2', name: 'Discus', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/discusredmap.jpg',
+    info: {
+      descripcion: 'Conocido como el "rey del acuario", el Discus es un cíclido amazónico de cuerpo redondeado y colores vibrantes que pueden cambiar según su estado de ánimo. Es un pez pacífico, inteligente y de movimientos elegantes, ideal para acuaristas que ya tienen algo de experiencia.',
+      temperatura: '28 a 30 °C',
+      ph: '6.0 a 7.0',
+      litros: 'Mínimo 200 litros por pareja',
+      alimentacion: 'Necesita alimento variado y de calidad: alimento vivo o congelado (larvas, gusanos), complementado con escamas o papillas. Una dieta pobre afecta su color y salud.',
+      consejos: 'Es sensible a cambios bruscos en el agua, así que conviene medir seguido PH y amoníaco. Se recomienda mantenerlos en grupos de al menos 5 ejemplares, con buena filtración y abundantes plantas o raíces donde puedan refugiarse.'
+    }
+  },
+  { id: '3', name: 'Escalar', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/escalar.jpg',
+    info: {
+      descripcion: 'También llamado Pez Ángel, el Escalar es un cíclido sudamericano de cuerpo aplanado y aletas largas en forma de vela. Es pacífico aunque puede volverse algo territorial, especialmente al formar pareja, y es una excelente opción para acuarios comunitarios.',
+      temperatura: '24 a 28 °C',
+      ph: '6.0 a 7.5',
+      litros: 'Mínimo 100 litros',
+      alimentacion: 'Omnívoro: acepta escamas y gránulos de calidad, complementados con alimento vivo o congelado como larvas de mosquito. Conviene variar la dieta para mantener su color y salud.',
+      consejos: 'Crece bastante en altura por sus aletas, así que el acuario necesita buena profundidad vertical. Es recomendable mantenerlos en grupos de 4 a 6 ejemplares jóvenes para que se formen parejas de forma natural y se reduzca la agresividad.'
+    }
+  },
+  { id: '4', name: 'Tetra Neón', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/tetraneon.jpg',
+    info: {
+      descripcion: 'El Tetra Neón es uno de los peces más populares en acuarofilia por su llamativa franja azul y roja que recorre su pequeño cuerpo. Es un pez de cardumen, muy pacífico, ideal tanto para principiantes como para acuarios comunitarios.',
+      temperatura: '22 a 27 °C',
+      ph: '5.5 a 6.5',
+      litros: 'Mínimo 50 litros para un grupo pequeño',
+      alimentacion: 'Omnívoro: escamas pequeñas o alimento en polvo de buena calidad, complementado con alimento vivo o congelado como artemia, en pequeñas porciones varias veces al día.',
+      consejos: 'Nunca debe mantenerse solo: necesita vivir en grupos de al menos 6 a 10 ejemplares para sentirse seguro y mostrar todo su color. Evitar mezclarlo con peces grandes o agresivos como cíclidos, y mantener una iluminación tenue con plantas para imitar su hábitat natural.'
+    }
+  },
   { id: '1', name: 'Medida de Mojarras Medianas', brand: '', category: 'mojarras', price: 6000, stock: 99, featured: true, offer: false, img: 'imagenes/mojarras.png' },
 ];
 
@@ -1604,6 +1654,7 @@ function productCardHTML(p) {
         <div class="product-brand">${p.brand}</div>
         ${priceHTML}
         <div class="${lowStock ? 'low-stock' : 'in-stock'}">${lowStock ? `Quedan ${p.stock}` : 'En stock'}</div>
+        ${p.info ? `<button class="ver-info-link" onclick="abrirInfoPez('${p.id}')"><i class="ti ti-info-circle" style="margin-right:4px;"></i>Cuidados y consejos</button>` : ''}
         <div id="buy-control-${p.id}">${buyControlHTML}</div>
       </div>
     </div>
@@ -1623,6 +1674,24 @@ function refreshCardStepper(id) {
       </div>
     `
     : `<button class="btn-buy" onclick="addToCart('${id}'); refreshCardStepper('${id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Comprar</button>`;
+}
+
+function abrirInfoPez(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p || !p.info) return;
+  const i = p.info;
+  document.getElementById('tool-modal-title').textContent = p.name;
+  document.getElementById('tool-modal-body').innerHTML = `
+    <p style="margin-bottom:14px;">${i.descripcion}</p>
+    <div class="pez-info-row"><i class="ti ti-thermometer"></i><div><strong>Temperatura</strong><span>${i.temperatura}</span></div></div>
+    <div class="pez-info-row"><i class="ti ti-droplet"></i><div><strong>PH</strong><span>${i.ph}</span></div></div>
+    <div class="pez-info-row"><i class="ti ti-aquarium"></i><div><strong>Tamaño de acuario</strong><span>${i.litros}</span></div></div>
+    <p style="margin:14px 0 6px; font-weight:700; color:var(--navy); font-size:13px;">Alimentación</p>
+    <p style="font-size:13px; color:var(--darkGray);">${i.alimentacion}</p>
+    <p style="margin:14px 0 6px; font-weight:700; color:var(--navy); font-size:13px;">Consejos</p>
+    <p style="font-size:13px; color:var(--darkGray);">${i.consejos}</p>
+  `;
+  document.getElementById('tool-modal').classList.add('active');
 }
 
 function addToCart(id) {
