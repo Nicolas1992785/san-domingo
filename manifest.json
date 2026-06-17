@@ -1,38 +1,2522 @@
-{
-  "name": "San Domingo - Artículos para la Pesca",
-  "short_name": "San Domingo",
-  "description": "Catálogo de artículos de pesca y acuarismo. Pedidos por WhatsApp.",
-  "start_url": "/",
-  "scope": "/",
-  "id": "/",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#F1EFE8",
-  "theme_color": "#042C53",
-  "icons": [
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <title>San Domingo — Artículos para la Pesca</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icon-180.png" />
+  <meta name="theme-color" content="#042C53" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="San Domingo" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --navy:      #042C53;
+      --blue:      #185FA5;
+      --lightBlue: #E6F1FB;
+      --white:     #FFFFFF;
+      --lightGray: #F1EFE8;
+      --gray:      #888780;
+      --darkGray:  #444441;
+      --green:     #639922;
+      --greenDark: #27500A;
+      --greenLight:#EAF3DE;
+      --red:       #A32D2D;
+      --border:    #D3D1C7;
     }
-  ]
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 20px 0;
+    }
+
+    @media (max-width: 480px) {
+      body { background: var(--lightGray); padding: 0; align-items: stretch; min-height: 100dvh; }
+      #app {
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    }
+
+    @media (display-mode: standalone), (display-mode: fullscreen) {
+      body { background: var(--lightGray); padding: 0; align-items: stretch; min-height: 100dvh; }
+      #app {
+        width: 100%;
+        max-width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    }
+
+    #app {
+      width: 390px;
+      min-height: 844px;
+      background: var(--lightGray);
+      border-radius: 40px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .screen { display: none; flex-direction: column; flex: 1; }
+    .screen.active { display: flex; }
+
+    #screen-splash {
+      background: var(--white);
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 40px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .splash-logo-wrap {
+      position: relative;
+      z-index: 2;
+      animation: splashLogoIn 0.8s ease-out;
+    }
+    .splash-fish {
+      animation: swimFish 3.2s ease-in-out infinite;
+      transform-origin: 50% 50%;
+    }
+    @keyframes splashLogoIn {
+      0% { opacity: 0; transform: scale(0.7) translateY(12px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes swimFish {
+      0%, 100% { transform: translateX(-4px) rotate(-3deg); }
+      50% { transform: translateX(4px) rotate(3deg); }
+    }
+    .splash-title, .splash-subtitle, .splash-address, .btn-enter {
+      position: relative;
+      z-index: 2;
+    }
+    .splash-bubble {
+      position: absolute;
+      bottom: -20px;
+      border-radius: 50%;
+      background: var(--lightBlue);
+      opacity: 0.7;
+      animation: bubbleRise linear infinite;
+      z-index: 1;
+    }
+    @keyframes bubbleRise {
+      0% { transform: translateY(0) translateX(0); opacity: 0.7; }
+      90% { opacity: 0.5; }
+      100% { transform: translateY(-720px) translateX(var(--drift, 0px)); opacity: 0; }
+    }
+    #screen-splash svg { margin-bottom: 20px; }
+    .splash-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+    .splash-subtitle {
+      font-size: 12px;
+      color: var(--gray);
+      letter-spacing: 3px;
+      margin-bottom: 40px;
+    }
+    .btn-enter {
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      padding: 14px 56px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-enter:active { opacity: 0.85; }
+
+    #screen-main {
+      flex-direction: column;
+      position: relative;
+    }
+
+    .whatsapp-float-btn {
+      position: absolute;
+      bottom: 80px;
+      right: 16px;
+      width: 52px;
+      height: 52px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      z-index: 999;
+      text-decoration: none;
+    }
+
+    .header {
+      background: var(--white);
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .header-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .header-address {
+      font-size: 10px;
+      color: var(--blue);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .header-text-block { flex: 1; min-width: 0; }
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      position: relative;
+      color: var(--navy);
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .badge {
+      position: absolute;
+      top: 0; right: 0;
+      background: var(--green);
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      border-radius: 8px;
+      min-width: 16px;
+      height: 16px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0 3px;
+    }
+    .badge.visible { display: flex; }
+    .search-input {
+      width: 100%;
+      background: var(--lightGray);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--navy);
+      outline: none;
+    }
+    .search-input::placeholder { color: var(--gray); }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .banner-carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 10px;
+      margin-bottom: 8px;
+      scrollbar-width: none;
+    }
+    .banner-carousel::-webkit-scrollbar { display: none; }
+    .banner-track { display: flex; gap: 10px; }
+    .banner-slide {
+      scroll-snap-align: center;
+      flex-shrink: 0;
+      width: 100%;
+      height: 140px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      background: var(--lightBlue);
+    }
+    .banner-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .banner-slide .banner-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(4,44,83,0.75));
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 24px 12px 10px;
+    }
+    .banner-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; }
+    .banner-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
+    .banner-dot.active { background: var(--blue); }
+    .puntos-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--navy);
+      color: white;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+    .puntos-banner i:first-child { color: #FAC775; }
+    .puntos-banner-titulo { font-size: 13px; font-weight: 700; }
+    .puntos-banner-sub { font-size: 11px; opacity: 0.8; margin-top: 1px; }
+    .hub-card {
+      position: relative;
+      height: 160px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 14px;
+      cursor: pointer;
+      background: var(--lightBlue);
+    }
+    .hub-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hub-card-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hub-card-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(4,44,83,0.8));
+      color: white;
+      padding: 30px 16px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .tool-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      cursor: pointer;
+    }
+    .tool-card i { font-size: 24px; color: var(--blue); }
+    .tool-card span {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-top: 8px;
+    }
+    .tool-modal {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4,44,83,0.45);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .tool-modal.active { display: flex; }
+    .tool-modal-card {
+      background: var(--white);
+      border-radius: 16px;
+      width: 100%;
+      max-height: 90%;
+      overflow-y: auto;
+      padding: 18px;
+    }
+    .tool-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .tool-modal-title { font-size: 16px; font-weight: 700; color: var(--navy); }
+    .tool-modal-body { font-size: 14px; color: var(--darkGray); }
+    .tool-field { margin-bottom: 12px; }
+    .tool-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--darkGray);
+      margin-bottom: 4px;
+    }
+    .tool-field input, .tool-field select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 10px;
+      font-size: 14px;
+      color: var(--navy);
+    }
+    .tool-button {
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 11px;
+      font-size: 14px;
+      font-weight: 700;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    .tool-result {
+      background: var(--lightBlue);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--navy);
+    }
+    .tool-result strong { font-size: 18px; }
+    .tool-note {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 8px;
+    }
+    .compat-result-ok { color: var(--green); font-weight: 700; }
+    .compat-result-bad { color: var(--red); font-weight: 700; }
+    .param-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .param-row label { font-size: 13px; color: var(--darkGray); flex: 1; }
+    .param-status { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 8px; }
+    .status-ok { background: var(--greenLight); color: var(--greenDark); }
+    .status-warn { background: #FAEEDA; color: #633806; }
+    .status-bad { background: #FCEBEB; color: #791F1F; }
+    .foro-post {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .foro-post img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+    .foro-post-body { padding: 12px; }
+    .foro-post-nombre { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .foro-post-fecha { font-size: 11px; color: var(--gray); margin-left: 6px; }
+    .foro-post-desc { font-size: 13px; color: var(--darkGray); margin-top: 4px; }
+    .comentarios-bloque { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px; }
+    .comentarios-lista { display: flex; flex-direction: column; gap: 5px; margin-bottom: 4px; }
+    .comentario-item { font-size: 12px; color: var(--darkGray); background: var(--lightGray); border-radius: 8px; padding: 6px 9px; }
+    .comentario-item strong { color: var(--navy); }
+    .lugar-card {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .lugar-card i { font-size: 20px; color: var(--blue); margin-top: 2px; }
+    .lugar-nombre { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .lugar-badge {
+      display: inline-block;
+      background: var(--lightBlue);
+      color: var(--blue);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    .lugar-desc { font-size: 12px; color: var(--darkGray); margin-top: 2px; }
+    .luna-visual { text-align: center; padding: 10px 0; }
+    .luna-fase-nombre { font-size: 16px; font-weight: 700; color: var(--navy); margin-top: 10px; }
+    .luna-fase-desc { font-size: 12px; color: var(--gray); margin-top: 4px; }
+    .clima-actual { text-align: center; padding: 6px 0 16px; }
+    .clima-temp { font-size: 36px; font-weight: 700; color: var(--navy); }
+    .clima-desc { font-size: 13px; color: var(--gray); margin-top: 2px; }
+    .clima-detalle-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--darkGray); padding: 7px 0; border-bottom: 1px solid var(--border); }
+    .clima-detalle-row:last-child { border-bottom: none; }
+    .acuario-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .acuario-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .acuario-nombre { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .acuario-detalle { font-size: 12px; color: var(--darkGray); margin-top: 4px; }
+    .acuario-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .acuario-actions button {
+      flex: 1;
+      border: 1px solid var(--border);
+      background: var(--white);
+      border-radius: 8px;
+      padding: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy);
+      cursor: pointer;
+    }
+    .section-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--darkGray);
+      margin-bottom: 10px;
+      margin-top: 4px;
+    }
+    .section-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .clear-link {
+      font-size: 13px;
+      color: var(--blue);
+      font-weight: 600;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .category-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .category-card i { color: var(--blue); font-size: 18px; }
+    .category-card:active { opacity: 0.8; }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .product-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 8px rgba(4,44,83,0.08);
+    }
+    .product-icon-wrap {
+      background: var(--lightBlue);
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .product-icon-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .product-icon-circle i { font-size: 24px; color: var(--navy); }
+    .offer-badge {
+      position: absolute;
+      top: 6px; left: 6px;
+      background: var(--greenDark);
+      color: var(--greenLight);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .save-btn {
+      position: absolute;
+      top: 6px; right: 6px;
+      background: rgba(255,255,255,0.92);
+      border: none;
+      border-radius: 50%;
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--gray);
+      z-index: 5;
+    }
+    .save-btn.saved { color: var(--blue); }
+    .product-info { padding: 10px; }
+    .product-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      min-height: 34px;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .product-brand { font-size: 11px; color: var(--gray); margin-top: 2px; }
+    .product-price { font-size: 20px; font-weight: 700; color: var(--blue); margin-top: 4px; }
+    .in-stock { font-size: 11px; color: var(--gray); margin-top: 2px; margin-bottom: 8px; }
+    .low-stock { font-size: 11px; color: var(--red); font-weight: 600; margin-top: 2px; margin-bottom: 8px; }
+    .btn-buy {
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-buy:active { opacity: 0.85; }
+    .ver-info-link {
+      background: none;
+      border: none;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 0;
+      margin-bottom: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .pez-info-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .pez-info-row:last-of-type { border-bottom: none; }
+    .pez-info-row i { font-size: 20px; color: var(--blue); flex-shrink: 0; }
+    .pez-info-row strong { display: block; font-size: 12px; color: var(--navy); }
+    .pez-info-row span { display: block; font-size: 13px; color: var(--darkGray); margin-top: 1px; }
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--blue);
+      border-radius: 10px;
+      padding: 4px;
+      width: 100%;
+    }
+    .qty-stepper-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qty-stepper-btn:active { background: rgba(255,255,255,0.35); }
+    .qty-stepper-num {
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      flex: 1;
+      text-align: center;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 16px;
+      color: var(--gray);
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .empty-state i { font-size: 32px; }
+
+    .cart-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cart-icon {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--lightBlue);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .cart-icon i { font-size: 20px; color: var(--blue); }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+    .cart-item-price { font-size: 12px; color: var(--gray); margin-top: 2px; }
+    .qty-controls { display: flex; align-items: center; gap: 6px; }
+    .qty-btn {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--lightGray);
+      border: none;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .qty-num { font-size: 13px; font-weight: 600; min-width: 18px; text-align: center; color: var(--navy); }
+    .cart-subtotal { font-size: 13px; font-weight: 700; color: var(--navy); min-width: 64px; text-align: right; }
+
+    .cart-footer {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 16px;
+      flex-shrink: 0;
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+    .total-label { font-size: 15px; font-weight: 600; color: var(--navy); }
+    .total-value { font-size: 22px; font-weight: 700; color: var(--navy); }
+    .btn-checkout {
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-checkout:active { opacity: 0.85; }
+
+    .tab-bar {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-shrink: 0;
+    }
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0 8px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      gap: 3px;
+      color: var(--gray);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .tab-item i { font-size: 20px; }
+    .tab-item.active { color: var(--blue); }
+
+    .footer-sig {
+      text-align: center;
+      font-size: 10px;
+      color: var(--gray);
+      font-style: italic;
+      padding: 5px;
+      background: var(--lightGray);
+      flex-shrink: 0;
+    }
+
+    .content::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <div id="screen-splash" class="screen active">
+    <div class="splash-bubble" style="width:14px; height:14px; left:18%; animation-duration:6s; animation-delay:0s; --drift:10px;"></div>
+    <div class="splash-bubble" style="width:9px; height:9px; left:32%; animation-duration:4.5s; animation-delay:1.2s; --drift:-8px;"></div>
+    <div class="splash-bubble" style="width:18px; height:18px; left:68%; animation-duration:7s; animation-delay:0.6s; --drift:-12px;"></div>
+    <div class="splash-bubble" style="width:11px; height:11px; left:80%; animation-duration:5s; animation-delay:2s; --drift:14px;"></div>
+    <div class="splash-bubble" style="width:7px; height:7px; left:50%; animation-duration:4s; animation-delay:2.6s; --drift:6px;"></div>
+    <div class="splash-logo-wrap">
+      <svg class="splash-fish" viewBox="0 0 100 100" width="90" height="90">
+        <circle cx="50" cy="50" r="48" fill="#E6F1FB"/>
+        <path d="M18 50 C 28 32 60 30 78 42 C 66 47 60 50 78 58 C 60 70 28 68 18 50 Z" fill="#185FA5"/>
+        <circle cx="32" cy="46" r="3" fill="#042C53"/>
+        <path d="M78 42 L88 36 M78 58 L88 64" stroke="#042C53" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p class="splash-title">SAN DOMINGO</p>
+    <p class="splash-subtitle">ARTÍCULOS PARA LA PESCA</p>
+    <a href="https://maps.google.com/?q=Chacabuco+711+y+Congreso,+Rodeo+de+la+Cruz,+Guaymallén,+Mendoza" target="_blank" class="splash-address" style="display:flex; align-items:center; gap:6px; color:var(--blue); font-size:13px; margin-bottom:28px; text-decoration:none;">
+      <i class="ti ti-map-pin" style="font-size:16px;"></i>
+      Chacabuco 711 y Congreso, Rodeo de la Cruz
+    </a>
+    <button class="btn-enter" onclick="checkIdentidad()">Entrar</button>
+    <button id="install-btn" onclick="installApp()" style="display:none; align-items:center; gap:6px; background:none; border:none; color:var(--blue); font-size:13px; font-weight:600; margin-top:16px; cursor:pointer; position:relative; z-index:2;">
+      <i class="ti ti-download"></i> Instalar app en mi celular
+    </button>
+  </div>
+
+  <div id="screen-registro" class="screen" style="align-items:center; justify-content:center; padding:40px 28px; background:var(--white);">
+    <i class="ti ti-user-circle" style="font-size:48px; color:var(--blue); margin-bottom:16px;"></i>
+    <p style="font-size:18px; font-weight:700; color:var(--navy); margin-bottom:6px; text-align:center;">¡Bienvenido!</p>
+    <p style="font-size:13px; color:var(--gray); margin-bottom:20px; text-align:center;">Decinos tu nombre y WhatsApp para guardar tus puntos y tus acuarios.</p>
+    <div class="tool-field" style="width:100%;"><label>Nombre</label><input type="text" id="registro-nombre" placeholder="Ej: Nahuel" /></div>
+    <div class="tool-field" style="width:100%;"><label>WhatsApp</label><input type="tel" id="registro-whatsapp" placeholder="Ej: 2616109829" /></div>
+    <div class="tool-field" style="width:100%;"><label>¿Alguien te invitó? (opcional)</label><input type="text" id="registro-codigo" placeholder="Código de invitación" /></div>
+    <button class="tool-button" onclick="registrarUsuario()">Continuar</button>
+    <p id="registro-msg" class="tool-note"></p>
+  </div>
+
+  <div id="screen-admin" class="screen" style="flex-direction:column; background:var(--white);">
+    <div class="header">
+      <div class="header-top">
+        <button class="icon-btn" onclick="goToSplash()" aria-label="Volver">
+          <i class="ti ti-arrow-left"></i>
+        </button>
+        <div class="header-text-block">
+          <div class="header-title">Panel - Sumar puntos</div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div id="admin-login-wrap">
+        <div class="tool-field"><label>Contraseña</label><input type="password" id="admin-password" placeholder="Contraseña del panel" /></div>
+        <button class="tool-button" onclick="loginAdmin()">Ingresar</button>
+        <p id="admin-login-msg" class="tool-note"></p>
+      </div>
+      <div id="admin-panel-wrap" style="display:none;">
+        <div class="tool-result" style="text-align:center; margin-bottom:16px;">
+          <p style="font-size:13px; color:var(--gray); margin-bottom:4px;">Usuarios en la app ahora</p>
+          <strong id="admin-usuarios-vivo" style="font-size:32px;">-</strong>
+        </div>
+        <div class="tool-field"><label>WhatsApp del cliente</label><input type="tel" id="admin-whatsapp" placeholder="Ej: 2616109829" /></div>
+        <button class="tool-button" onclick="buscarClienteAdmin()">Buscar cliente</button>
+        <div id="admin-cliente-resultado"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-hub" class="screen" style="flex-direction:column;">
+    <div class="header" style="border-bottom:none;">
+      <div class="header-top" style="margin-bottom:0;">
+        <svg viewBox="0 0 100 100" width="28" height="28">
+          <circle cx="50" cy="50" r="48" fill="#E6F1FB"/>
+          <path d="M18 50 C 28 32 60 30 78 42 C 66 47 60 50 78 58 C 60 70 28 68 18 50 Z" fill="#185FA5"/>
+          <circle cx="32" cy="46" r="3" fill="#042C53"/>
+        </svg>
+        <div class="header-text-block">
+          <div class="header-title">San Domingo</div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <p class="section-label">¿Qué estás buscando?</p>
+      <div class="hub-card" onclick="enterWorld('acuariofilia')">
+        <img src="imagenes/acuario.jpg" alt="Acuariofilia" />
+        <div class="hub-card-overlay">
+          <i class="ti ti-fish" style="font-size:22px;"></i>
+          <span>Acuariofilia</span>
+        </div>
+      </div>
+      <div class="hub-card" onclick="enterWorld('pesca')">
+        <img src="imagenes/pesca.jpg" alt="Pesca" />
+        <div class="hub-card-overlay">
+          <i class="ti ti-anchor" style="font-size:22px;"></i>
+          <span>Pesca</span>
+        </div>
+      </div>
+    </div>
+    <p class="footer-sig">Creada con amor - Nicolas Genco</p>
+  </div>
+
+  <div id="screen-main" class="screen" style="flex-direction:column;">
+
+    <div class="header">
+      <div class="header-top">
+        <button class="icon-btn" onclick="goToHub()" aria-label="Volver al inicio">
+          <i class="ti ti-home"></i>
+        </button>
+        <svg viewBox="0 0 100 100" width="28" height="28">
+          <circle cx="50" cy="50" r="48" fill="#E6F1FB"/>
+          <path d="M18 50 C 28 32 60 30 78 42 C 66 47 60 50 78 58 C 60 70 28 68 18 50 Z" fill="#185FA5"/>
+          <circle cx="32" cy="46" r="3" fill="#042C53"/>
+        </svg>
+        <div class="header-text-block">
+          <div class="header-title">San Domingo</div>
+          <a href="https://maps.google.com/?q=Chacabuco+711+y+Congreso,+Rodeo+de+la+Cruz,+Guaymallén,+Mendoza" target="_blank" class="header-address">
+            <i class="ti ti-map-pin" style="font-size:11px;"></i> Rodeo de la Cruz, Guaymallén
+          </a>
+        </div>
+        <button class="icon-btn" onclick="showTab('saved')" aria-label="Guardados">
+          <i class="ti ti-bookmark"></i>
+        </button>
+        <button class="icon-btn" onclick="showTab('cart')" aria-label="Carrito">
+          <i class="ti ti-shopping-cart"></i>
+          <span class="badge" id="cart-badge">0</span>
+        </button>
+      </div>
+      <input class="search-input" id="search-input" type="search" placeholder="Buscar por nombre, marca o categoría" oninput="renderHome()" />
+    </div>
+
+    <div id="tab-home" class="content">
+      <div class="banner-carousel" id="banner-carousel">
+        <div class="banner-track" id="banner-track"></div>
+      </div>
+      <div class="banner-dots" id="banner-dots"></div>
+      <div class="puntos-banner" onclick="openTool('misPuntos')">
+        <i class="ti ti-star" style="font-size:24px;"></i>
+        <div>
+          <p class="puntos-banner-titulo">Sumá puntos y ganá descuentos</p>
+          <p class="puntos-banner-sub">Publicá fotos, comentá e invitá amigos</p>
+        </div>
+        <i class="ti ti-chevron-right" style="margin-left:auto; font-size:18px;"></i>
+      </div>
+      <div id="tools-section" style="display:none;">
+        <p class="section-label">Herramientas</p>
+        <div class="tools-grid" id="tools-grid"></div>
+      </div>
+      <p class="section-label">Categorías</p>
+      <div class="categories-grid" id="categories-grid"></div>
+      <div class="section-header-row">
+        <p class="section-label" id="products-title" style="margin-bottom:0;">Destacados</p>
+        <button class="clear-link" id="btn-clear" style="display:none;" onclick="clearFilter()">Ver destacados</button>
+      </div>
+      <div class="products-grid" id="products-grid"></div>
+    </div>
+
+    <div id="tab-cart" class="content" style="display:none; flex-direction:column;">
+      <div id="cart-items"></div>
+      <div id="cart-empty" class="empty-state" style="display:none;">
+        <i class="ti ti-shopping-cart"></i>
+        <span>Tu carrito está vacío.</span>
+        <button class="btn-enter" style="padding:10px 28px; font-size:14px;" onclick="showTab('home')">Ir al catálogo</button>
+      </div>
+    </div>
+    <div class="cart-footer" id="cart-footer" style="display:none;">
+      <div class="tool-field" style="margin-bottom:12px;">
+        <label>Zona de envío</label>
+        <select id="envio-zona">
+          <option value="gran-mendoza">Dentro del Gran Mendoza (envío gratis)</option>
+          <option value="fuera">Fuera del Gran Mendoza (envío con adicional)</option>
+        </select>
+      </div>
+      <div class="total-row">
+        <span class="total-label">Total</span>
+        <span class="total-value" id="cart-total">$0</span>
+      </div>
+      <button class="btn-checkout" onclick="checkout()">
+        <i class="ti ti-brand-whatsapp"></i> Finalizar pedido por WhatsApp
+      </button>
+    </div>
+
+    <div id="tab-saved" class="content" style="display:none;">
+      <div class="products-grid" id="saved-grid"></div>
+      <div id="saved-empty" class="empty-state" style="display:none;">
+        <i class="ti ti-bookmark"></i>
+        <span>Todavía no guardaste productos. Tocá el marcador en cualquier producto.</span>
+      </div>
+    </div>
+
+    <div id="tab-foro" class="content" style="display:none; flex-direction:column;">
+      <p class="section-label">Foro de acuarios</p>
+      <button class="tool-button" style="margin-bottom:14px;" onclick="abrirFormularioForo()">
+        <i class="ti ti-camera" style="margin-right:6px;"></i>Compartir foto de mi acuario
+      </button>
+      <div id="foro-form-wrap" style="display:none; background:var(--white); border:1px solid var(--border); border-radius:14px; padding:14px; margin-bottom:14px;">
+        <div class="tool-field">
+          <label>Foto (tomá una con la cámara o elegí de tu galería)</label>
+          <input type="file" id="foro-foto" accept="image/*" capture="environment" />
+        </div>
+        <div class="tool-field">
+          <label>Tu nombre o apodo</label>
+          <input type="text" id="foro-nombre" placeholder="Ej: Nahuel" />
+        </div>
+        <div class="tool-field">
+          <label>Descripción (opcional)</label>
+          <input type="text" id="foro-descripcion" placeholder="Ej: Mi acuario de 100 litros" />
+        </div>
+        <button class="tool-button" onclick="publicarForo()">Publicar</button>
+        <p id="foro-form-msg" class="tool-note"></p>
+      </div>
+      <div id="foro-lista"></div>
+      <div id="foro-empty" class="empty-state" style="display:none;">
+        <i class="ti ti-photo"></i>
+        <span>Todavía no hay publicaciones. ¡Sé el primero en compartir tu acuario!</span>
+      </div>
+    </div>
+
+    <div id="tab-bitacora" class="content" style="display:none; flex-direction:column;">
+      <p class="section-label">Bitácora de capturas</p>
+      <button class="tool-button" style="margin-bottom:14px;" onclick="abrirFormularioBitacora()">
+        <i class="ti ti-camera" style="margin-right:6px;"></i>Registrar una captura
+      </button>
+      <div id="bitacora-form-wrap" style="display:none; background:var(--white); border:1px solid var(--border); border-radius:14px; padding:14px; margin-bottom:14px;">
+        <div class="tool-field">
+          <label>Foto (opcional)</label>
+          <input type="file" id="bitacora-foto" accept="image/*" capture="environment" />
+        </div>
+        <div class="tool-field">
+          <label>Tu nombre o apodo</label>
+          <input type="text" id="bitacora-nombre" placeholder="Ej: Nahuel" />
+        </div>
+        <div class="tool-field">
+          <label>Lugar</label>
+          <input type="text" id="bitacora-lugar" placeholder="Ej: Dique Frías" />
+        </div>
+        <div class="tool-field">
+          <label>Especie</label>
+          <input type="text" id="bitacora-especie" placeholder="Ej: Pejerrey" />
+        </div>
+        <div class="tool-field">
+          <label>Notas (opcional)</label>
+          <input type="text" id="bitacora-notas" placeholder="Ej: Con señuelo, primeras horas de la mañana" />
+        </div>
+        <button class="tool-button" onclick="publicarBitacora()">Publicar</button>
+        <p id="bitacora-form-msg" class="tool-note"></p>
+      </div>
+      <div id="bitacora-lista"></div>
+      <div id="bitacora-empty" class="empty-state" style="display:none;">
+        <i class="ti ti-fish"></i>
+        <span>Todavía no hay capturas registradas. ¡Sé el primero en compartir la tuya!</span>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab-item active" id="tab-btn-home" onclick="showTab('home')">
+        <i class="ti ti-grid-dots"></i> Catálogo
+      </button>
+      <button class="tab-item" id="tab-btn-foro" style="display:none;" onclick="showTab('foro')">
+        <i class="ti ti-users"></i> Foro
+      </button>
+      <button class="tab-item" id="tab-btn-bitacora" style="display:none;" onclick="showTab('bitacora')">
+        <i class="ti ti-book"></i> Bitácora
+      </button>
+      <button class="tab-item" id="tab-btn-saved" onclick="showTab('saved')">
+        <i class="ti ti-bookmark"></i> Guardados
+      </button>
+      <button class="tab-item" id="tab-btn-cart" onclick="showTab('cart')">
+        <i class="ti ti-shopping-cart"></i> Carrito
+      </button>
+    </div>
+
+    <a href="https://wa.me/5492616109829" target="_blank" class="whatsapp-float-btn">
+      <i class="ti ti-brand-whatsapp" style="font-size:28px; color:white;"></i>
+    </a>
+    <p class="footer-sig">Creada con amor - Nicolas Genco</p>
+  </div>
+
+  <div id="tool-modal" class="tool-modal">
+    <div class="tool-modal-card">
+      <div class="tool-modal-header">
+        <p id="tool-modal-title" class="tool-modal-title"></p>
+        <button class="icon-btn" onclick="closeTool()" aria-label="Cerrar">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+      <div id="tool-modal-body" class="tool-modal-body"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SUPABASE_URL = 'https://ruxxatzwgqqjgdfnahir.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_36MZSCr4-wtDHCXht_f2GQ_2uMhZPNK';
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+// ══════════════════════════════════════════════
+// PRESENCIA EN VIVO (sin datos personales)
+// ══════════════════════════════════════════════
+
+const SESSION_KEY = 'sandomingo_session_id';
+
+function getSessionId() {
+  let id = sessionStorage.getItem(SESSION_KEY);
+  if (!id) {
+    id = 's_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    sessionStorage.setItem(SESSION_KEY, id);
+  }
+  return id;
 }
+
+async function avisarPresencia() {
+  if (!supabaseClient) return;
+  try {
+    await supabaseClient
+      .from('presencia')
+      .upsert({ session_id: getSessionId(), ultima_actividad: new Date().toISOString() });
+  } catch (e) {}
+}
+
+avisarPresencia();
+setInterval(avisarPresencia, 20000);
+
+const USUARIO_KEY = 'sandomingo_usuario';
+
+function getUsuarioLocal() {
+  try {
+    return JSON.parse(localStorage.getItem(USUARIO_KEY));
+  } catch (e) {
+    return null;
+  }
+}
+
+function setUsuarioLocal(usuario) {
+  localStorage.setItem(USUARIO_KEY, JSON.stringify(usuario));
+}
+
+function generarCodigoInvitacion(nombre) {
+  const base = nombre.replace(/[^a-zA-Z]/g, '').toUpperCase().slice(0, 4) || 'AMIG';
+  return base + Math.floor(1000 + Math.random() * 9000);
+}
+
+function checkIdentidad() {
+  const usuario = getUsuarioLocal();
+  if (usuario && usuario.whatsapp) {
+    goToHub();
+  } else {
+    document.getElementById('screen-splash').classList.remove('active');
+    document.getElementById('screen-registro').classList.add('active');
+  }
+}
+
+async function registrarUsuario() {
+  const nombre = document.getElementById('registro-nombre').value.trim();
+  const whatsapp = document.getElementById('registro-whatsapp').value.trim().replace(/\D/g, '');
+  const codigoUsado = document.getElementById('registro-codigo').value.trim().toUpperCase();
+  const msgEl = document.getElementById('registro-msg');
+
+  if (!nombre || !whatsapp) {
+    msgEl.textContent = 'Completá tu nombre y WhatsApp.';
+    return;
+  }
+  if (!supabaseClient) {
+    msgEl.textContent = 'No se pudo conectar con el servidor. Probá de nuevo más tarde.';
+    return;
+  }
+
+  msgEl.textContent = 'Guardando...';
+
+  const { data: existente } = await supabaseClient
+    .from('usuarios')
+    .select('*')
+    .eq('whatsapp', whatsapp)
+    .maybeSingle();
+
+  if (existente) {
+    setUsuarioLocal(existente);
+    goToHub();
+    return;
+  }
+
+  const codigoPropio = generarCodigoInvitacion(nombre);
+  const nuevoUsuario = {
+    nombre,
+    whatsapp,
+    puntos: 0,
+    codigo_invitacion: codigoPropio,
+    invitado_por: codigoUsado || null,
+  };
+
+  const { data: creado, error } = await supabaseClient
+    .from('usuarios')
+    .insert([nuevoUsuario])
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    msgEl.textContent = 'No se pudo completar el registro. Intentá de nuevo.';
+    return;
+  }
+
+  if (codigoUsado) {
+    const { data: invitador } = await supabaseClient
+      .from('usuarios')
+      .select('*')
+      .eq('codigo_invitacion', codigoUsado)
+      .maybeSingle();
+    if (invitador) {
+      await supabaseClient
+        .from('usuarios')
+        .update({ puntos: (invitador.puntos || 0) + 50 })
+        .eq('whatsapp', invitador.whatsapp);
+    }
+  }
+
+  setUsuarioLocal(creado);
+  goToHub();
+}
+
+async function sumarPuntos(cantidad) {
+  const usuario = getUsuarioLocal();
+  if (!usuario || !supabaseClient) return;
+  const nuevoTotal = (usuario.puntos || 0) + cantidad;
+  await supabaseClient
+    .from('usuarios')
+    .update({ puntos: nuevoTotal })
+    .eq('whatsapp', usuario.whatsapp);
+  usuario.puntos = nuevoTotal;
+  setUsuarioLocal(usuario);
+}
+
+async function refrescarUsuarioLocal() {
+  const usuario = getUsuarioLocal();
+  if (!usuario || !supabaseClient) return;
+  const { data } = await supabaseClient
+    .from('usuarios')
+    .select('*')
+    .eq('whatsapp', usuario.whatsapp)
+    .maybeSingle();
+  if (data) setUsuarioLocal(data);
+}
+
+async function renderMisPuntos() {
+  await refrescarUsuarioLocal();
+  const usuario = getUsuarioLocal();
+  const el = document.getElementById('puntos-resultado');
+  if (!usuario) {
+    el.innerHTML = `<p class="tool-note">No pudimos encontrar tu usuario. Volvé al inicio de la app.</p>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="tool-result" style="text-align:center;">
+      <p style="font-size:13px; color:var(--gray); margin-bottom:4px;">Tenés acumulados</p>
+      <strong style="font-size:32px;">${usuario.puntos || 0} puntos</strong>
+    </div>
+    <p style="margin:14px 0 8px; font-size:13px; color:var(--darkGray);">Sumás puntos cuando:</p>
+    <p class="acuario-detalle">📷 Publicás una foto en el foro o la bitácora: +10</p>
+    <p class="acuario-detalle">💬 Dejás un comentario: +2</p>
+    <p class="acuario-detalle">🛒 Confirmás una compra: puntos a cargo del local</p>
+    <p class="acuario-detalle">🎁 Invitás a un amigo y se registra: +50</p>
+    <div class="tool-field" style="margin-top:14px;">
+      <label>Tu código de invitación</label>
+      <input type="text" value="${usuario.codigo_invitacion || ''}" readonly style="font-weight:700; text-align:center;" />
+    </div>
+    <p class="tool-note">Compartí tu código con amigos. Cuando se registren usándolo, ganás 50 puntos.</p>
+    <button class="tool-button" onclick="canjearPuntos()">Canjear mis puntos por un descuento</button>
+  `;
+}
+
+function canjearPuntos() {
+  const usuario = getUsuarioLocal();
+  const msg = `Hola San Domingo, quiero canjear mis puntos. Tengo ${usuario ? usuario.puntos : 0} puntos acumulados a nombre de ${usuario ? usuario.nombre : ''}.`;
+  window.open(`https://wa.me/5492616109829?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// ══════════════════════════════════════════════
+// PANEL DE ADMINISTRADOR (sumar puntos manualmente)
+// ══════════════════════════════════════════════
+
+const ADMIN_PASSWORD = 'sandomingo2026';
+
+function loginAdmin() {
+  const pass = document.getElementById('admin-password').value;
+  const msgEl = document.getElementById('admin-login-msg');
+  if (pass === ADMIN_PASSWORD) {
+    document.getElementById('admin-login-wrap').style.display = 'none';
+    document.getElementById('admin-panel-wrap').style.display = 'block';
+    cargarUsuariosVivo();
+    setInterval(cargarUsuariosVivo, 15000);
+  } else {
+    msgEl.textContent = 'Contraseña incorrecta.';
+  }
+}
+
+async function cargarUsuariosVivo() {
+  if (!supabaseClient) return;
+  const limite = new Date(Date.now() - 60000).toISOString();
+  const { data, error } = await supabaseClient
+    .from('presencia')
+    .select('session_id')
+    .gte('ultima_actividad', limite);
+  const el = document.getElementById('admin-usuarios-vivo');
+  if (el && !error) el.textContent = data.length;
+}
+
+async function buscarClienteAdmin() {
+  const whatsapp = document.getElementById('admin-whatsapp').value.trim().replace(/\D/g, '');
+  const cont = document.getElementById('admin-cliente-resultado');
+  if (!whatsapp || !supabaseClient) {
+    cont.innerHTML = `<p class="tool-note">Ingresá un WhatsApp válido.</p>`;
+    return;
+  }
+  const { data } = await supabaseClient
+    .from('usuarios')
+    .select('*')
+    .eq('whatsapp', whatsapp)
+    .maybeSingle();
+
+  if (!data) {
+    cont.innerHTML = `<p class="tool-note">No se encontró ningún cliente con ese WhatsApp.</p>`;
+    return;
+  }
+
+  cont.innerHTML = `
+    <div class="tool-result" style="margin-top:14px;">
+      <strong>${data.nombre}</strong><br/>
+      Puntos actuales: ${data.puntos || 0}
+    </div>
+    <div class="tool-field" style="margin-top:10px;">
+      <label>Puntos a sumar</label>
+      <input type="number" id="admin-puntos-sumar" placeholder="Ej: 20" />
+    </div>
+    <button class="tool-button" onclick="confirmarSumaAdmin('${data.whatsapp}')">Sumar puntos</button>
+    <p id="admin-suma-msg" class="tool-note"></p>
+  `;
+}
+
+async function confirmarSumaAdmin(whatsapp) {
+  const cantidad = Number(document.getElementById('admin-puntos-sumar').value);
+  const msgEl = document.getElementById('admin-suma-msg');
+  if (!cantidad || cantidad <= 0) {
+    msgEl.textContent = 'Ingresá una cantidad válida.';
+    return;
+  }
+  const { data } = await supabaseClient.from('usuarios').select('*').eq('whatsapp', whatsapp).maybeSingle();
+  if (!data) return;
+  const nuevoTotal = (data.puntos || 0) + cantidad;
+  await supabaseClient.from('usuarios').update({ puntos: nuevoTotal }).eq('whatsapp', whatsapp);
+  msgEl.textContent = `Listo. Nuevo total: ${nuevoTotal} puntos.`;
+}
+
+const SETTINGS = {
+  businessName: 'San Domingo',
+  whatsapp: '5492616109829',
+};
+
+const CAT_ICONS = {
+  canas: 'ti-fish-hook', anzuelos: 'ti-anchor', mojarras: 'ti-fish',
+  tanzas: 'ti-line', senuelos: 'ti-target', accesorios: 'ti-tool',
+  camping: 'ti-tent', ofertas: 'ti-tag',
+  peces: 'ti-fish', acuarios: 'ti-box', acc_acuario: 'ti-droplet', filtracion: 'ti-filter',
+  iluminacion: 'ti-bulb', alimentacion_pez: 'ti-bowl',
+};
+
+const CATEGORIES = [
+  { id: 'canas', name: 'Cañas' },
+  { id: 'anzuelos', name: 'Anzuelos' },
+  { id: 'mojarras', name: 'Mojarras' },
+  { id: 'tanzas', name: 'Tanzas' },
+  { id: 'senuelos', name: 'Señuelos' },
+  { id: 'accesorios', name: 'Accesorios' },
+  { id: 'camping', name: 'Camping' },
+  { id: 'ofertas', name: 'Ofertas' },
+  { id: 'peces', name: 'Peces (Agua Dulce)' },
+  { id: 'acuarios', name: 'Acuarios y Kits' },
+  { id: 'acc_acuario', name: 'Acc. Acuario' },
+  { id: 'filtracion', name: 'Filtración' },
+  { id: 'iluminacion', name: 'Iluminación' },
+];
+
+const WORLD_CATEGORIES = {
+  acuariofilia: ['peces', 'acuarios', 'acc_acuario', 'filtracion', 'iluminacion', 'alimentacion_pez'],
+  pesca: ['canas', 'anzuelos', 'mojarras', 'tanzas', 'senuelos', 'accesorios', 'camping', 'ofertas'],
+};
+
+let currentWorld = null;
+
+const WORLD_TOOLS = {
+  acuariofilia: [
+    { id: 'misPuntos', icon: 'ti-star', label: 'Mis puntos' },
+    { id: 'misAcuarios', icon: 'ti-aquarium', label: 'Mis acuarios' },
+    { id: 'litros', icon: 'ti-ruler-2', label: 'Litros del acuario' },
+    { id: 'compatibilidad', icon: 'ti-fish', label: 'Compatibilidad' },
+    { id: 'parametros', icon: 'ti-droplet', label: 'Parámetros' },
+    { id: 'cambioAgua', icon: 'ti-bell', label: 'Cambio de agua' },
+  ],
+  pesca: [
+    { id: 'misPuntos', icon: 'ti-star', label: 'Mis puntos' },
+    { id: 'clima', icon: 'ti-cloud', label: 'Clima y pronóstico' },
+    { id: 'luna', icon: 'ti-moon', label: 'Fase lunar' },
+    { id: 'lugares', icon: 'ti-map-pin', label: 'Lugares recomendados' },
+  ],
+};
+
+function renderTools() {
+  const tools = WORLD_TOOLS[currentWorld] || [];
+  document.getElementById('tools-grid').innerHTML = tools.map(t => `
+    <div class="tool-card" onclick="openTool('${t.id}')">
+      <i class="ti ${t.icon}"></i>
+      <span>${t.label}</span>
+    </div>
+  `).join('');
+}
+
+const PRODUCTS = [
+  { id: '2', name: 'Discus', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/discusredmap.jpg',
+    info: {
+      descripcion: 'Conocido como el "rey del acuario", el Discus es un cíclido amazónico de cuerpo redondeado y colores vibrantes que pueden cambiar según su estado de ánimo. Es un pez pacífico, inteligente y de movimientos elegantes, ideal para acuaristas que ya tienen algo de experiencia.',
+      temperatura: '28 a 30 °C',
+      ph: '6.0 a 7.0',
+      litros: 'Mínimo 200 litros por pareja',
+      alimentacion: 'Necesita alimento variado y de calidad: alimento vivo o congelado (larvas, gusanos), complementado con escamas o papillas. Una dieta pobre afecta su color y salud.',
+      consejos: 'Es sensible a cambios bruscos en el agua, así que conviene medir seguido PH y amoníaco. Se recomienda mantenerlos en grupos de al menos 5 ejemplares, con buena filtración y abundantes plantas o raíces donde puedan refugiarse.'
+    }
+  },
+  { id: '3', name: 'Escalar', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/escalar.jpg',
+    info: {
+      descripcion: 'También llamado Pez Ángel, el Escalar es un cíclido sudamericano de cuerpo aplanado y aletas largas en forma de vela. Es pacífico aunque puede volverse algo territorial, especialmente al formar pareja, y es una excelente opción para acuarios comunitarios.',
+      temperatura: '24 a 28 °C',
+      ph: '6.0 a 7.5',
+      litros: 'Mínimo 100 litros',
+      alimentacion: 'Omnívoro: acepta escamas y gránulos de calidad, complementados con alimento vivo o congelado como larvas de mosquito. Conviene variar la dieta para mantener su color y salud.',
+      consejos: 'Crece bastante en altura por sus aletas, así que el acuario necesita buena profundidad vertical. Es recomendable mantenerlos en grupos de 4 a 6 ejemplares jóvenes para que se formen parejas de forma natural y se reduzca la agresividad.'
+    }
+  },
+  { id: '4', name: 'Tetra Neón', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/tetraneon.jpg',
+    info: {
+      descripcion: 'El Tetra Neón es uno de los peces más populares en acuarofilia por su llamativa franja azul y roja que recorre su pequeño cuerpo. Es un pez de cardumen, muy pacífico, ideal tanto para principiantes como para acuarios comunitarios.',
+      temperatura: '22 a 27 °C',
+      ph: '5.5 a 6.5',
+      litros: 'Mínimo 50 litros para un grupo pequeño',
+      alimentacion: 'Omnívoro: escamas pequeñas o alimento en polvo de buena calidad, complementado con alimento vivo o congelado como artemia, en pequeñas porciones varias veces al día.',
+      consejos: 'Nunca debe mantenerse solo: necesita vivir en grupos de al menos 6 a 10 ejemplares para sentirse seguro y mostrar todo su color. Evitar mezclarlo con peces grandes o agresivos como cíclidos, y mantener una iluminación tenue con plantas para imitar su hábitat natural.'
+    }
+  },
+  { id: '1', name: 'Medida de Mojarras Medianas', brand: '', category: 'mojarras', price: 6000, stock: 99, featured: true, offer: false, img: 'imagenes/mojarras.png' },
+];
+
+let cart = {};
+let saved = {};
+let activeCategory = null;
+
+const fmt = n => '$' + Number(n).toLocaleString('es-AR');
+
+function totalItems() { return Object.values(cart).reduce((a,b)=>a+b,0); }
+function totalPrice() {
+  return Object.entries(cart).reduce((sum,[id,qty]) => {
+    const p = PRODUCTS.find(x=>x.id===id);
+    return sum + (p ? p.price * qty : 0);
+  }, 0);
+}
+
+function goToSplash() {
+  document.getElementById('screen-main').classList.remove('active');
+  document.getElementById('screen-hub').classList.remove('active');
+  document.getElementById('screen-registro').classList.remove('active');
+  document.getElementById('screen-admin').classList.remove('active');
+  document.getElementById('screen-splash').classList.add('active');
+}
+
+function goToHub() {
+  document.getElementById('screen-splash').classList.remove('active');
+  document.getElementById('screen-registro').classList.remove('active');
+  document.getElementById('screen-admin').classList.remove('active');
+  document.getElementById('screen-main').classList.remove('active');
+  document.getElementById('screen-hub').classList.add('active');
+}
+
+function enterWorld(world) {
+  currentWorld = world;
+  activeCategory = null;
+  document.getElementById('screen-hub').classList.remove('active');
+  document.getElementById('screen-main').classList.add('active');
+  document.getElementById('tools-section').style.display = 'block';
+  document.getElementById('tab-btn-foro').style.display = world === 'acuariofilia' ? 'flex' : 'none';
+  document.getElementById('tab-btn-bitacora').style.display = world === 'pesca' ? 'flex' : 'none';
+  renderTools();
+  showTab('home');
+  renderHome();
+  renderCategories();
+  renderBanner();
+}
+
+function showTab(tab) {
+  ['home','cart','saved','foro','bitacora'].forEach(t => {
+    document.getElementById(`tab-${t}`).style.display = 'none';
+    document.getElementById(`tab-btn-${t}`).classList.remove('active');
+  });
+  document.getElementById(`tab-${tab}`).style.display = tab === 'home' ? 'block' : 'flex';
+  document.getElementById(`tab-btn-${tab}`).classList.add('active');
+  document.getElementById('search-input').style.display = tab === 'home' ? 'block' : 'none';
+  document.getElementById('cart-footer').style.display = (tab === 'cart' && Object.keys(cart).length > 0) ? 'block' : 'none';
+  if (tab === 'saved') renderSaved();
+  if (tab === 'cart') renderCart();
+  if (tab === 'home') renderHome();
+  if (tab === 'foro') renderForo();
+  if (tab === 'bitacora') renderBitacora();
+}
+
+const BANNER_SLIDES = [
+  { img: 'imagenes/discusredmap.jpg', label: 'Discus disponibles' },
+  { img: 'imagenes/escalar.jpg', label: 'Escalares en stock' },
+  { img: 'imagenes/tetraneon.jpg', label: 'Tetra Neón' },
+];
+
+function renderBanner() {
+  const wrap = document.querySelector('.banner-carousel').parentElement;
+  if (currentWorld !== 'acuariofilia') {
+    document.getElementById('banner-carousel').style.display = 'none';
+    document.getElementById('banner-dots').style.display = 'none';
+    return;
+  }
+  document.getElementById('banner-carousel').style.display = 'flex';
+  document.getElementById('banner-dots').style.display = 'flex';
+  const track = document.getElementById('banner-track');
+  const dots = document.getElementById('banner-dots');
+  track.innerHTML = BANNER_SLIDES.map(s => `
+    <div class="banner-slide">
+      <img src="${s.img}" alt="${s.label}" />
+      <div class="banner-label">${s.label}</div>
+    </div>
+  `).join('');
+  dots.innerHTML = BANNER_SLIDES.map((_, i) => `<div class="banner-dot ${i === 0 ? 'active' : ''}" data-i="${i}"></div>`).join('');
+  const carousel = document.getElementById('banner-carousel');
+  carousel.addEventListener('scroll', () => {
+    const i = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+    document.querySelectorAll('.banner-dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
+  });
+}
+
+function renderCategories() {
+  const ids = WORLD_CATEGORIES[currentWorld] || [];
+  const cats = CATEGORIES.filter(c => ids.includes(c.id));
+  const grid = document.getElementById('categories-grid');
+  grid.innerHTML = cats.map(cat => `
+    <div class="category-card" onclick="filterByCategory('${cat.id}')">
+      <i class="ti ${CAT_ICONS[cat.id] || 'ti-box'}"></i>
+      ${cat.name}
+    </div>
+  `).join('');
+}
+
+function filterByCategory(id) {
+  activeCategory = id;
+  document.getElementById('search-input').value = '';
+  renderHome();
+}
+
+function clearFilter() {
+  activeCategory = null;
+  document.getElementById('search-input').value = '';
+  renderHome();
+}
+
+function renderHome() {
+  const query = document.getElementById('search-input').value.trim().toLowerCase();
+  const worldIds = WORLD_CATEGORIES[currentWorld] || [];
+  let list = PRODUCTS.filter(p => p.stock > 0 && worldIds.includes(p.category));
+  let title = 'Destacados';
+
+  if (query) {
+    list = list.filter(p =>
+      p.name.toLowerCase().includes(query) ||
+      p.brand.toLowerCase().includes(query) ||
+      p.category.toLowerCase().includes(query)
+    );
+    title = `Resultados para "${query}"`;
+  } else if (activeCategory === 'ofertas') {
+    list = list.filter(p => p.offer);
+    title = 'Ofertas';
+  } else if (activeCategory) {
+    list = list.filter(p => p.category === activeCategory);
+    title = CATEGORIES.find(c => c.id === activeCategory)?.name || '';
+  } else {
+    list = list.filter(p => p.featured);
+  }
+
+  const showFilter = query || activeCategory;
+  document.getElementById('products-title').textContent = title;
+  document.getElementById('btn-clear').style.display = showFilter ? 'inline' : 'none';
+  document.getElementById('categories-grid').style.display = (query || activeCategory) ? 'none' : 'grid';
+
+  const grid = document.getElementById('products-grid');
+  if (list.length === 0) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="ti ti-search"></i><span>No encontramos productos.</span></div>';
+    return;
+  }
+  grid.innerHTML = list.map(p => productCardHTML(p)).join('');
+}
+
+function productCardHTML(p) {
+  const icon = CAT_ICONS[p.category] || 'ti-box';
+  const isSaved = !!saved[p.id];
+  const lowStock = p.stock > 0 && p.stock <= 3;
+  const priceHTML = p.consultar
+    ? `<div class="product-price" style="font-size:14px;">Consultar precio</div>`
+    : `<div class="product-price">${fmt(p.price)}</div>`;
+  const imageHTML = p.img
+    ? `<img src="${p.img}" alt="${p.name}" style="width:100%; height:100%; object-fit:cover;" />`
+    : `<div class="product-icon-circle"><i class="ti ${icon}"></i></div>`;
+  const qtyInCart = cart[p.id] || 0;
+  const buyControlHTML = qtyInCart > 0
+    ? `
+      <div class="qty-stepper" id="stepper-${p.id}">
+        <button class="qty-stepper-btn" onclick="changeQty('${p.id}',-1); refreshCardStepper('${p.id}')">−</button>
+        <span class="qty-stepper-num">${qtyInCart}</span>
+        <button class="qty-stepper-btn" onclick="changeQty('${p.id}',1); refreshCardStepper('${p.id}')">+</button>
+      </div>
+    `
+    : `<button class="btn-buy" onclick="addToCart('${p.id}'); refreshCardStepper('${p.id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Comprar</button>`;
+  return `
+    <div class="product-card">
+      <div class="product-icon-wrap">
+        ${p.offer ? '<span class="offer-badge">Oferta</span>' : ''}
+        <button class="save-btn ${isSaved ? 'saved' : ''}" onclick="toggleSaved('${p.id}')" aria-label="Guardar">
+          <i class="ti ${isSaved ? 'ti-bookmark-filled' : 'ti-bookmark'}"></i>
+        </button>
+        ${imageHTML}
+      </div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-brand">${p.brand}</div>
+        ${priceHTML}
+        <div class="${lowStock ? 'low-stock' : 'in-stock'}">${lowStock ? `Quedan ${p.stock}` : 'En stock'}</div>
+        ${p.info ? `<button class="ver-info-link" onclick="abrirInfoPez('${p.id}')"><i class="ti ti-info-circle" style="margin-right:4px;"></i>Cuidados y consejos</button>` : ''}
+        <div id="buy-control-${p.id}">${buyControlHTML}</div>
+      </div>
+    </div>
+  `;
+}
+
+function refreshCardStepper(id) {
+  const wrap = document.getElementById(`buy-control-${id}`);
+  if (!wrap) return;
+  const qty = cart[id] || 0;
+  wrap.innerHTML = qty > 0
+    ? `
+      <div class="qty-stepper" id="stepper-${id}">
+        <button class="qty-stepper-btn" onclick="changeQty('${id}',-1); refreshCardStepper('${id}')">−</button>
+        <span class="qty-stepper-num">${qty}</span>
+        <button class="qty-stepper-btn" onclick="changeQty('${id}',1); refreshCardStepper('${id}')">+</button>
+      </div>
+    `
+    : `<button class="btn-buy" onclick="addToCart('${id}'); refreshCardStepper('${id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Comprar</button>`;
+}
+
+function abrirInfoPez(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p || !p.info) return;
+  const i = p.info;
+  document.getElementById('tool-modal-title').textContent = p.name;
+  document.getElementById('tool-modal-body').innerHTML = `
+    <p style="margin-bottom:14px;">${i.descripcion}</p>
+    <div class="pez-info-row"><i class="ti ti-thermometer"></i><div><strong>Temperatura</strong><span>${i.temperatura}</span></div></div>
+    <div class="pez-info-row"><i class="ti ti-droplet"></i><div><strong>PH</strong><span>${i.ph}</span></div></div>
+    <div class="pez-info-row"><i class="ti ti-aquarium"></i><div><strong>Tamaño de acuario</strong><span>${i.litros}</span></div></div>
+    <p style="margin:14px 0 6px; font-weight:700; color:var(--navy); font-size:13px;">Alimentación</p>
+    <p style="font-size:13px; color:var(--darkGray);">${i.alimentacion}</p>
+    <p style="margin:14px 0 6px; font-weight:700; color:var(--navy); font-size:13px;">Consejos</p>
+    <p style="font-size:13px; color:var(--darkGray);">${i.consejos}</p>
+  `;
+  document.getElementById('tool-modal').classList.add('active');
+}
+
+function addToCart(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  updateBadge();
+  renderHome();
+}
+
+function changeQty(id, delta) {
+  cart[id] = (cart[id] || 0) + delta;
+  if (cart[id] <= 0) delete cart[id];
+  updateBadge();
+  renderCart();
+}
+
+function updateBadge() {
+  const n = totalItems();
+  const badge = document.getElementById('cart-badge');
+  badge.textContent = n;
+  badge.classList.toggle('visible', n > 0);
+}
+
+function renderCart() {
+  const ids = Object.keys(cart);
+  const itemsEl = document.getElementById('cart-items');
+  const emptyEl = document.getElementById('cart-empty');
+  const footer = document.getElementById('cart-footer');
+
+  if (ids.length === 0) {
+    itemsEl.innerHTML = '';
+    emptyEl.style.display = 'flex';
+    footer.style.display = 'none';
+    return;
+  }
+  emptyEl.style.display = 'none';
+  footer.style.display = 'block';
+
+  itemsEl.innerHTML = ids.map(id => {
+    const p = PRODUCTS.find(x => x.id === id);
+    const qty = cart[id];
+    const icon = CAT_ICONS[p.category] || 'ti-box';
+    return `
+      <div class="cart-item">
+        <div class="cart-icon"><i class="ti ${icon}"></i></div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${p.name}</div>
+          <div class="cart-item-price">${fmt(p.price)} c/u</div>
+        </div>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="changeQty('${id}',-1)">−</button>
+          <span class="qty-num">${qty}</span>
+          <button class="qty-btn" onclick="changeQty('${id}',1)">+</button>
+        </div>
+        <span class="cart-subtotal">${fmt(p.price * qty)}</span>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('cart-total').textContent = fmt(totalPrice());
+}
+
+function checkout() {
+  const ids = Object.keys(cart);
+  if (!ids.length) return;
+  const total = totalPrice();
+  const sena = Math.round(total * 0.4);
+  const lines = ids.map(id => {
+    const p = PRODUCTS.find(x => x.id === id);
+    return `- ${p.name} x${cart[id]} (${fmt(p.price * cart[id])})`;
+  });
+  const zona = document.getElementById('envio-zona').value;
+  const envioTexto = zona === 'fuera'
+    ? 'Fuera del Gran Mendoza (envío con adicional a coordinar)'
+    : 'Dentro del Gran Mendoza (envío gratis)';
+  const msg = `Hola ${SETTINGS.businessName}.\nQuiero realizar el siguiente pedido:\n\n${lines.join('\n')}\n\nTotal: ${fmt(total)}\nSeña requerida (40%): ${fmt(sena)}\nAlias MP: roka33.mp\n\nZona de envío: ${envioTexto}\n\nUna vez transferida la seña confirmo el pedido.`;
+  window.open(`https://wa.me/${SETTINGS.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function toggleSaved(id) {
+  if (saved[id]) delete saved[id]; else saved[id] = true;
+  renderHome();
+  renderSaved();
+}
+
+function renderSaved() {
+  const list = PRODUCTS.filter(p => saved[p.id]);
+  const grid = document.getElementById('saved-grid');
+  const empty = document.getElementById('saved-empty');
+  if (list.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'flex';
+  } else {
+    empty.style.display = 'none';
+    grid.innerHTML = list.map(p => productCardHTML(p)).join('');
+  }
+}
+
+// ══════════════════════════════════════════════
+// HERRAMIENTAS DE ACUARIOFILIA
+// ══════════════════════════════════════════════
+
+const FISH_COMPATIBILITY = {
+  guppy: { name: 'Guppy', temperament: 'pacifico', water: 'dulce' },
+  neon: { name: 'Tetra Neón', temperament: 'pacifico', water: 'dulce' },
+  escalar: { name: 'Escalar', temperament: 'semiagresivo', water: 'dulce' },
+  discus: { name: 'Discus', temperament: 'pacifico', water: 'dulce' },
+  betta: { name: 'Betta', temperament: 'territorial', water: 'dulce' },
+  cíclido: { name: 'Cíclido africano', temperament: 'agresivo', water: 'dulce' },
+  goldfish: { name: 'Pez dorado', temperament: 'pacifico', water: 'fria' },
+  corydora: { name: 'Corydora', temperament: 'pacifico', water: 'dulce' },
+};
+
+function openTool(tool) {
+  const titles = {
+    misPuntos: 'Mis puntos',
+    misAcuarios: 'Mis acuarios',
+    litros: 'Calculadora de litros',
+    compatibilidad: 'Compatibilidad entre especies',
+    parametros: 'Control de parámetros',
+    cambioAgua: 'Recordatorio de cambio de agua',
+    clima: 'Clima y pronóstico',
+    luna: 'Fase lunar',
+    lugares: 'Lugares recomendados',
+  };
+  document.getElementById('tool-modal-title').textContent = titles[tool] || '';
+  document.getElementById('tool-modal-body').innerHTML = TOOL_BODIES[tool]();
+  document.getElementById('tool-modal').classList.add('active');
+  if (tool === 'clima') obtenerClima();
+  if (tool === 'luna') calcularFaseLunar();
+  if (tool === 'misAcuarios') renderMisAcuarios();
+  if (tool === 'misPuntos') renderMisPuntos();
+}
+
+function closeTool() {
+  document.getElementById('tool-modal').classList.remove('active');
+}
+
+const TOOL_BODIES = {
+  misPuntos: () => `
+    <div id="puntos-resultado"></div>
+  `,
+  misAcuarios: () => `
+    <div id="misacuarios-lista"></div>
+    <div id="misacuarios-empty" class="empty-state" style="display:none;">
+      <i class="ti ti-aquarium"></i>
+      <span>Todavía no registraste ningún acuario.</span>
+    </div>
+    <button class="tool-button" onclick="mostrarFormularioAcuario()">
+      <i class="ti ti-plus" style="margin-right:6px;"></i>Agregar acuario
+    </button>
+    <div id="acuario-form-wrap" style="display:none; margin-top:14px; border-top:1px solid var(--border); padding-top:14px;">
+      <input type="hidden" id="acuario-edit-id" />
+      <div class="tool-field"><label>Nombre del acuario</label><input type="text" id="acuario-nombre" placeholder="Ej: Acuario de la sala" /></div>
+      <div class="tool-field"><label>Litros</label><input type="number" id="acuario-litros" placeholder="Ej: 100" /></div>
+      <div class="tool-field"><label>Especies</label><input type="text" id="acuario-especies" placeholder="Ej: Discus, Tetra Neón" /></div>
+      <div class="tool-field"><label>Foto (opcional)</label><input type="file" id="acuario-foto" accept="image/*" /></div>
+      <div class="tool-field"><label>PH</label><input type="number" step="0.1" id="acuario-ph" placeholder="Ej: 7.0" /></div>
+      <div class="tool-field"><label>Amoníaco mg/L</label><input type="number" step="0.1" id="acuario-amoniaco" placeholder="Ej: 0" /></div>
+      <div class="tool-field"><label>Nitritos mg/L</label><input type="number" step="0.1" id="acuario-nitritos" placeholder="Ej: 0" /></div>
+      <div class="tool-field"><label>Último cambio de agua</label><input type="date" id="acuario-fecha" /></div>
+      <div class="tool-field"><label>Notas</label><input type="text" id="acuario-notas" placeholder="Notas libres" /></div>
+      <button class="tool-button" onclick="guardarAcuario()">Guardar</button>
+      <button class="tool-button" style="background:var(--gray); margin-top:8px;" onclick="ocultarFormularioAcuario()">Cancelar</button>
+    </div>
+  `,
+  litros: () => `
+    <p style="margin-bottom:12px;">Ingresá las medidas internas de tu acuario en centímetros.</p>
+    <div class="tool-field"><label>Largo (cm)</label><input type="number" id="litros-largo" placeholder="Ej: 100" /></div>
+    <div class="tool-field"><label>Ancho (cm)</label><input type="number" id="litros-ancho" placeholder="Ej: 40" /></div>
+    <div class="tool-field"><label>Alto (cm)</label><input type="number" id="litros-alto" placeholder="Ej: 50" /></div>
+    <button class="tool-button" onclick="calcularLitros()">Calcular</button>
+    <div id="litros-resultado"></div>
+  `,
+  compatibilidad: () => `
+    <p style="margin-bottom:12px;">Elegí dos especies para ver si conviven bien en el mismo acuario.</p>
+    <div class="tool-field">
+      <label>Especie 1</label>
+      <select id="compat-a">${fishOptions()}</select>
+    </div>
+    <div class="tool-field">
+      <label>Especie 2</label>
+      <select id="compat-b">${fishOptions()}</select>
+    </div>
+    <button class="tool-button" onclick="calcularCompatibilidad()">Verificar</button>
+    <div id="compat-resultado"></div>
+    <p class="tool-note">Resultado orientativo. Siempre confirmá con un asesor antes de mezclar especies.</p>
+  `,
+  parametros: () => `
+    <p style="margin-bottom:12px;">Ingresá los valores medidos para ver si están en rango saludable.</p>
+    <div class="tool-field"><label>PH (rango ideal 6.5 - 7.5)</label><input type="number" step="0.1" id="param-ph" placeholder="Ej: 7.0" /></div>
+    <div class="tool-field"><label>Amoníaco mg/L (ideal 0)</label><input type="number" step="0.1" id="param-amoniaco" placeholder="Ej: 0" /></div>
+    <div class="tool-field"><label>Nitritos mg/L (ideal 0)</label><input type="number" step="0.1" id="param-nitritos" placeholder="Ej: 0" /></div>
+    <button class="tool-button" onclick="calcularParametros()">Evaluar</button>
+    <div id="param-resultado"></div>
+  `,
+  cambioAgua: () => `
+    <p style="margin-bottom:12px;">Configurá cada cuánto querés cambiar el agua y te avisamos.</p>
+    <div class="tool-field">
+      <label>Frecuencia recomendada</label>
+      <select id="cambio-frecuencia">
+        <option value="7">Cada 7 días</option>
+        <option value="14" selected>Cada 14 días</option>
+        <option value="21">Cada 21 días</option>
+        <option value="30">Cada 30 días</option>
+      </select>
+    </div>
+    <button class="tool-button" onclick="calcularCambioAgua()">Calcular próxima fecha</button>
+    <div id="cambio-resultado"></div>
+    <p class="tool-note">Este recordatorio es solo informativo dentro de la app; no envía notificaciones automáticas.</p>
+  `,
+  clima: () => `
+    <div id="clima-resultado">
+      <p class="tool-note">Buscando el pronóstico para Mendoza...</p>
+    </div>
+  `,
+  luna: () => `
+    <div id="luna-resultado"></div>
+  `,
+  lugares: () => `
+    <p style="margin-bottom:12px;">Algunos spots recomendados por pescadores de la zona.</p>
+    <div id="lugares-lista">
+      ${LUGARES_PESCA.map(l => `
+        <div class="lugar-card" style="${l.destacado ? 'border-color:var(--blue); border-width:2px;' : ''}">
+          <i class="ti ti-map-pin"></i>
+          <div>
+            <p class="lugar-nombre">${l.nombre} ${l.destacado ? '<span class="lugar-badge">Recomendado</span>' : ''}</p>
+            <p class="lugar-desc">${l.descripcion}</p>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <p class="tool-note">Recomendaciones generales. Verificá siempre permisos y vedas locales antes de salir.</p>
+  `,
+};
+
+function fishOptions() {
+  return Object.keys(FISH_COMPATIBILITY)
+    .map((key) => `<option value="${key}">${FISH_COMPATIBILITY[key].name}</option>`)
+    .join('');
+}
+
+function calcularLitros() {
+  const largo = Number(document.getElementById('litros-largo').value) || 0;
+  const ancho = Number(document.getElementById('litros-ancho').value) || 0;
+  const alto = Number(document.getElementById('litros-alto').value) || 0;
+  const litros = (largo * ancho * alto) / 1000;
+  const el = document.getElementById('litros-resultado');
+  if (largo <= 0 || ancho <= 0 || alto <= 0) {
+    el.innerHTML = `<div class="tool-result">Completá las tres medidas para calcular.</div>`;
+    return;
+  }
+  el.innerHTML = `<div class="tool-result">Volumen aproximado: <strong>${litros.toFixed(1)} litros</strong></div>`;
+}
+
+function calcularCompatibilidad() {
+  const a = document.getElementById('compat-a').value;
+  const b = document.getElementById('compat-b').value;
+  const fishA = FISH_COMPATIBILITY[a];
+  const fishB = FISH_COMPATIBILITY[b];
+  const el = document.getElementById('compat-resultado');
+
+  if (a === b) {
+    el.innerHTML = `<div class="tool-result">Elegí dos especies distintas para comparar.</div>`;
+    return;
+  }
+  if (fishA.water !== fishB.water) {
+    el.innerHTML = `<div class="tool-result"><span class="compat-result-bad">No compatibles.</span> ${fishA.name} necesita agua ${fishA.water === 'fria' ? 'fría' : 'cálida'} y ${fishB.name} agua ${fishB.water === 'fria' ? 'fría' : 'cálida'}.</div>`;
+    return;
+  }
+  const agresivos = ['agresivo', 'territorial'];
+  if (agresivos.includes(fishA.temperament) || agresivos.includes(fishB.temperament)) {
+    el.innerHTML = `<div class="tool-result"><span class="compat-result-bad">Riesgo de conflicto.</span> ${fishA.name} y ${fishB.name} pueden no convivir bien por temperamento.</div>`;
+    return;
+  }
+  el.innerHTML = `<div class="tool-result"><span class="compat-result-ok">Compatibles.</span> ${fishA.name} y ${fishB.name} suelen convivir bien en el mismo acuario.</div>`;
+}
+
+function calcularParametros() {
+  const ph = Number(document.getElementById('param-ph').value);
+  const amoniaco = Number(document.getElementById('param-amoniaco').value);
+  const nitritos = Number(document.getElementById('param-nitritos').value);
+
+  const phStatus = ph >= 6.5 && ph <= 7.5 ? 'ok' : (ph >= 6 && ph <= 8 ? 'warn' : 'bad');
+  const amoniacoStatus = amoniaco === 0 ? 'ok' : (amoniaco <= 0.25 ? 'warn' : 'bad');
+  const nitritosStatus = nitritos === 0 ? 'ok' : (nitritos <= 0.25 ? 'warn' : 'bad');
+
+  const labels = { ok: 'Normal', warn: 'Atención', bad: 'Riesgo' };
+
+  document.getElementById('param-resultado').innerHTML = `
+    <div class="param-row"><label>PH</label><span class="param-status status-${phStatus}">${labels[phStatus]}</span></div>
+    <div class="param-row"><label>Amoníaco</label><span class="param-status status-${amoniacoStatus}">${labels[amoniacoStatus]}</span></div>
+    <div class="param-row"><label>Nitritos</label><span class="param-status status-${nitritosStatus}">${labels[nitritosStatus]}</span></div>
+    ${[phStatus, amoniacoStatus, nitritosStatus].includes('bad') ? '<p class="tool-note" style="color:var(--red);">Valores en riesgo: te recomendamos un cambio de agua parcial y consultar en el local.</p>' : ''}
+  `;
+}
+
+function calcularCambioAgua() {
+  const dias = Number(document.getElementById('cambio-frecuencia').value);
+  const hoy = new Date();
+  const proxima = new Date(hoy);
+  proxima.setDate(hoy.getDate() + dias);
+  const formato = proxima.toLocaleDateString('es-AR', { day: 'numeric', month: 'long' });
+  document.getElementById('cambio-resultado').innerHTML = `
+    <div class="tool-result">Próximo cambio de agua sugerido: <strong>${formato}</strong></div>
+  `;
+}
+
+// ══════════════════════════════════════════════
+// HERRAMIENTAS DE PESCA
+// ══════════════════════════════════════════════
+
+const LUGARES_PESCA = [
+  { nombre: 'Embalse El Carrizal', descripcion: 'El preferido de nuestros clientes. Pejerrey y pejerrey trofeo, muy buena pesca durante todo el año.', destacado: true },
+  { nombre: 'Dique Frías', descripcion: 'Embalse cercano a Luján de Cuyo, conocido por pejerrey y siluro.' },
+  { nombre: 'Dique Potrerillos', descripcion: 'Buen lugar para pejerrey y trucha, especialmente en temporada de apertura.' },
+  { nombre: 'Río Mendoza', descripcion: 'Tramos con buena pesca de trucha en zonas altas y media montaña.' },
+  { nombre: 'Laguna del Diamante', descripcion: 'Pesca de trucha en entorno de alta montaña, San Carlos.' },
+];
+
+function calcularFaseLunar() {
+  const hoy = new Date();
+  const fecha = Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+  const lunaNueva = Date.UTC(2000, 0, 6, 18, 14);
+  const cicloLunar = 29.53058867;
+  const diasDesde = (fecha - lunaNueva) / (1000 * 60 * 60 * 24);
+  const cicloActual = ((diasDesde % cicloLunar) + cicloLunar) % cicloLunar;
+  const porcentaje = cicloActual / cicloLunar;
+
+  let fase, descripcion, icono;
+  if (porcentaje < 0.03 || porcentaje > 0.97) {
+    fase = 'Luna nueva'; icono = 'ti-circle'; descripcion = 'Poca luz nocturna, buena para pesca al amanecer y atardecer.';
+  } else if (porcentaje < 0.22) {
+    fase = 'Luna creciente'; icono = 'ti-moon-2'; descripcion = 'Actividad de peces en aumento, buen momento para salir.';
+  } else if (porcentaje < 0.28) {
+    fase = 'Cuarto creciente'; icono = 'ti-moon'; descripcion = 'Buena actividad de peces durante el día.';
+  } else if (porcentaje < 0.47) {
+    fase = 'Luna gibosa creciente'; icono = 'ti-moon'; descripcion = 'Actividad moderada, recomendable pescar al amanecer.';
+  } else if (porcentaje < 0.53) {
+    fase = 'Luna llena'; icono = 'ti-circle-filled'; descripcion = 'Mucha luz nocturna, ideal para pesca nocturna.';
+  } else if (porcentaje < 0.72) {
+    fase = 'Luna gibosa menguante'; icono = 'ti-moon'; descripcion = 'Buena actividad, especialmente al atardecer.';
+  } else if (porcentaje < 0.78) {
+    fase = 'Cuarto menguante'; icono = 'ti-moon'; descripcion = 'Actividad moderada durante el día.';
+  } else {
+    fase = 'Luna menguante'; icono = 'ti-moon-2'; descripcion = 'Actividad en descenso, mejor en horas de luz.';
+  }
+
+  document.getElementById('luna-resultado').innerHTML = `
+    <div class="luna-visual">
+      <i class="ti ${icono}" style="font-size:48px; color:var(--blue);"></i>
+      <p class="luna-fase-nombre">${fase}</p>
+      <p class="luna-fase-desc">${descripcion}</p>
+    </div>
+  `;
+}
+
+async function obtenerClima() {
+  const el = document.getElementById('clima-resultado');
+  try {
+    const lat = -33.0;
+    const lon = -68.85;
+    const resp = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=America%2FArgentina%2FMendoza`);
+    const data = await resp.json();
+    const actual = data.current_weather;
+    const hoyMax = data.daily.temperature_2m_max[0];
+    const hoyMin = data.daily.temperature_2m_min[0];
+    const lluvia = data.daily.precipitation_probability_max[0];
+
+    const codigosClima = {
+      0: 'Despejado', 1: 'Mayormente despejado', 2: 'Parcialmente nublado', 3: 'Nublado',
+      45: 'Niebla', 48: 'Niebla', 51: 'Llovizna débil', 53: 'Llovizna', 55: 'Llovizna intensa',
+      61: 'Lluvia débil', 63: 'Lluvia', 65: 'Lluvia intensa', 71: 'Nieve débil', 73: 'Nieve',
+      75: 'Nieve intensa', 80: 'Chubascos débiles', 81: 'Chubascos', 82: 'Chubascos intensos',
+      95: 'Tormenta', 96: 'Tormenta con granizo', 99: 'Tormenta fuerte',
+    };
+    const descripcion = codigosClima[actual.weathercode] || 'Variable';
+
+    el.innerHTML = `
+      <div class="clima-actual">
+        <div class="clima-temp">${Math.round(actual.temperature)}°C</div>
+        <div class="clima-desc">${descripcion}</div>
+      </div>
+      <div class="clima-detalle-row"><span>Máxima de hoy</span><span>${Math.round(hoyMax)}°C</span></div>
+      <div class="clima-detalle-row"><span>Mínima de hoy</span><span>${Math.round(hoyMin)}°C</span></div>
+      <div class="clima-detalle-row"><span>Viento</span><span>${Math.round(actual.windspeed)} km/h</span></div>
+      <div class="clima-detalle-row"><span>Probabilidad de lluvia</span><span>${lluvia}%</span></div>
+      <p class="tool-note">Pronóstico para la zona de Mendoza. Datos de Open-Meteo.</p>
+    `;
+  } catch (e) {
+    el.innerHTML = `<p class="tool-note">No se pudo obtener el pronóstico. Revisá tu conexión a internet.</p>`;
+  }
+}
+
+// ══════════════════════════════════════════════
+// MIS ACUARIOS (guardado local en el celular)
+// ══════════════════════════════════════════════
+
+const ACUARIOS_KEY = 'sandomingo_mis_acuarios';
+
+function getMisAcuarios() {
+  try {
+    return JSON.parse(localStorage.getItem(ACUARIOS_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function setMisAcuarios(lista) {
+  localStorage.setItem(ACUARIOS_KEY, JSON.stringify(lista));
+}
+
+function mostrarFormularioAcuario(id) {
+  document.getElementById('acuario-form-wrap').style.display = 'block';
+  document.getElementById('acuario-edit-id').value = '';
+  ['nombre','litros','especies','ph','amoniaco','nitritos','fecha','notas'].forEach(f => {
+    document.getElementById(`acuario-${f}`).value = '';
+  });
+
+  if (id) {
+    const acuario = getMisAcuarios().find(a => a.id === id);
+    if (acuario) {
+      document.getElementById('acuario-edit-id').value = id;
+      document.getElementById('acuario-nombre').value = acuario.nombre || '';
+      document.getElementById('acuario-litros').value = acuario.litros || '';
+      document.getElementById('acuario-especies').value = acuario.especies || '';
+      document.getElementById('acuario-ph').value = acuario.ph || '';
+      document.getElementById('acuario-amoniaco').value = acuario.amoniaco || '';
+      document.getElementById('acuario-nitritos').value = acuario.nitritos || '';
+      document.getElementById('acuario-fecha').value = acuario.fecha || '';
+      document.getElementById('acuario-notas').value = acuario.notas || '';
+    }
+  }
+}
+
+function ocultarFormularioAcuario() {
+  document.getElementById('acuario-form-wrap').style.display = 'none';
+}
+
+function guardarAcuario() {
+  const nombre = document.getElementById('acuario-nombre').value.trim();
+  if (!nombre) {
+    alert('Ingresá un nombre para el acuario.');
+    return;
+  }
+
+  const editId = document.getElementById('acuario-edit-id').value;
+  const fotoInput = document.getElementById('acuario-foto');
+
+  const datosBase = {
+    nombre,
+    litros: document.getElementById('acuario-litros').value,
+    especies: document.getElementById('acuario-especies').value.trim(),
+    ph: document.getElementById('acuario-ph').value,
+    amoniaco: document.getElementById('acuario-amoniaco').value,
+    nitritos: document.getElementById('acuario-nitritos').value,
+    fecha: document.getElementById('acuario-fecha').value,
+    notas: document.getElementById('acuario-notas').value.trim(),
+  };
+
+  function guardarConFoto(fotoBase64) {
+    let lista = getMisAcuarios();
+    if (editId) {
+      lista = lista.map(a => a.id === editId ? { ...a, ...datosBase, foto: fotoBase64 !== undefined ? fotoBase64 : a.foto } : a);
+    } else {
+      lista.push({ id: 'a_' + Date.now(), ...datosBase, foto: fotoBase64 || null });
+    }
+    setMisAcuarios(lista);
+    ocultarFormularioAcuario();
+    renderMisAcuarios();
+  }
+
+  if (fotoInput.files && fotoInput.files.length > 0) {
+    const reader = new FileReader();
+    reader.onload = () => guardarConFoto(reader.result);
+    reader.readAsDataURL(fotoInput.files[0]);
+  } else {
+    guardarConFoto(undefined);
+  }
+}
+
+function eliminarAcuario(id) {
+  if (!confirm('¿Eliminar este acuario de tu lista?')) return;
+  setMisAcuarios(getMisAcuarios().filter(a => a.id !== id));
+  renderMisAcuarios();
+}
+
+function renderMisAcuarios() {
+  const lista = getMisAcuarios();
+  const cont = document.getElementById('misacuarios-lista');
+  const empty = document.getElementById('misacuarios-empty');
+
+  if (lista.length === 0) {
+    cont.innerHTML = '';
+    empty.style.display = 'flex';
+    return;
+  }
+
+  empty.style.display = 'none';
+  cont.innerHTML = lista.map(a => `
+    <div class="acuario-card">
+      ${a.foto ? `<img src="${a.foto}" alt="${a.nombre}" />` : ''}
+      <p class="acuario-nombre">${a.nombre}</p>
+      ${a.litros ? `<p class="acuario-detalle">Litros: ${a.litros}</p>` : ''}
+      ${a.especies ? `<p class="acuario-detalle">Especies: ${a.especies}</p>` : ''}
+      ${a.ph || a.amoniaco || a.nitritos ? `<p class="acuario-detalle">PH: ${a.ph || '-'} · Amoníaco: ${a.amoniaco || '-'} · Nitritos: ${a.nitritos || '-'}</p>` : ''}
+      ${a.fecha ? `<p class="acuario-detalle">Último cambio de agua: ${a.fecha}</p>` : ''}
+      ${a.notas ? `<p class="acuario-detalle">${a.notas}</p>` : ''}
+      <div class="acuario-actions">
+        <button onclick="mostrarFormularioAcuario('${a.id}')"><i class="ti ti-edit" style="margin-right:4px;"></i>Editar</button>
+        <button onclick="eliminarAcuario('${a.id}')"><i class="ti ti-trash" style="margin-right:4px;"></i>Eliminar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════
+// FORO DE ACUARIOS (Supabase, sin login)
+// ══════════════════════════════════════════════
+
+function abrirFormularioForo() {
+  const wrap = document.getElementById('foro-form-wrap');
+  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+}
+
+async function publicarForo() {
+  const fotoInput = document.getElementById('foro-foto');
+  const nombre = document.getElementById('foro-nombre').value.trim();
+  const descripcion = document.getElementById('foro-descripcion').value.trim();
+  const msgEl = document.getElementById('foro-form-msg');
+
+  if (!fotoInput.files || fotoInput.files.length === 0) {
+    msgEl.textContent = 'Elegí o tomá una foto antes de publicar.';
+    return;
+  }
+  if (!nombre) {
+    msgEl.textContent = 'Ingresá tu nombre o apodo.';
+    return;
+  }
+  if (!supabaseClient) {
+    msgEl.textContent = 'No se pudo conectar con el servidor. Probá de nuevo más tarde.';
+    return;
+  }
+
+  msgEl.textContent = 'Subiendo foto...';
+  const file = fotoInput.files[0];
+  const ext = file.name.split('.').pop() || 'jpg';
+  const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+
+  try {
+    const { error: uploadError } = await supabaseClient.storage
+      .from('foro-fotos')
+      .upload(fileName, file);
+
+    if (uploadError) {
+      msgEl.textContent = 'No se pudo subir la foto. Intentá de nuevo.';
+      return;
+    }
+
+    const { data: publicUrlData } = supabaseClient.storage
+      .from('foro-fotos')
+      .getPublicUrl(fileName);
+
+    const { error: insertError } = await supabaseClient
+      .from('foro_posts')
+      .insert([{ nombre, descripcion, foto_url: publicUrlData.publicUrl }]);
+
+    if (insertError) {
+      msgEl.textContent = 'No se pudo publicar. Intentá de nuevo.';
+      return;
+    }
+
+    msgEl.textContent = '¡Publicado! +10 puntos';
+    fotoInput.value = '';
+    document.getElementById('foro-nombre').value = '';
+    document.getElementById('foro-descripcion').value = '';
+    await sumarPuntos(10);
+    setTimeout(() => {
+      document.getElementById('foro-form-wrap').style.display = 'none';
+      msgEl.textContent = '';
+    }, 1200);
+    renderForo();
+  } catch (e) {
+    msgEl.textContent = 'Ocurrió un error. Intentá de nuevo.';
+  }
+}
+
+async function renderForo() {
+  const lista = document.getElementById('foro-lista');
+  const empty = document.getElementById('foro-empty');
+
+  if (!supabaseClient) {
+    lista.innerHTML = '';
+    empty.style.display = 'flex';
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('foro_posts')
+    .select('*')
+    .order('creado_en', { ascending: false })
+    .limit(50);
+
+  if (error || !data || data.length === 0) {
+    lista.innerHTML = '';
+    empty.style.display = 'flex';
+    return;
+  }
+
+  empty.style.display = 'none';
+  lista.innerHTML = data.map(post => {
+    const fecha = new Date(post.creado_en).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
+    return `
+      <div class="foro-post">
+        <img src="${post.foto_url}" alt="Acuario de ${post.nombre}" />
+        <div class="foro-post-body">
+          <span class="foro-post-nombre">${post.nombre}</span>
+          <span class="foro-post-fecha">${fecha}</span>
+          ${post.descripcion ? `<div class="foro-post-desc">${post.descripcion}</div>` : ''}
+          ${comentariosBloqueHTML('foro', post.id)}
+        </div>
+      </div>
+    `;
+  }).join('');
+  data.forEach(post => cargarComentarios('foro', post.id));
+}
+
+// ══════════════════════════════════════════════
+// BITÁCORA DE CAPTURAS (Supabase, sin login)
+// ══════════════════════════════════════════════
+
+function abrirFormularioBitacora() {
+  const wrap = document.getElementById('bitacora-form-wrap');
+  wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+}
+
+async function publicarBitacora() {
+  const fotoInput = document.getElementById('bitacora-foto');
+  const nombre = document.getElementById('bitacora-nombre').value.trim();
+  const lugar = document.getElementById('bitacora-lugar').value.trim();
+  const especie = document.getElementById('bitacora-especie').value.trim();
+  const notas = document.getElementById('bitacora-notas').value.trim();
+  const msgEl = document.getElementById('bitacora-form-msg');
+
+  if (!nombre || !lugar || !especie) {
+    msgEl.textContent = 'Completá nombre, lugar y especie.';
+    return;
+  }
+  if (!supabaseClient) {
+    msgEl.textContent = 'No se pudo conectar con el servidor. Probá de nuevo más tarde.';
+    return;
+  }
+
+  let fotoUrl = null;
+  if (fotoInput.files && fotoInput.files.length > 0) {
+    msgEl.textContent = 'Subiendo foto...';
+    const file = fotoInput.files[0];
+    const ext = file.name.split('.').pop() || 'jpg';
+    const fileName = `bitacora_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error: uploadError } = await supabaseClient.storage.from('foro-fotos').upload(fileName, file);
+    if (uploadError) {
+      msgEl.textContent = 'No se pudo subir la foto. Intentá de nuevo.';
+      return;
+    }
+    const { data: publicUrlData } = supabaseClient.storage.from('foro-fotos').getPublicUrl(fileName);
+    fotoUrl = publicUrlData.publicUrl;
+  }
+
+  try {
+    msgEl.textContent = 'Publicando...';
+    const { error: insertError } = await supabaseClient
+      .from('bitacora_capturas')
+      .insert([{ nombre, lugar, especie, notas, foto_url: fotoUrl }]);
+
+    if (insertError) {
+      msgEl.textContent = 'No se pudo publicar. Intentá de nuevo.';
+      return;
+    }
+
+    msgEl.textContent = '¡Publicado! +10 puntos';
+    fotoInput.value = '';
+    document.getElementById('bitacora-nombre').value = '';
+    document.getElementById('bitacora-lugar').value = '';
+    document.getElementById('bitacora-especie').value = '';
+    document.getElementById('bitacora-notas').value = '';
+    await sumarPuntos(10);
+    setTimeout(() => {
+      document.getElementById('bitacora-form-wrap').style.display = 'none';
+      msgEl.textContent = '';
+    }, 1200);
+    renderBitacora();
+  } catch (e) {
+    msgEl.textContent = 'Ocurrió un error. Intentá de nuevo.';
+  }
+}
+
+async function renderBitacora() {
+  const lista = document.getElementById('bitacora-lista');
+  const empty = document.getElementById('bitacora-empty');
+
+  if (!supabaseClient) {
+    lista.innerHTML = '';
+    empty.style.display = 'flex';
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('bitacora_capturas')
+    .select('*')
+    .order('creado_en', { ascending: false })
+    .limit(50);
+
+  if (error || !data || data.length === 0) {
+    lista.innerHTML = '';
+    empty.style.display = 'flex';
+    return;
+  }
+
+  empty.style.display = 'none';
+  lista.innerHTML = data.map(post => {
+    const fecha = new Date(post.creado_en).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
+    return `
+      <div class="foro-post">
+        ${post.foto_url ? `<img src="${post.foto_url}" alt="Captura de ${post.nombre}" />` : ''}
+        <div class="foro-post-body">
+          <span class="foro-post-nombre">${post.especie} — ${post.lugar}</span>
+          <span class="foro-post-fecha">${fecha}</span>
+          <div class="foro-post-desc">Por ${post.nombre}${post.notas ? `. ${post.notas}` : ''}</div>
+          ${comentariosBloqueHTML('bitacora', post.id)}
+        </div>
+      </div>
+    `;
+  }).join('');
+  data.forEach(post => cargarComentarios('bitacora', post.id));
+}
+
+// ══════════════════════════════════════════════
+// COMENTARIOS (foro y bitácora)
+// ══════════════════════════════════════════════
+
+function comentariosBloqueHTML(tipo, postId) {
+  const contId = `comentarios_${tipo}_${postId}`;
+  return `
+    <div class="comentarios-bloque">
+      <div id="${contId}" class="comentarios-lista"></div>
+      <div style="display:flex; gap:6px; margin-top:8px;">
+        <input type="text" id="input_${contId}" placeholder="Escribí un comentario..." style="flex:1; border:1px solid var(--border); border-radius:8px; padding:7px 9px; font-size:12px;" />
+        <button onclick="publicarComentario('${tipo}','${postId}')" style="background:var(--blue); color:white; border:none; border-radius:8px; padding:7px 12px; font-size:12px; font-weight:600; cursor:pointer;">Enviar</button>
+      </div>
+    </div>
+  `;
+}
+
+async function cargarComentarios(tipo, postId) {
+  if (!supabaseClient) return;
+  const { data } = await supabaseClient
+    .from('comentarios')
+    .select('*')
+    .eq('tipo', tipo)
+    .eq('post_id', postId)
+    .order('creado_en', { ascending: true });
+
+  const cont = document.getElementById(`comentarios_${tipo}_${postId}`);
+  if (!cont) return;
+  if (!data || data.length === 0) {
+    cont.innerHTML = '';
+    return;
+  }
+  cont.innerHTML = data.map(c => `
+    <div class="comentario-item"><strong>${c.nombre}:</strong> ${c.texto}</div>
+  `).join('');
+}
+
+async function publicarComentario(tipo, postId) {
+  const usuario = getUsuarioLocal();
+  if (!usuario) {
+    alert('Necesitás identificarte para comentar. Volvé al inicio de la app.');
+    return;
+  }
+  const inputId = `input_comentarios_${tipo}_${postId}`;
+  const input = document.getElementById(inputId);
+  const texto = input.value.trim();
+  if (!texto || !supabaseClient) return;
+
+  const { error } = await supabaseClient
+    .from('comentarios')
+    .insert([{ tipo, post_id: postId, whatsapp: usuario.whatsapp, nombre: usuario.nombre, texto }]);
+
+  if (!error) {
+    input.value = '';
+    await sumarPuntos(2);
+    cargarComentarios(tipo, postId);
+  }
+}
+
+// ══════════════════════════════════════════════
+// PWA: registrar service worker + botón instalar
+// ══════════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  const btn = document.getElementById('install-btn');
+  if (btn) btn.style.display = 'flex';
+});
+
+function installApp() {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(() => {
+    deferredInstallPrompt = null;
+    const btn = document.getElementById('install-btn');
+    if (btn) btn.style.display = 'none';
+  });
+}
+
+if (new URLSearchParams(window.location.search).has('admin')) {
+  document.getElementById('screen-splash').classList.remove('active');
+  document.getElementById('screen-admin').classList.add('active');
+}
+</script>
+</body>
+</html>
