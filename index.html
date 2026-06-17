@@ -1564,8 +1564,19 @@ function renderBanner() {
   `).join('');
   dots.innerHTML = BANNER_SLIDES.map((_, i) => `<div class="banner-dot ${i === 0 ? 'active' : ''}" data-i="${i}"></div>`).join('');
   const carousel = document.getElementById('banner-carousel');
-  carousel.addEventListener('scroll', () => {
+carousel.addEventListener('scroll', () => {
     const i = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+    document.querySelectorAll('.banner-dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
+  });
+
+  if (window.bannerAutoInterval) clearInterval(window.bannerAutoInterval);
+  window.bannerAutoInterval = setInterval(() => {
+    const totalSlides = BANNER_SLIDES.length;
+    const current = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+    const next = (current + 1) % totalSlides;
+    carousel.scrollTo({ left: next * carousel.offsetWidth, behavior: 'smooth' });
+  }, 2500);
+  const i = Math.round(carousel.scrollLeft / carousel.offsetWidth);
     document.querySelectorAll('.banner-dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
   });
 }
