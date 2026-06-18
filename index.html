@@ -1027,7 +1027,58 @@
 
 <div id="app">
 
-  <div id="screen-splash" class="screen active">
+  <div id="screen-cinematic" class="screen active" style="background:#031018; align-items:center; justify-content:flex-end; overflow:hidden;">
+    <svg viewBox="0 0 400 700" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style="position:absolute; top:0; left:0;">
+      <defs>
+        <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0B3B75"/>
+          <stop offset="100%" stop-color="#042C53"/>
+        </linearGradient>
+        <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FAC775" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#FAC775" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <rect id="waterSurface" x="0" y="430" width="400" height="270" fill="url(#waterGrad)" opacity="0"/>
+
+      <path id="waveLine1" d="M0,440 Q50,430 100,440 T200,440 T300,440 T400,440" stroke="#1E73BE" stroke-width="2" fill="none" opacity="0"/>
+      <path id="waveLine2" d="M0,450 Q60,442 120,450 T240,450 T360,450 T480,450" stroke="#378ADD" stroke-width="1.5" fill="none" opacity="0"/>
+
+      <g id="fishShadow" opacity="0" transform="translate(200,470) scale(0.5)">
+        <ellipse cx="0" cy="0" rx="34" ry="11" fill="#021A2E"/>
+      </g>
+
+      <g id="fishJump" opacity="0" transform="translate(200,440) scale(0)">
+        <path d="M-32,0 C-20,-20 20,-20 38,0 C24,5 14,3 0,0 C-10,9 -22,9 -32,0 Z" fill="#185FA5"/>
+        <path d="M38,0 L52,-9 M38,0 L52,9" stroke="#042C53" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="-18" cy="-4" r="2.4" fill="#031018"/>
+      </g>
+
+      <g id="splashRipples" opacity="0">
+        <circle id="ripple1" cx="200" cy="440" r="6" fill="none" stroke="#B5D4F4" stroke-width="2"/>
+        <circle id="ripple2" cx="200" cy="440" r="6" fill="none" stroke="#B5D4F4" stroke-width="1.5"/>
+      </g>
+
+      <g id="dropsGroup" opacity="0">
+        <circle cx="178" cy="420" r="2.5" fill="#B5D4F4"/>
+        <circle cx="190" cy="408" r="2" fill="#B5D4F4"/>
+        <circle cx="210" cy="406" r="2.2" fill="#B5D4F4"/>
+        <circle cx="224" cy="416" r="1.8" fill="#B5D4F4"/>
+        <circle cx="200" cy="398" r="1.6" fill="#FAC775"/>
+      </g>
+    </svg>
+
+    <div id="cinematicLogoBlock" style="position:relative; z-index:2; text-align:center; padding-bottom:90px; opacity:0;">
+      <p style="font-size:24px; font-weight:700; letter-spacing:2px; color:#FFFFFF; margin-bottom:4px;">SAN DOMINGO</p>
+      <p style="font-size:11px; letter-spacing:3px; color:#B5D4F4; margin-bottom:22px;">PESCA &amp; ACUARIOFILIA</p>
+      <div style="width:140px; height:3px; background:rgba(255,255,255,0.15); border-radius:2px; margin:0 auto; overflow:hidden;">
+        <div id="cinematicLoadBar" style="width:0%; height:100%; background:#FAC775; border-radius:2px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-splash" class="screen">
     <div class="splash-bubble" style="width:14px; height:14px; left:18%; animation-duration:6s; animation-delay:0s; --drift:10px;"></div>
     <div class="splash-bubble" style="width:9px; height:9px; left:32%; animation-duration:4.5s; animation-delay:1.2s; --drift:-8px;"></div>
     <div class="splash-bubble" style="width:18px; height:18px; left:68%; animation-duration:7s; animation-delay:0.6s; --drift:-12px;"></div>
@@ -1052,6 +1103,7 @@
       <i class="ti ti-download"></i> Instalar app en mi celular
     </button>
   </div>
+
 
   <div id="screen-registro" class="screen" style="align-items:center; justify-content:center; padding:40px 28px; background:var(--white);">
     <i class="ti ti-user-circle" style="font-size:48px; color:var(--blue); margin-bottom:16px;"></i>
@@ -2907,8 +2959,92 @@ function installApp() {
 }
 
 if (new URLSearchParams(window.location.search).has('admin')) {
+  document.getElementById('screen-cinematic').classList.remove('active');
   document.getElementById('screen-splash').classList.remove('active');
   document.getElementById('screen-admin').classList.add('active');
+} else {
+  runCinematicSplash();
+}
+
+function runCinematicSplash() {
+  const water = document.getElementById('waterSurface');
+  const wave1 = document.getElementById('waveLine1');
+  const wave2 = document.getElementById('waveLine2');
+  const shadow = document.getElementById('fishShadow');
+  const fish = document.getElementById('fishJump');
+  const ripples = document.getElementById('splashRipples');
+  const ripple1 = document.getElementById('ripple1');
+  const ripple2 = document.getElementById('ripple2');
+  const drops = document.getElementById('dropsGroup');
+  const logoBlock = document.getElementById('cinematicLogoBlock');
+  const loadBar = document.getElementById('cinematicLoadBar');
+  const cinematicScreen = document.getElementById('screen-cinematic');
+  const splashScreen = document.getElementById('screen-splash');
+
+  const setT = (el, t, dur) => {
+    el.style.transition = `all ${dur}ms ease-out`;
+    el.setAttribute('transform', t);
+  };
+
+  requestAnimationFrame(() => {
+    water.style.transition = 'opacity 600ms ease-out';
+    water.style.opacity = '1';
+    wave1.style.transition = 'opacity 600ms ease-out';
+    wave1.style.opacity = '0.5';
+    wave2.style.transition = 'opacity 600ms ease-out';
+    wave2.style.opacity = '0.4';
+  });
+
+  setTimeout(() => {
+    shadow.style.transition = 'opacity 500ms ease-in, transform 500ms ease-in';
+    shadow.style.opacity = '0.5';
+    shadow.setAttribute('transform', 'translate(200,470) scale(1)');
+  }, 500);
+
+  setTimeout(() => {
+    shadow.style.opacity = '0';
+    fish.style.transition = 'opacity 200ms ease-out, transform 700ms cubic-bezier(.2,.7,.3,1)';
+    fish.style.opacity = '1';
+    fish.setAttribute('transform', 'translate(200,250) scale(1) rotate(-25)');
+    ripples.style.transition = 'opacity 300ms ease-out';
+    ripples.style.opacity = '1';
+    ripple1.style.transition = 'r 700ms ease-out, opacity 700ms ease-out';
+    ripple2.style.transition = 'r 900ms ease-out, opacity 900ms ease-out';
+    ripple1.setAttribute('r', '70');
+    ripple2.setAttribute('r', '110');
+    ripple1.style.opacity = '0';
+    ripple2.style.opacity = '0';
+    drops.style.transition = 'opacity 300ms ease-out, transform 800ms ease-out';
+    drops.style.opacity = '1';
+    drops.setAttribute('transform', 'translate(0,-60)');
+  }, 1000);
+
+  setTimeout(() => {
+    logoBlock.style.transition = 'opacity 600ms ease-out';
+    logoBlock.style.opacity = '1';
+    fish.style.transition = 'opacity 500ms ease-in, transform 500ms ease-in';
+    fish.style.opacity = '0';
+    drops.style.transition = 'opacity 500ms ease-in';
+    drops.style.opacity = '0';
+  }, 1650);
+
+  setTimeout(() => {
+    loadBar.style.transition = 'width 700ms ease-out';
+    loadBar.style.width = '100%';
+  }, 1900);
+
+  setTimeout(() => {
+    cinematicScreen.style.transition = 'opacity 500ms ease-in, transform 500ms ease-in';
+    cinematicScreen.style.opacity = '0';
+    cinematicScreen.style.transform = 'scale(1.06)';
+  }, 2650);
+
+  setTimeout(() => {
+    cinematicScreen.classList.remove('active');
+    cinematicScreen.style.display = 'none';
+    splashScreen.classList.add('active');
+    splashScreen.classList.add('slide-up');
+  }, 3150);
 }
 </script>
 </body>
