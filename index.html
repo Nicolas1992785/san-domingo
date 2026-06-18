@@ -18,6 +18,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     :root {
+      --banner-height: 60vh;
       --navy:      #042C53;
       --blue:      #185FA5;
       --lightBlue: #E6F1FB;
@@ -250,21 +251,23 @@
       padding: 16px;
     }
 
-    .banner-carousel {
+    .banner-fullscreen {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--banner-height);
       display: flex;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
-      margin: 0 -16px 8px -16px;
       scrollbar-width: none;
+      z-index: 1;
     }
-    .banner-carousel::-webkit-scrollbar { display: none; }
-    .banner-track { display: flex; }
+    .banner-fullscreen::-webkit-scrollbar { display: none; }
+    .banner-track { display: flex; width: 100%; }
     .banner-slide {
       scroll-snap-align: center;
       flex-shrink: 0;
       width: 100%;
-      height: 140px;
-      border-radius: 0;
+      height: var(--banner-height);
       overflow: hidden;
       position: relative;
       background: var(--lightBlue);
@@ -280,7 +283,24 @@
       font-weight: 600;
       padding: 24px 12px 10px;
     }
-    .banner-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; }
+    .header-floating {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 2;
+      background: linear-gradient(rgba(4,44,83,0.55), transparent);
+      border-bottom: none;
+    }
+    .header-floating .header-title,
+    .header-floating .header-address,
+    .header-floating .icon-btn i {
+      color: white;
+    }
+    .header-floating .icon-btn { background: rgba(255,255,255,0.18); }
+    .header-floating .search-input {
+      background: rgba(255,255,255,0.92);
+      border: none;
+    }
+    .banner-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; padding-top: 14px; }
     .banner-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
     .banner-dot.active { background: var(--blue); }
     .puntos-banner {
@@ -972,9 +992,13 @@
     <p class="footer-sig">Creada con amor - Nicolas Genco</p>
   </div>
 
-  <div id="screen-main" class="screen" style="flex-direction:column;">
+  <div id="screen-main" class="screen" style="flex-direction:column; position:relative;">
 
-    <div class="header">
+    <div class="banner-fullscreen" id="banner-carousel">
+      <div class="banner-track" id="banner-track"></div>
+    </div>
+
+    <div class="header header-floating">
       <div class="header-top">
         <button class="icon-btn" onclick="goToHub()" aria-label="Volver al inicio">
           <i class="ti ti-home"></i>
@@ -1001,10 +1025,7 @@
       <input class="search-input" id="search-input" type="search" placeholder="Buscar por nombre, marca o categoría" oninput="renderHome()" />
     </div>
 
-    <div id="tab-home" class="content">
-      <div class="banner-carousel" id="banner-carousel">
-        <div class="banner-track" id="banner-track"></div>
-      </div>
+    <div id="tab-home" class="content" style="margin-top:var(--banner-height);">
       <div class="banner-dots" id="banner-dots"></div>
       <div class="puntos-banner" onclick="openTool('misPuntos')">
         <i class="ti ti-star" style="font-size:24px;"></i>
@@ -1646,7 +1667,6 @@ const BANNER_SLIDES_BY_WORLD = {
 };
 
 function renderBanner() {
-  const wrap = document.querySelector('.banner-carousel').parentElement;
   const slides = BANNER_SLIDES_BY_WORLD[currentWorld];
   if (!slides) {
     document.getElementById('banner-carousel').style.display = 'none';
