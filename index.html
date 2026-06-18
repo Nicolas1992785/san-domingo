@@ -7,33 +7,39 @@
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/icon-192.png" />
   <link rel="apple-touch-icon" href="/icon-180.png" />
-  <meta name="theme-color" content="#042C53" />
+  <meta name="theme-color" content="#0B3B75" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="San Domingo" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     :root {
-      --navy:      #042C53;
-      --blue:      #185FA5;
-      --lightBlue: #E6F1FB;
+      --navy:      #0B3B75;
+      --blue:      #1E73BE;
+      --lightBlue: #F8F9FC;
       --white:     #FFFFFF;
-      --lightGray: #F1EFE8;
-      --gray:      #888780;
-      --darkGray:  #444441;
-      --green:     #639922;
-      --greenDark: #27500A;
-      --greenLight:#EAF3DE;
-      --red:       #A32D2D;
-      --border:    #D3D1C7;
+      --lightGray: #F8F9FC;
+      --gray:      #6B7280;
+      --darkGray:  #1F2937;
+      --green:     #1D9E75;
+      --greenDark: #0F6E56;
+      --greenLight:#E1F5EE;
+      --red:       #D85A30;
+      --border:    #E5E7EB;
+      --accent:    #25D366;
+      --surface:   #F8F9FC;
+      --text:      #1F2937;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #ccc;
       display: flex;
       justify-content: center;
@@ -180,7 +186,7 @@
 
     .header {
       background: var(--white);
-      padding: 14px 16px 12px;
+      padding: 10px 16px 10px;
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
     }
@@ -188,7 +194,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .header-title {
       font-size: 15px;
@@ -275,11 +281,41 @@
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(4,44,83,0.5);
+      background: rgba(11,59,117,0.45);
       z-index: 1;
     }
     .banner-slide img { width: 100%; height: 100%; object-fit: cover; }
     .banner-slide video { width: 100%; height: 100%; object-fit: cover; }
+    .hero-text-block {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      z-index: 2;
+      padding: 0 16px 18px;
+      color: white;
+    }
+    .hero-title {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+    }
+    .hero-subtitle {
+      font-size: 13px;
+      opacity: 0.92;
+      margin-bottom: 12px;
+    }
+    .hero-buttons { display: flex; gap: 8px; }
+    .hero-btn {
+      border: none;
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+    }
+    .hero-btn-primary { background: var(--white); color: var(--navy); }
+    .hero-btn-secondary { background: rgba(255,255,255,0.22); color: var(--white); }
     .banner-slide .banner-label {
       position: absolute;
       bottom: 0; left: 0; right: 0;
@@ -388,6 +424,17 @@
       border-radius: 8px;
       background: var(--lightGray);
       color: var(--darkGray);
+    }
+    .hub-logo-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 32px 0 20px;
+    }
+    .hub-logo-img {
+      width: 70%;
+      max-width: 260px;
+      filter: drop-shadow(0 6px 14px rgba(4,44,83,0.25));
     }
     .tools-grid {
       display: grid;
@@ -864,6 +911,20 @@
     .tab-item i { font-size: 20px; }
     .tab-item.active { color: var(--blue); }
 
+    .footer-block {
+      flex-shrink: 0;
+      background: var(--lightGray);
+    }
+    .footer-address {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--blue);
+      text-decoration: none;
+      padding: 8px 16px 2px;
+    }
     .footer-sig {
       text-align: center;
       font-size: 10px;
@@ -994,6 +1055,9 @@
           </div>
         </div>
       </div>
+      <div class="hub-logo-wrap">
+        <img src="imagenes/logo-sandomingo.png" alt="San Domingo" class="hub-logo-img" />
+      </div>
     </div>
     <p class="footer-sig">Creada con amor - Nicolas Genco</p>
   </div>
@@ -1016,9 +1080,6 @@
         </svg>
         <div class="header-text-block">
           <div class="header-title">San Domingo</div>
-          <a href="https://maps.google.com/?q=Chacabuco+711+y+Congreso,+Rodeo+de+la+Cruz,+Guaymallén,+Mendoza" target="_blank" class="header-address">
-            <i class="ti ti-map-pin" style="font-size:11px;"></i> Rodeo de la Cruz, Guaymallén
-          </a>
         </div>
         <button class="icon-btn" onclick="showTab('saved')" aria-label="Guardados">
           <i class="ti ti-bookmark"></i>
@@ -1172,7 +1233,12 @@
     <a href="https://wa.me/5492616109829" target="_blank" class="whatsapp-float-btn">
       <i class="ti ti-brand-whatsapp" style="font-size:28px; color:white;"></i>
     </a>
-    <p class="footer-sig">Creada con amor - Nicolas Genco</p>
+    <div class="footer-block">
+      <a href="https://maps.google.com/?q=Chacabuco+711+y+Congreso,+Rodeo+de+la+Cruz,+Guaymallén,+Mendoza" target="_blank" class="footer-address">
+        <i class="ti ti-map-pin" style="font-size:12px;"></i> Chacabuco 711 y Congreso, Rodeo de la Cruz
+      </a>
+      <p class="footer-sig">Creada con amor - Nicolas Genco</p>
+    </div>
   </div>
 
   <div id="tool-modal" class="tool-modal">
@@ -1672,6 +1738,11 @@ const BANNER_SLIDES_BY_WORLD = {
   pesca: [{ video: 'imagenes/pescando.mp4' }],
 };
 
+const HERO_SUBTITLE_BY_WORLD = {
+  acuariofilia: 'Todo para tu acuario',
+  pesca: 'Todo para tu próxima salida',
+};
+
 function renderBanner() {
   const slides = BANNER_SLIDES_BY_WORLD[currentWorld];
   if (!slides) {
@@ -1682,11 +1753,20 @@ function renderBanner() {
   document.getElementById('banner-carousel').style.display = 'flex';
   document.getElementById('banner-dots').style.display = 'none';
   const track = document.getElementById('banner-track');
+  const subtitle = HERO_SUBTITLE_BY_WORLD[currentWorld] || '';
   track.innerHTML = slides.map(s => `
     <div class="banner-slide">
       ${s.video
         ? `<video src="${s.video}" autoplay muted loop playsinline></video>`
         : `<img src="${s.img}" alt="" />`}
+      <div class="hero-text-block">
+        <p class="hero-title">SAN DOMINGO</p>
+        <p class="hero-subtitle">${subtitle}</p>
+        <div class="hero-buttons">
+          <button class="hero-btn hero-btn-primary" onclick="showTab('home')">Ver catálogo</button>
+          <button class="hero-btn hero-btn-secondary" onclick="filterByCategory('ofertas')">Ver ofertas</button>
+        </div>
+      </div>
     </div>
   `).join('');
   const carousel = document.getElementById('banner-carousel');
