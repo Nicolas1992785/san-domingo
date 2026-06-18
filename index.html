@@ -376,6 +376,36 @@
     .puntos-banner i:first-child { color: #FAC775; }
     .puntos-banner-titulo { font-size: 13px; font-weight: 700; }
     .puntos-banner-sub { font-size: 11px; opacity: 0.8; margin-top: 1px; }
+    .community-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .community-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(11,59,117,0.07);
+      padding: 12px 14px;
+      cursor: pointer;
+    }
+    .community-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 19px;
+    }
+    .community-icon-amber { background: #FAEEDA; color: #854F0B; }
+    .community-icon-blue { background: var(--lightBlue); color: var(--blue); }
+    .community-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .community-sub { font-size: 11px; color: var(--gray); margin-top: 1px; }
     .hub-card {
       position: relative;
       height: 160px;
@@ -461,11 +491,14 @@
     }
     .tool-card {
       background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 14px;
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(11,59,117,0.06);
       padding: 14px;
       cursor: pointer;
+      transition: transform 0.3s ease;
     }
+    .tool-card:active { transform: scale(0.97); }
     .tool-card i { font-size: 24px; color: var(--blue); }
     .tool-card span {
       display: block;
@@ -1132,25 +1165,19 @@
     <div id="tab-home" class="content" style="margin-top:56.25vw;">
       <div class="banner-dots" id="banner-dots"></div>
       <div class="quick-access-grid" id="quick-access-grid"></div>
-      <div class="puntos-banner" onclick="openTool('misPuntos')">
-        <i class="ti ti-star" style="font-size:24px;"></i>
-        <div>
-          <p class="puntos-banner-titulo">Sumá puntos y ganá descuentos</p>
-          <p class="puntos-banner-sub">Publicá fotos, comentá e invitá amigos</p>
-        </div>
-        <i class="ti ti-chevron-right" style="margin-left:auto; font-size:18px;"></i>
-      </div>
-      <div id="tools-section" style="display:none;">
-        <p class="section-label">Herramientas</p>
-        <div class="tools-grid" id="tools-grid"></div>
-      </div>
-      <p class="section-label">Categorías</p>
-      <div class="categories-grid" id="categories-grid"></div>
       <div class="section-header-row">
         <p class="section-label" id="products-title" style="margin-bottom:0;">Destacados</p>
         <button class="clear-link" id="btn-clear" style="display:none;" onclick="clearFilter()">Ver destacados</button>
       </div>
       <div class="products-grid" id="products-grid"></div>
+      <p class="section-label">Categorías</p>
+      <div class="categories-grid" id="categories-grid"></div>
+      <p class="section-label">Comunidad San Domingo</p>
+      <div class="community-grid" id="community-grid"></div>
+      <div id="tools-section" style="display:none;">
+        <p class="section-label">Herramientas</p>
+        <div class="tools-grid" id="tools-grid"></div>
+      </div>
     </div>
 
     <div id="tab-cart" class="content" style="display:none; flex-direction:column;">
@@ -1251,8 +1278,20 @@
     </div>
 
     <div class="tab-bar">
-      <button class="tab-item active" id="tab-btn-home" onclick="showTab('home')">
-        <i class="ti ti-grid-dots"></i> Catálogo
+      <button class="tab-item active" id="tab-btn-home" onclick="showTab('home'); clearFilter();">
+        <i class="ti ti-home"></i> Inicio
+      </button>
+      <button class="tab-item" id="tab-btn-ofertas" onclick="showTab('home'); filterByCategory('ofertas');">
+        <i class="ti ti-flame"></i> Ofertas
+      </button>
+      <button class="tab-item" id="tab-btn-comunidad" onclick="goToComunidad()">
+        <i class="ti ti-users"></i> Comunidad
+      </button>
+      <button class="tab-item" id="tab-btn-cart" onclick="showTab('cart')">
+        <i class="ti ti-shopping-cart"></i> Carrito
+      </button>
+      <button class="tab-item" id="tab-btn-mas" onclick="showTab('saved')">
+        <i class="ti ti-dots"></i> Más
       </button>
       <button class="tab-item" id="tab-btn-foro" style="display:none;" onclick="showTab('foro')">
         <i class="ti ti-users"></i> Foro
@@ -1260,11 +1299,8 @@
       <button class="tab-item" id="tab-btn-bitacora" style="display:none;" onclick="showTab('bitacora')">
         <i class="ti ti-book"></i> Bitácora
       </button>
-      <button class="tab-item" id="tab-btn-saved" onclick="showTab('saved')">
+      <button class="tab-item" id="tab-btn-saved" style="display:none;" onclick="showTab('saved')">
         <i class="ti ti-bookmark"></i> Guardados
-      </button>
-      <button class="tab-item" id="tab-btn-cart" onclick="showTab('cart')">
-        <i class="ti ti-shopping-cart"></i> Carrito
       </button>
     </div>
 
@@ -1591,7 +1627,6 @@ let currentWorld = null;
 
 const WORLD_TOOLS = {
   acuariofilia: [
-    { id: 'misPuntos', icon: 'ti-star', label: 'Mis puntos' },
     { id: 'misAcuarios', icon: 'ti-aquarium', label: 'Mis acuarios' },
     { id: 'litros', icon: 'ti-ruler-2', label: 'Litros del acuario' },
     { id: 'compatibilidad', icon: 'ti-fish', label: 'Compatibilidad' },
@@ -1599,7 +1634,6 @@ const WORLD_TOOLS = {
     { id: 'cambioAgua', icon: 'ti-bell', label: 'Cambio de agua' },
   ],
   pesca: [
-    { id: 'misPuntos', icon: 'ti-star', label: 'Mis puntos' },
     { id: 'clima', icon: 'ti-cloud', label: 'Clima y pronóstico' },
     { id: 'luna', icon: 'ti-moon', label: 'Fase lunar' },
     { id: 'lugares', icon: 'ti-map-pin', label: 'Lugares recomendados' },
@@ -1754,6 +1788,7 @@ function enterWorld(world) {
   renderCategories();
   renderBanner();
   renderQuickAccess();
+  renderCommunity();
 }
 
 function showTab(tab) {
@@ -1762,14 +1797,26 @@ function showTab(tab) {
     document.getElementById(`tab-btn-${t}`).classList.remove('active');
   });
   document.getElementById(`tab-${tab}`).style.display = tab === 'home' ? 'block' : 'flex';
-  document.getElementById(`tab-btn-${tab}`).classList.add('active');
   document.getElementById('search-input').style.display = tab === 'home' ? 'block' : 'none';
   document.getElementById('cart-footer').style.display = (tab === 'cart' && Object.keys(cart).length > 0) ? 'block' : 'none';
+
+  ['tab-btn-home','tab-btn-ofertas','tab-btn-comunidad','tab-btn-cart','tab-btn-mas'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+  });
+  if (tab === 'home') document.getElementById('tab-btn-home').classList.add('active');
+  if (tab === 'cart') document.getElementById('tab-btn-cart').classList.add('active');
+  if (tab === 'saved') document.getElementById('tab-btn-mas').classList.add('active');
+  if (tab === 'foro' || tab === 'bitacora') document.getElementById('tab-btn-comunidad').classList.add('active');
+
   if (tab === 'saved') renderSaved();
   if (tab === 'cart') renderCart();
   if (tab === 'home') renderHome();
   if (tab === 'foro') renderForo();
   if (tab === 'bitacora') renderBitacora();
+}
+
+function goToComunidad() {
+  showTab(currentWorld === 'acuariofilia' ? 'foro' : 'bitacora');
 }
 
 const QUICK_ACCESS_BY_WORLD = {
@@ -1795,6 +1842,33 @@ function renderQuickAccess() {
     <div class="quick-access-card" onclick="window.__quickAccessItems[${i}].action()">
       <i class="ti ${item.icon}"></i>
       <p>${item.label}</p>
+    </div>
+  `).join('');
+}
+
+function renderCommunity() {
+  const isAcuario = currentWorld === 'acuariofilia';
+  const communityItems = [
+    {
+      icon: 'ti-star',
+      color: 'amber',
+      title: 'Mis puntos',
+      sub: 'Sumá puntos y ganá descuentos',
+      action: "openTool('misPuntos')",
+    },
+    isAcuario
+      ? { icon: 'ti-message-circle', color: 'blue', title: 'Foro de acuarios', sub: 'Compartí tu acuario y consejos', action: "showTab('foro')" }
+      : { icon: 'ti-notebook', color: 'blue', title: 'Bitácora de pesca', sub: 'Compartí tus capturas', action: "showTab('bitacora')" },
+  ];
+  const grid = document.getElementById('community-grid');
+  grid.innerHTML = communityItems.map(item => `
+    <div class="community-card" onclick="${item.action}">
+      <div class="community-icon community-icon-${item.color}"><i class="ti ${item.icon}"></i></div>
+      <div>
+        <p class="community-title">${item.title}</p>
+        <p class="community-sub">${item.sub}</p>
+      </div>
+      <i class="ti ti-chevron-right" style="margin-left:auto; font-size:16px; color:var(--gray);"></i>
     </div>
   `).join('');
 }
@@ -1865,12 +1939,18 @@ function filterByCategory(id) {
   activeCategory = id;
   document.getElementById('search-input').value = '';
   renderHome();
+  if (id === 'ofertas') {
+    document.getElementById('tab-btn-home').classList.remove('active');
+    document.getElementById('tab-btn-ofertas').classList.add('active');
+  }
 }
 
 function clearFilter() {
   activeCategory = null;
   document.getElementById('search-input').value = '';
   renderHome();
+  document.getElementById('tab-btn-ofertas').classList.remove('active');
+  document.getElementById('tab-btn-home').classList.add('active');
 }
 
 function renderHome() {
