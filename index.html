@@ -139,7 +139,7 @@
     .fade-in { animation: fadeIn 0.3s ease both; }
     .slide-up { animation: slideUp 0.3s ease both; }
     .product-card, .quick-access-card, .community-card, .tool-card, .category-card {
-      animation: slideUp 0.3s ease both;
+      /* sin animación automática para mantener scroll fluido */
     }
     #screen-splash svg { margin-bottom: 20px; }
     .splash-title {
@@ -261,6 +261,8 @@
       padding: 16px;
       min-height: 0;
       -webkit-overflow-scrolling: touch;
+      will-change: transform;
+      transform: translateZ(0);
     }
 
     .banner-fullscreen {
@@ -366,9 +368,9 @@
       padding: 16px 10px;
       text-align: center;
       cursor: pointer;
-      transition: transform 0.3s ease;
+      transition: opacity 0.2s ease;
     }
-    .quick-access-card:active { transform: scale(0.96); }
+    .quick-access-card:active { opacity: 0.7; transform: none; }
     .quick-access-card i { font-size: 24px; color: var(--blue); }
     .quick-access-card p { font-size: 12px; font-weight: 500; margin-top: 8px; color: var(--text); }
     .puntos-banner {
@@ -397,7 +399,7 @@
       gap: 12px;
       background: var(--white);
       border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(11,59,117,0.07);
+      box-shadow: 0 3px 10px rgba(11,59,117,0.07);
       padding: 12px 14px;
       cursor: pointer;
     }
@@ -502,12 +504,12 @@
       background: var(--white);
       border: none;
       border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(11,59,117,0.06);
+      box-shadow: 0 3px 10px rgba(11,59,117,0.06);
       padding: 14px;
       cursor: pointer;
-      transition: transform 0.3s ease;
+      transition: opacity 0.2s ease;
     }
-    .tool-card:active { transform: scale(0.97); }
+    .tool-card:active { opacity: 0.7; }
     .tool-card i { font-size: 24px; color: var(--blue); }
     .tool-card span {
       display: block;
@@ -737,10 +739,10 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 10px 30px rgba(11,59,117,0.08);
-      transition: transform 0.3s ease;
+      box-shadow: 0 4px 12px rgba(11,59,117,0.08);
+      transition: opacity 0.2s ease;
     }
-    .product-card:active { transform: scale(0.98); }
+    .product-card:active { opacity: 0.75; }
     .product-icon-wrap {
       background: var(--lightBlue);
       aspect-ratio: 1 / 1;
@@ -1722,7 +1724,7 @@ const PRODUCTS = [
       consejos: 'Es sensible a cambios bruscos en el agua, así que conviene medir seguido PH y amoníaco. Se recomienda mantenerlos en grupos de al menos 5 ejemplares, con buena filtración y abundantes plantas o raíces donde puedan refugiarse.'
     }
   },
-  { id: '3', name: 'Escalar', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/escalar.jpg',
+  { id: '3', name: 'Escalar', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: false, offer: false, img: 'imagenes/escalar.jpg',
     info: {
       descripcion: 'También llamado Pez Ángel, el Escalar es un cíclido sudamericano de cuerpo aplanado y aletas largas en forma de vela. Es pacífico aunque puede volverse algo territorial, especialmente al formar pareja, y es una excelente opción para acuarios comunitarios.',
       temperatura: '24 a 28 °C',
@@ -1732,7 +1734,7 @@ const PRODUCTS = [
       consejos: 'Crece bastante en altura por sus aletas, así que el acuario necesita buena profundidad vertical. Es recomendable mantenerlos en grupos de 4 a 6 ejemplares jóvenes para que se formen parejas de forma natural y se reduzca la agresividad.'
     }
   },
-  { id: '4', name: 'Tetra Neón', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/tetraneon.jpg',
+  { id: '4', name: 'Tetra Neón', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: false, offer: false, img: 'imagenes/tetraneon.jpg',
     info: {
       descripcion: 'El Tetra Neón es uno de los peces más populares en acuarofilia por su llamativa franja azul y roja que recorre su pequeño cuerpo. Es un pez de cardumen, muy pacífico, ideal tanto para principiantes como para acuarios comunitarios.',
       temperatura: '22 a 27 °C',
@@ -1742,7 +1744,7 @@ const PRODUCTS = [
       consejos: 'Nunca debe mantenerse solo: necesita vivir en grupos de al menos 6 a 10 ejemplares para sentirse seguro y mostrar todo su color. Evitar mezclarlo con peces grandes o agresivos como cíclidos, y mantener una iluminación tenue con plantas para imitar su hábitat natural.'
     }
   },
-  { id: '5', name: 'Cíclido Polar Blue', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: true, offer: false, img: 'imagenes/polarblue.jpg',
+  { id: '5', name: 'Cíclido Polar Blue', brand: '', category: 'peces', price: 0, consultar: true, stock: 99, featured: false, offer: false, img: 'imagenes/polarblue.jpg',
     info: {
       descripcion: 'El Polar Blue es un cíclido híbrido (cruce entre cíclido convicto y pez loro) criado en cautiverio, muy valorado por su color azul eléctrico intenso y su resistencia. Es territorial como todo cíclido, pero no demasiado agresivo si tiene suficiente espacio y escondites en el acuario.',
       temperatura: '24 a 28 °C',
@@ -1752,7 +1754,7 @@ const PRODUCTS = [
       consejos: 'Defiende cuevas y zonas del acuario, así que conviene darle suficientes refugios (rocas, troncos) para reducir la agresividad territorial. Lo ideal es mantener una pareja o un macho con varias hembras si el acuario es grande. Con buena dieta y agua estable, su color azul se vuelve mucho más intenso.'
     }
   },
-  { id: '6', name: 'Mochila Filtro 250L/H - 3W', brand: '', category: 'filtracion', price: 19000, stock: 99, featured: true, offer: false, img: 'imagenes/filtromochila.jpg',
+  { id: '6', name: 'Mochila Filtro 250L/H - 3W', brand: '', category: 'filtracion', price: 19000, stock: 99, featured: false, offer: false, img: 'imagenes/filtromochila.jpg',
     info: {
       descripcion: 'Filtro de mochila compacto, ideal para acuarios chicos a medianos. Se cuelga por afuera del acuario sin ocupar espacio adentro, y realiza filtración mecánica y biológica para mantener el agua limpia y saludable.',
       temperatura: 'No aplica (es un equipo, no un ser vivo)',
@@ -1762,7 +1764,7 @@ const PRODUCTS = [
       consejos: 'Beneficios: no ocupa espacio dentro del acuario, fácil de instalar y de limpiar, ayuda a mantener el ciclo del nitrógeno gracias a la esponja donde se acumulan bacterias beneficiosas. Conviene limpiar la esponja cada 2 a 4 semanas usando agua del propio acuario, para no eliminar esas bacterias buenas.'
     }
   },
-  { id: '7', name: 'Mochila Filtro 400L/H - 7W', brand: '', category: 'filtracion', price: 29000, stock: 99, featured: true, offer: false, img: 'imagenes/filtromochila.jpg',
+  { id: '7', name: 'Mochila Filtro 400L/H - 7W', brand: '', category: 'filtracion', price: 29000, stock: 99, featured: false, offer: false, img: 'imagenes/filtromochila.jpg',
     info: {
       descripcion: 'Filtro de mochila de potencia media, ideal para acuarios medianos o con más cantidad de peces. Ofrece muy buena filtración mecánica y biológica, manteniendo el agua oxigenada y en buen estado.',
       temperatura: 'No aplica (es un equipo, no un ser vivo)',
@@ -1772,7 +1774,7 @@ const PRODUCTS = [
       consejos: 'Beneficios: gran poder de filtración sin ocupar espacio visible en el acuario, fácil mantenimiento, y ayuda a prevenir picos de amoníaco y nitritos. Ideal si tenés varios peces o un acuario con buena carga de desechos.'
     }
   },
-  { id: '8', name: 'Mochila Filtro 600L/H - 10W', brand: '', category: 'filtracion', price: 40000, stock: 99, featured: true, offer: false, img: 'imagenes/filtromochila.jpg',
+  { id: '8', name: 'Mochila Filtro 600L/H - 10W', brand: '', category: 'filtracion', price: 40000, stock: 99, featured: false, offer: false, img: 'imagenes/filtromochila.jpg',
     info: {
       descripcion: 'Filtro de mochila de mayor potencia, pensado para acuarios grandes o con peces que generan más desechos (como cíclidos o Discus). Brinda una filtración mecánica y biológica más completa, manteniendo el agua cristalina.',
       temperatura: 'No aplica (es un equipo, no un ser vivo)',
@@ -1782,7 +1784,7 @@ const PRODUCTS = [
       consejos: 'Beneficios: mayor capacidad de filtración para acuarios con más biocarga, funcionamiento silencioso, y mejora la oxigenación general del agua. Es preferible elegir un filtro algo sobredimensionado para el tamaño del acuario, así no queda corto con el tiempo.'
     }
   },
-  { id: '9', name: 'AquaSafe Plus 100ml', brand: 'Tetra', category: 'acc_acuario', price: 17000, stock: 99, featured: true, offer: false, img: 'imagenes/aquasafeplus.jpg',
+  { id: '9', name: 'AquaSafe Plus 100ml', brand: 'Tetra', category: 'acc_acuario', price: 17000, stock: 99, featured: false, offer: false, img: 'imagenes/aquasafeplus.jpg',
     info: {
       descripcion: 'Acondicionador de agua que convierte el agua de la canilla en agua segura para los peces en cuestión de segundos. Neutraliza el cloro, las cloraminas y los metales pesados presentes en el agua corriente, que son dañinos para los peces.',
       temperatura: 'No aplica (es un producto, no un ser vivo)',
@@ -1792,7 +1794,7 @@ const PRODUCTS = [
       consejos: 'Beneficios: protege las branquias y mucosas de los peces gracias a sus coloides, ayuda a cicatrizar heridas, y su fórmula con extractos de algas favorece el crecimiento de bacterias beneficiosas para mantener el agua clara. Usar siempre al armar un acuario nuevo y en cada cambio de agua.'
     }
   },
-  { id: '10', name: 'AquaSafe Plus 250ml', brand: 'Tetra', category: 'acc_acuario', price: 25000, stock: 99, featured: true, offer: false, img: 'imagenes/aquasafeplus.jpg',
+  { id: '10', name: 'AquaSafe Plus 250ml', brand: 'Tetra', category: 'acc_acuario', price: 25000, stock: 99, featured: false, offer: false, img: 'imagenes/aquasafeplus.jpg',
     info: {
       descripcion: 'Acondicionador de agua que convierte el agua de la canilla en agua segura para los peces en cuestión de segundos. Neutraliza el cloro, las cloraminas y los metales pesados presentes en el agua corriente, que son dañinos para los peces.',
       temperatura: 'No aplica (es un producto, no un ser vivo)',
