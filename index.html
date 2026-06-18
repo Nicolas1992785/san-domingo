@@ -345,6 +345,23 @@
     .banner-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; padding-top: 14px; }
     .banner-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
     .banner-dot.active { background: var(--blue); }
+    .quick-access-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .quick-access-card {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 16px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .quick-access-card:active { transform: scale(0.96); }
+    .quick-access-card i { font-size: 24px; color: var(--blue); }
+    .quick-access-card p { font-size: 12px; font-weight: 500; margin-top: 8px; color: var(--text); }
     .puntos-banner {
       display: flex;
       align-items: center;
@@ -673,16 +690,19 @@
 
     .product-card {
       background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      border: none;
+      border-radius: 20px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 2px 8px rgba(4,44,83,0.08);
+      box-shadow: 0 10px 30px rgba(11,59,117,0.08);
+      transition: transform 0.3s ease;
     }
+    .product-card:active { transform: scale(0.98); }
     .product-icon-wrap {
       background: var(--lightBlue);
-      height: 90px;
+      aspect-ratio: 1 / 1;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -754,6 +774,23 @@
       gap: 6px;
     }
     .btn-buy:active { opacity: 0.85; }
+    .product-actions-row {
+      display: flex;
+      gap: 6px;
+      align-items: stretch;
+    }
+    .btn-wa-consulta {
+      width: 38px;
+      flex-shrink: 0;
+      background: var(--accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: white;
+      font-size: 17px;
+    }
     .ver-info-link {
       background: none;
       border: none;
@@ -1094,6 +1131,7 @@
 
     <div id="tab-home" class="content" style="margin-top:56.25vw;">
       <div class="banner-dots" id="banner-dots"></div>
+      <div class="quick-access-grid" id="quick-access-grid"></div>
       <div class="puntos-banner" onclick="openTool('misPuntos')">
         <i class="ti ti-star" style="font-size:24px;"></i>
         <div>
@@ -1715,6 +1753,7 @@ function enterWorld(world) {
   renderHome();
   renderCategories();
   renderBanner();
+  renderQuickAccess();
 }
 
 function showTab(tab) {
@@ -1731,6 +1770,33 @@ function showTab(tab) {
   if (tab === 'home') renderHome();
   if (tab === 'foro') renderForo();
   if (tab === 'bitacora') renderBitacora();
+}
+
+const QUICK_ACCESS_BY_WORLD = {
+  acuariofilia: [
+    { icon: 'ti-fish', label: 'Peces', action: () => filterByCategory('peces') },
+    { icon: 'ti-flame', label: 'Ofertas', action: () => filterByCategory('ofertas') },
+    { icon: 'ti-message-circle', label: 'Foro', action: () => showTab('foro') },
+    { icon: 'ti-aquarium', label: 'Mis acuarios', action: () => openTool('misAcuarios') },
+  ],
+  pesca: [
+    { icon: 'ti-fish-hook', label: 'Cañas', action: () => filterByCategory('canas') },
+    { icon: 'ti-flame', label: 'Ofertas', action: () => filterByCategory('ofertas') },
+    { icon: 'ti-map-pin', label: 'Lugares', action: () => openTool('lugares') },
+    { icon: 'ti-cloud', label: 'Clima', action: () => openTool('clima') },
+  ],
+};
+
+function renderQuickAccess() {
+  const items = QUICK_ACCESS_BY_WORLD[currentWorld] || [];
+  window.__quickAccessItems = items;
+  const grid = document.getElementById('quick-access-grid');
+  grid.innerHTML = items.map((item, i) => `
+    <div class="quick-access-card" onclick="window.__quickAccessItems[${i}].action()">
+      <i class="ti ${item.icon}"></i>
+      <p>${item.label}</p>
+    </div>
+  `).join('');
 }
 
 const BANNER_SLIDES_BY_WORLD = {
@@ -1862,7 +1928,8 @@ function productCardHTML(p) {
         <button class="qty-stepper-btn" onclick="changeQty('${p.id}',1); refreshCardStepper('${p.id}')">+</button>
       </div>
     `
-    : `<button class="btn-buy" onclick="addToCart('${p.id}'); refreshCardStepper('${p.id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Comprar</button>`;
+    : `<button class="btn-buy" onclick="addToCart('${p.id}'); refreshCardStepper('${p.id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Agregar</button>`;
+  const waMsg = encodeURIComponent(`Hola San Domingo, te consulto por: ${p.name}`);
   return `
     <div class="product-card">
       <div class="product-icon-wrap">
@@ -1878,7 +1945,12 @@ function productCardHTML(p) {
         ${priceHTML}
         <div class="${lowStock ? 'low-stock' : 'in-stock'}">${lowStock ? `Quedan ${p.stock}` : 'En stock'}</div>
         ${p.info ? `<button class="ver-info-link" onclick="abrirInfoPez('${p.id}')"><i class="ti ti-info-circle" style="margin-right:4px;"></i>Cuidados y consejos</button>` : ''}
-        <div id="buy-control-${p.id}">${buyControlHTML}</div>
+        <div class="product-actions-row">
+          <a href="https://wa.me/5492616109829?text=${waMsg}" target="_blank" class="btn-wa-consulta" aria-label="Consultar por WhatsApp">
+            <i class="ti ti-brand-whatsapp"></i>
+          </a>
+          <div id="buy-control-${p.id}" style="flex:1;">${buyControlHTML}</div>
+        </div>
       </div>
     </div>
   `;
@@ -1896,7 +1968,7 @@ function refreshCardStepper(id) {
         <button class="qty-stepper-btn" onclick="changeQty('${id}',1); refreshCardStepper('${id}')">+</button>
       </div>
     `
-    : `<button class="btn-buy" onclick="addToCart('${id}'); refreshCardStepper('${id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Comprar</button>`;
+    : `<button class="btn-buy" onclick="addToCart('${id}'); refreshCardStepper('${id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Agregar</button>`;
 }
 
 function abrirInfoPez(id) {
