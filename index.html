@@ -2054,7 +2054,7 @@ const TOOL_BODIES = {
     <div id="luna-resultado"></div>
   `,
   lugares: () => `
-    <p style="margin-bottom:12px;">Algunos spots recomendados por pescadores de la zona.</p>
+    <p style="margin-bottom:12px;">Embalses recomendados para pejerrey en la temporada 2025/2026 vigente en Mendoza (datos según fuentes oficiales y de pesca actualizadas).</p>
     <div id="lugares-lista">
       ${LUGARES_PESCA.map(l => `
         <div class="lugar-card" style="${l.destacado ? 'border-color:var(--blue); border-width:2px;' : ''}">
@@ -2066,7 +2066,7 @@ const TOOL_BODIES = {
         </div>
       `).join('')}
     </div>
-    <p class="tool-note">Recomendaciones generales. Verificá siempre permisos y vedas locales antes de salir.</p>
+    <p class="tool-note">Pejerrey habilitado del 1 de diciembre de 2025 al 30 de septiembre de 2026 en la mayoría de los embalses. Verificá siempre tu carnet de pesca vigente, cupos y vedas locales antes de salir.</p>
   `,
 };
 
@@ -2147,11 +2147,14 @@ function calcularCambioAgua() {
 // ══════════════════════════════════════════════
 
 const LUGARES_PESCA = [
-  { nombre: 'Embalse El Carrizal', descripcion: 'El preferido de nuestros clientes. Pejerrey y pejerrey trofeo, muy buena pesca durante todo el año.', destacado: true },
-  { nombre: 'Dique Frías', descripcion: 'Embalse cercano a Luján de Cuyo, conocido por pejerrey y siluro.' },
-  { nombre: 'Dique Potrerillos', descripcion: 'Buen lugar para pejerrey y trucha, especialmente en temporada de apertura.' },
+  { nombre: 'Embalse El Carrizal', descripcion: 'El preferido de nuestros clientes. Pejerrey habilitado todo el año, hasta 40 ejemplares por salida (el cupo más alto de la provincia). Muy buena pesca embarcado y desde balsas; en 2025 se registraron ejemplares de más de 650 gramos.', destacado: true },
+  { nombre: 'Embalse Los Reyunos', descripcion: 'Pejerrey de buen porte, pescando embarcado con paternóster o balancín. Cupo de hasta 30 ejemplares por salida, temporada habilitada hasta el 30 de septiembre de 2026.' },
+  { nombre: 'Embalse Agua del Toro', descripcion: 'Buena pesca de pejerrey de todo tamaño entre 10 y 15 metros de profundidad, usando balancín y mojarra como carnada. Cupo de hasta 30 ejemplares por salida.' },
+  { nombre: 'Embalse Valle Grande', descripcion: 'Pejerrey y salmónidos, con buena pesca de costa y embarcada. Habilitado fines de semana y feriados hasta el 1 de diciembre de 2026.' },
+  { nombre: 'Embalse El Nihuil', descripcion: 'Cerca de San Rafael, con cupo de hasta 30 ejemplares de pejerrey por salida. Buen ambiente para pesca de costa y embarcada.' },
+  { nombre: 'Dique Potrerillos', descripcion: 'Buen lugar para pejerrey y trucha, especialmente en temporada de apertura. Cercano a la Ciudad de Mendoza.' },
   { nombre: 'Río Mendoza', descripcion: 'Tramos con buena pesca de trucha en zonas altas y media montaña.' },
-  { nombre: 'Laguna del Diamante', descripcion: 'Pesca de trucha en entorno de alta montaña, San Carlos.' },
+  { nombre: 'Laguna del Diamante', descripcion: 'Pesca de trucha en entorno de alta montaña, San Carlos. Sin límite para la variedad Fontinalis.' },
 ];
 
 function calcularFaseLunar() {
