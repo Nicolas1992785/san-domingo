@@ -330,6 +330,39 @@
       font-size: 17px;
       font-weight: 700;
     }
+    .hub-info-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .hub-info-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--greenLight);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+      color: var(--blue);
+    }
+    .hub-info-icon i { color: var(--blue); }
+    .hub-info-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .hub-info-sub { font-size: 12px; color: var(--gray); line-height: 1.5; }
+    .hub-info-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .hub-info-tag {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 8px;
+      background: var(--lightGray);
+      color: var(--darkGray);
+    }
     .tools-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -915,6 +948,24 @@
         <div class="hub-card-overlay">
           <i class="ti ti-anchor" style="font-size:22px;"></i>
           <span>Pesca</span>
+        </div>
+      </div>
+      <div class="hub-info-card">
+        <div class="hub-info-icon"><i class="ti ti-truck-delivery"></i></div>
+        <div class="hub-info-text">
+          <p class="hub-info-title">Envío a domicilio</p>
+          <p class="hub-info-sub">Gratis en el Gran Mendoza. Fuera de esa zona, con un adicional a coordinar.</p>
+        </div>
+      </div>
+      <div class="hub-info-card">
+        <div class="hub-info-icon" style="background:var(--lightBlue);"><i class="ti ti-credit-card"></i></div>
+        <div class="hub-info-text">
+          <p class="hub-info-title">Formas de pago</p>
+          <div class="hub-info-tags">
+            <span class="hub-info-tag">Efectivo</span>
+            <span class="hub-info-tag">Transferencia</span>
+            <span class="hub-info-tag">Mercado Pago</span>
+          </div>
         </div>
       </div>
     </div>
