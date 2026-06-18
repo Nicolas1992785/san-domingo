@@ -81,7 +81,7 @@
       }
     }
 
-    .screen { display: none; flex-direction: column; flex: 1; }
+    .screen { display: none; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
     .screen.active { display: flex; }
 
     #screen-splash {
@@ -257,7 +257,10 @@
     .content {
       flex: 1;
       overflow-y: auto;
+      overflow-x: hidden;
       padding: 16px;
+      min-height: 0;
+      -webkit-overflow-scrolling: touch;
     }
 
     .banner-fullscreen {
