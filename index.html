@@ -18,7 +18,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     :root {
-      --banner-height: 60vh;
       --navy:      #042C53;
       --blue:      #185FA5;
       --lightBlue: #E6F1FB;
@@ -254,7 +253,7 @@
     .banner-fullscreen {
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: var(--banner-height);
+      aspect-ratio: 16 / 9;
       display: flex;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
@@ -267,7 +266,7 @@
       scroll-snap-align: center;
       flex-shrink: 0;
       width: 100%;
-      height: var(--banner-height);
+      aspect-ratio: 16 / 9;
       overflow: hidden;
       position: relative;
       background: var(--lightBlue);
@@ -1032,7 +1031,7 @@
       <input class="search-input" id="search-input" type="search" placeholder="Buscar por nombre, marca o categoría" oninput="renderHome()" />
     </div>
 
-    <div id="tab-home" class="content" style="margin-top:var(--banner-height);">
+    <div id="tab-home" class="content" style="margin-top:56.25vw;">
       <div class="banner-dots" id="banner-dots"></div>
       <div class="puntos-banner" onclick="openTool('misPuntos')">
         <i class="ti ti-star" style="font-size:24px;"></i>
@@ -1697,6 +1696,11 @@ function renderBanner() {
   });
 
   if (window.bannerAutoInterval) clearInterval(window.bannerAutoInterval);
+
+  requestAnimationFrame(() => {
+    const realHeight = carousel.offsetHeight;
+    document.getElementById('tab-home').style.marginTop = realHeight + 'px';
+  });
 }
 
 function renderCategories() {
