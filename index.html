@@ -40,54 +40,45 @@
 
     body {
       font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #ccc;
+      background: var(--lightGray);
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: stretch;
       min-height: 100vh;
       min-height: 100dvh;
-      padding: 20px 0;
-    }
-
-    @media (max-width: 480px) {
-      body { background: var(--lightGray); padding: 0; align-items: stretch; min-height: 100dvh; }
-      #app {
-        width: 100%;
-        min-height: 100vh;
-        min-height: 100dvh;
-        height: 100dvh;
-        border-radius: 0;
-        box-shadow: none;
-        padding-top: env(safe-area-inset-top);
-        padding-bottom: env(safe-area-inset-bottom);
-      }
-    }
-
-    @media (display-mode: standalone), (display-mode: fullscreen) {
-      body { background: var(--lightGray); padding: 0; align-items: stretch; min-height: 100dvh; }
-      #app {
-        width: 100%;
-        max-width: 100%;
-        min-height: 100vh;
-        min-height: 100dvh;
-        height: 100dvh;
-        border-radius: 0;
-        box-shadow: none;
-        padding-top: env(safe-area-inset-top);
-        padding-bottom: env(safe-area-inset-bottom);
-      }
+      padding: 0;
+      margin: 0;
     }
 
     #app {
-      width: 390px;
-      min-height: 844px;
+      width: 100vw;
+      max-width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      height: 100dvh;
       background: var(--lightGray);
-      border-radius: 40px;
+      border-radius: 0;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      box-shadow: none;
       position: relative;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    @media (min-width: 768px) {
+      body { background: #ccc; align-items: flex-start; justify-content: center; padding: 20px 0; }
+      #app {
+        width: 390px;
+        max-width: 390px;
+        min-height: 844px;
+        height: auto;
+        border-radius: 40px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        padding-top: 0;
+        padding-bottom: 0;
+      }
     }
 
     .screen { display: none; flex-direction: column; flex: 1; }
@@ -2987,64 +2978,64 @@ function runCinematicSplash() {
   };
 
   requestAnimationFrame(() => {
-    water.style.transition = 'opacity 1000ms ease-out';
+    water.style.transition = 'opacity 600ms ease-out';
     water.style.opacity = '1';
-    wave1.style.transition = 'opacity 1000ms ease-out';
+    wave1.style.transition = 'opacity 600ms ease-out';
     wave1.style.opacity = '0.5';
-    wave2.style.transition = 'opacity 1000ms ease-out';
+    wave2.style.transition = 'opacity 600ms ease-out';
     wave2.style.opacity = '0.4';
   });
 
   setTimeout(() => {
-    shadow.style.transition = 'opacity 800ms ease-in, transform 800ms ease-in';
+    shadow.style.transition = 'opacity 500ms ease-in, transform 500ms ease-in';
     shadow.style.opacity = '0.5';
     shadow.setAttribute('transform', 'translate(200,470) scale(1)');
-  }, 900);
+  }, 500);
 
   setTimeout(() => {
     shadow.style.opacity = '0';
-    fish.style.transition = 'opacity 300ms ease-out, transform 1100ms cubic-bezier(.2,.7,.3,1)';
+    fish.style.transition = 'opacity 200ms ease-out, transform 700ms cubic-bezier(.2,.7,.3,1)';
     fish.style.opacity = '1';
     fish.setAttribute('transform', 'translate(200,250) scale(1) rotate(-25)');
-    ripples.style.transition = 'opacity 400ms ease-out';
+    ripples.style.transition = 'opacity 300ms ease-out';
     ripples.style.opacity = '1';
-    ripple1.style.transition = 'r 1100ms ease-out, opacity 1100ms ease-out';
-    ripple2.style.transition = 'r 1400ms ease-out, opacity 1400ms ease-out';
+    ripple1.style.transition = 'r 700ms ease-out, opacity 700ms ease-out';
+    ripple2.style.transition = 'r 900ms ease-out, opacity 900ms ease-out';
     ripple1.setAttribute('r', '70');
     ripple2.setAttribute('r', '110');
     ripple1.style.opacity = '0';
     ripple2.style.opacity = '0';
-    drops.style.transition = 'opacity 400ms ease-out, transform 1200ms ease-out';
+    drops.style.transition = 'opacity 300ms ease-out, transform 800ms ease-out';
     drops.style.opacity = '1';
     drops.setAttribute('transform', 'translate(0,-60)');
-  }, 1700);
+  }, 1000);
 
   setTimeout(() => {
-    logoBlock.style.transition = 'opacity 900ms ease-out';
+    logoBlock.style.transition = 'opacity 600ms ease-out';
     logoBlock.style.opacity = '1';
-    fish.style.transition = 'opacity 700ms ease-in, transform 700ms ease-in';
+    fish.style.transition = 'opacity 500ms ease-in, transform 500ms ease-in';
     fish.style.opacity = '0';
-    drops.style.transition = 'opacity 700ms ease-in';
+    drops.style.transition = 'opacity 500ms ease-in';
     drops.style.opacity = '0';
-  }, 2700);
+  }, 1650);
 
   setTimeout(() => {
-    loadBar.style.transition = 'width 1100ms ease-out';
+    loadBar.style.transition = 'width 700ms ease-out';
     loadBar.style.width = '100%';
-  }, 3100);
+  }, 1900);
 
   setTimeout(() => {
-    cinematicScreen.style.transition = 'opacity 700ms ease-in, transform 700ms ease-in';
+    cinematicScreen.style.transition = 'opacity 500ms ease-in, transform 500ms ease-in';
     cinematicScreen.style.opacity = '0';
     cinematicScreen.style.transform = 'scale(1.06)';
-  }, 4300);
+  }, 2650);
 
   setTimeout(() => {
     cinematicScreen.classList.remove('active');
     cinematicScreen.style.display = 'none';
     splashScreen.classList.add('active');
     splashScreen.classList.add('slide-up');
-  }, 5000);
+  }, 3150);
 }
 </script>
 </body>
