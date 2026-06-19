@@ -132,6 +132,27 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
+    @keyframes skeletonPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .skeleton-card {
+      background: var(--white);
+      border-radius: 20px;
+      overflow: hidden;
+      animation: skeletonPulse 1.4s ease-in-out infinite;
+    }
+    .skeleton-img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: var(--border);
+    }
+    .skeleton-line {
+      height: 12px;
+      background: var(--border);
+      border-radius: 6px;
+      margin-bottom: 4px;
+    }
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: translateY(0); }
@@ -417,6 +438,141 @@
     .community-icon-blue { background: var(--lightBlue); color: var(--blue); }
     .community-title { font-size: 14px; font-weight: 600; color: var(--text); }
     .community-sub { font-size: 11px; color: var(--gray); margin-top: 1px; }
+    .hub-header {
+      background: var(--navy);
+      padding: 14px 16px 12px;
+      flex-shrink: 0;
+    }
+    .hub-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .hub-header-icon-wrap {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hub-header-title { font-size: 15px; font-weight: 600; color: white; margin: 0; }
+    .hub-header-sub { font-size: 11px; color: rgba(255,255,255,0.7); margin: 0; }
+    .hub-icon-btn {
+      width: 34px;
+      height: 34px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .hub-search-bar {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .hub-section-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      margin: 0 0 10px;
+    }
+    .hub-world-card {
+      border-radius: 16px;
+      height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 12px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: opacity 0.2s ease;
+    }
+    .hub-world-card:active { opacity: 0.85; }
+    .hub-world-pesca { background: linear-gradient(135deg, #0B3B75, #185FA5); }
+    .hub-world-acuario { background: linear-gradient(135deg, #1E73BE, #378ADD); }
+    .hub-world-icon {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 32px;
+      color: rgba(255,255,255,0.2);
+    }
+    .hub-world-name { font-size: 15px; font-weight: 600; color: white; margin: 0 0 2px; }
+    .hub-world-sub { font-size: 11px; color: rgba(255,255,255,0.75); margin: 0; }
+    .hub-quick-btn {
+      height: 38px;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+    .hub-quick-btn:active { opacity: 0.8; }
+    .hub-quick-puntos { background: rgba(250,199,117,0.18); color: #854F0B; }
+    .hub-quick-ofertas { background: rgba(29,158,117,0.12); color: #0F6E56; }
+    .trust-bar {
+      display: flex;
+      align-items: center;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+      gap: 0;
+    }
+    .trust-bar::-webkit-scrollbar { display: none; }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+      font-size: 11px;
+      color: var(--darkGray);
+      font-weight: 500;
+    }
+    .trust-item i { font-size: 15px; }
+    .trust-divider {
+      width: 1px;
+      height: 16px;
+      background: var(--border);
+      margin: 0 10px;
+      flex-shrink: 0;
+    }
+    .hub-trust-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .hub-trust-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .hub-trust-title { font-size: 12px; font-weight: 600; color: var(--navy); margin: 6px 0 2px; }
+    .hub-trust-sub { font-size: 10px; color: var(--gray); margin: 0; }
     .hub-card {
       position: relative;
       height: 160px;
@@ -426,18 +582,7 @@
       cursor: pointer;
       background: var(--lightBlue);
     }
-    .hub-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .hub-card-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .hub-card img { width: 100%; height: 100%; object-fit: cover; }
     .hub-card-overlay {
       position: absolute;
       bottom: 0; left: 0; right: 0;
@@ -487,7 +632,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 32px 0 20px;
+      padding: 24px 0 16px;
     }
     .hub-logo-img {
       width: 70%;
@@ -1141,53 +1286,99 @@
     </div>
   </div>
 
-  <div id="screen-hub" class="screen" style="flex-direction:column;">
-    <div class="header" style="border-bottom:none;">
-      <div class="header-top" style="margin-bottom:0;">
-        <svg viewBox="0 0 100 100" width="28" height="28">
-          <circle cx="50" cy="50" r="48" fill="#E6F1FB"/>
-          <path d="M18 50 C 28 32 60 30 78 42 C 66 47 60 50 78 58 C 60 70 28 68 18 50 Z" fill="#185FA5"/>
-          <circle cx="32" cy="46" r="3" fill="#042C53"/>
-        </svg>
-        <div class="header-text-block">
-          <div class="header-title">San Domingo</div>
-        </div>
-      </div>
-    </div>
-    <div class="content">
-      <p class="section-label">¿Qué estás buscando?</p>
-      <div class="hub-card" onclick="enterWorld('acuariofilia')">
-        <img src="imagenes/acuario.jpg" alt="Acuariofilia" />
-        <div class="hub-card-overlay">
-          <i class="ti ti-fish" style="font-size:22px;"></i>
-          <span>Acuariofilia</span>
-        </div>
-      </div>
-      <div class="hub-card" onclick="enterWorld('pesca')">
-        <img src="imagenes/pesca.jpg" alt="Pesca" />
-        <div class="hub-card-overlay">
-          <i class="ti ti-anchor" style="font-size:22px;"></i>
-          <span>Pesca</span>
-        </div>
-      </div>
-      <div class="hub-info-card">
-        <div class="hub-info-icon"><i class="ti ti-truck-delivery"></i></div>
-        <div class="hub-info-text">
-          <p class="hub-info-title">Envío a domicilio</p>
-          <p class="hub-info-sub">Gratis en el Gran Mendoza. Fuera de esa zona, con un adicional a coordinar.</p>
-        </div>
-      </div>
-      <div class="hub-info-card">
-        <div class="hub-info-icon" style="background:var(--lightBlue);"><i class="ti ti-credit-card"></i></div>
-        <div class="hub-info-text">
-          <p class="hub-info-title">Formas de pago</p>
-          <div class="hub-info-tags">
-            <span class="hub-info-tag">Efectivo</span>
-            <span class="hub-info-tag">Transferencia</span>
-            <span class="hub-info-tag">Mercado Pago</span>
+  <div id="screen-hub" class="screen" style="flex-direction:column; background:var(--white);">
+
+    <div class="hub-header">
+      <div class="hub-header-top">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="hub-header-icon-wrap">
+            <i class="ti ti-fish" style="font-size:18px; color:white;"></i>
+          </div>
+          <div>
+            <p class="hub-header-title">San Domingo</p>
+            <p class="hub-header-sub">Pesca &amp; Acuariofilia</p>
           </div>
         </div>
+        <div style="display:flex; gap:8px;">
+          <button class="hub-icon-btn" onclick="openTool('misPuntos')"><i class="ti ti-star"></i></button>
+          <button class="hub-icon-btn" onclick="showTab('cart'); enterWorld(lastWorld || 'acuariofilia');"><i class="ti ti-shopping-cart"></i></button>
+        </div>
       </div>
+      <div class="hub-search-bar" onclick="enterWorld(lastWorld || 'acuariofilia'); setTimeout(()=>document.getElementById('search-input').focus(),300);">
+        <i class="ti ti-search" style="font-size:16px; color:var(--gray);"></i>
+        <span style="font-size:13px; color:var(--gray);">Buscar productos...</span>
+      </div>
+    </div>
+
+    <div class="content">
+      <p class="hub-section-label">¿Qué estás buscando?</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+        <div class="hub-world-card hub-world-pesca" onclick="enterWorld('pesca')">
+          <i class="ti ti-fish-hook hub-world-icon"></i>
+          <p class="hub-world-name">Pesca</p>
+          <p class="hub-world-sub">Ver catálogo →</p>
+        </div>
+        <div class="hub-world-card hub-world-acuario" onclick="enterWorld('acuariofilia')">
+          <i class="ti ti-fish hub-world-icon"></i>
+          <p class="hub-world-name">Acuariofilia</p>
+          <p class="hub-world-sub">Ver catálogo →</p>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
+        <button class="hub-quick-btn hub-quick-puntos" onclick="enterWorld(lastWorld||'acuariofilia'); setTimeout(()=>openTool('misPuntos'),300);">
+          <i class="ti ti-star" style="font-size:16px;"></i> Mis puntos
+        </button>
+        <button class="hub-quick-btn hub-quick-ofertas" onclick="enterWorld(lastWorld||'acuariofilia'); setTimeout(()=>filterByCategory('ofertas'),300);">
+          <i class="ti ti-tag" style="font-size:16px;"></i> Ofertas
+        </button>
+      </div>
+
+      <div class="trust-bar">
+        <div class="trust-item">
+          <i class="ti ti-award" style="color:#FAC775;"></i>
+          <span>+20 años</span>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <i class="ti ti-truck-delivery" style="color:#1D9E75;"></i>
+          <span>Envío gratis GBA</span>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <i class="ti ti-shield-check" style="color:#1D9E75;"></i>
+          <span>Pago seguro</span>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+          <i class="ti ti-headset" style="color:#1E73BE;"></i>
+          <span>Atención personal</span>
+        </div>
+      </div>
+
+      <div class="hub-trust-grid">
+        <div class="hub-trust-card">
+          <i class="ti ti-award" style="font-size:22px; color:var(--navy);"></i>
+          <p class="hub-trust-title">+20 años</p>
+          <p class="hub-trust-sub">Trayectoria</p>
+        </div>
+        <div class="hub-trust-card">
+          <i class="ti ti-headset" style="font-size:22px; color:var(--navy);"></i>
+          <p class="hub-trust-title">Atención</p>
+          <p class="hub-trust-sub">Personalizada</p>
+        </div>
+        <div class="hub-trust-card">
+          <i class="ti ti-truck-delivery" style="font-size:22px; color:var(--green);"></i>
+          <p class="hub-trust-title">Envío gratis</p>
+          <p class="hub-trust-sub">Gran Mendoza</p>
+        </div>
+        <div class="hub-trust-card">
+          <i class="ti ti-shield-check" style="font-size:22px; color:var(--green);"></i>
+          <p class="hub-trust-title">Pago seguro</p>
+          <p class="hub-trust-sub">MP · Transferencia</p>
+        </div>
+      </div>
+
       <div class="hub-logo-wrap">
         <img src="imagenes/logo-sandomingo.png" alt="San Domingo" class="hub-logo-img" />
       </div>
@@ -1227,6 +1418,15 @@
 
     <div id="tab-home" class="content" style="margin-top:56.25vw;">
       <div class="banner-dots" id="banner-dots"></div>
+      <div class="trust-bar" style="margin-bottom:14px;">
+        <div class="trust-item"><i class="ti ti-award" style="color:#FAC775;"></i><span>+20 años</span></div>
+        <div class="trust-divider"></div>
+        <div class="trust-item"><i class="ti ti-truck-delivery" style="color:#1D9E75;"></i><span>Envío gratis GBA</span></div>
+        <div class="trust-divider"></div>
+        <div class="trust-item"><i class="ti ti-shield-check" style="color:#1D9E75;"></i><span>Pago seguro</span></div>
+        <div class="trust-divider"></div>
+        <div class="trust-item"><i class="ti ti-headset" style="color:#1E73BE;"></i><span>Atención personal</span></div>
+      </div>
       <div class="quick-access-grid" id="quick-access-grid"></div>
       <div class="section-header-row">
         <p class="section-label" id="products-title" style="margin-bottom:0;">Destacados</p>
@@ -1688,6 +1888,7 @@ const WORLD_CATEGORIES = {
 };
 
 let currentWorld = null;
+let lastWorld = 'acuariofilia';
 
 const WORLD_TOOLS = {
   acuariofilia: [
@@ -1875,6 +2076,7 @@ function goToHub() {
 
 function enterWorld(world) {
   currentWorld = world;
+  lastWorld = world;
   activeCategory = null;
   document.getElementById('screen-hub').classList.remove('active');
   document.getElementById('screen-main').classList.add('active');
@@ -2053,6 +2255,19 @@ function clearFilter() {
 }
 
 function renderHome() {
+  const grid = document.getElementById('products-grid');
+  if (grid && grid.innerHTML === '') {
+    grid.innerHTML = [1,2,3,4].map(() => `
+      <div class="skeleton-card">
+        <div class="skeleton-img"></div>
+        <div style="padding:10px;">
+          <div class="skeleton-line" style="width:80%;"></div>
+          <div class="skeleton-line" style="width:50%; margin-top:6px;"></div>
+          <div class="skeleton-line" style="width:60%; margin-top:8px; height:18px;"></div>
+        </div>
+      </div>
+    `).join('');
+  }
   const query = document.getElementById('search-input').value.trim().toLowerCase();
   const worldIds = WORLD_CATEGORIES[currentWorld] || [];
   let list = PRODUCTS.filter(p => p.stock > 0 && worldIds.includes(p.category));
@@ -2080,12 +2295,12 @@ function renderHome() {
   document.getElementById('btn-clear').style.display = showFilter ? 'inline' : 'none';
   document.getElementById('categories-grid').style.display = (query || activeCategory) ? 'none' : 'grid';
 
-  const grid = document.getElementById('products-grid');
+  const productsGrid = document.getElementById('products-grid');
   if (list.length === 0) {
-    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="ti ti-search"></i><span>No encontramos productos.</span></div>';
+    productsGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="ti ti-search"></i><span>No encontramos productos.</span></div>';
     return;
   }
-  grid.innerHTML = list.map(p => productCardHTML(p)).join('');
+  productsGrid.innerHTML = list.map(p => productCardHTML(p)).join('');
 }
 
 function productCardHTML(p) {
@@ -2107,7 +2322,7 @@ function productCardHTML(p) {
         <button class="qty-stepper-btn" onclick="changeQty('${p.id}',1); refreshCardStepper('${p.id}')">+</button>
       </div>
     `
-    : `<button class="btn-buy" onclick="addToCart('${p.id}'); refreshCardStepper('${p.id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Agregar</button>`;
+    : `<button class="btn-buy" data-add-btn="${p.id}" onclick="addToCart('${p.id}')"><i class="ti ti-shopping-cart-plus" style="font-size:15px;"></i> Agregar</button>`;
   const waMsg = encodeURIComponent(`Hola San Domingo, te consulto por: ${p.name}`);
   return `
     <div class="product-card">
@@ -2147,7 +2362,7 @@ function refreshCardStepper(id) {
         <button class="qty-stepper-btn" onclick="changeQty('${id}',1); refreshCardStepper('${id}')">+</button>
       </div>
     `
-    : `<button class="btn-buy" onclick="addToCart('${id}'); refreshCardStepper('${id}')"><i class="ti ti-shopping-cart" style="font-size:15px;"></i> Agregar</button>`;
+    : `<button class="btn-buy" data-add-btn="${id}" onclick="addToCart('${id}')"><i class="ti ti-shopping-cart-plus" style="font-size:15px;"></i> Agregar</button>`;
 }
 
 function abrirInfoPez(id) {
@@ -2171,7 +2386,14 @@ function abrirInfoPez(id) {
 function addToCart(id) {
   cart[id] = (cart[id] || 0) + 1;
   updateBadge();
-  renderHome();
+  const btn = document.querySelector(`[data-add-btn="${id}"]`);
+  if (btn) {
+    btn.innerHTML = '<i class="ti ti-check" style="font-size:16px;"></i> ¡Agregado!';
+    btn.style.background = 'var(--green)';
+    setTimeout(() => refreshCardStepper(id), 900);
+  } else {
+    refreshCardStepper(id);
+  }
 }
 
 function changeQty(id, delta) {
