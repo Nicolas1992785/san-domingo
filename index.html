@@ -927,17 +927,23 @@
     }
 
     .categories-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .category-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 13px 12px;
       display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding: 4px 0 12px;
+      scrollbar-width: none;
+      margin-bottom: 4px;
+    }
+    .categories-grid::-webkit-scrollbar { display: none; }
+    .category-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: opacity 0.2s;
+    }
       align-items: center;
       gap: 8px;
       cursor: pointer;
@@ -2614,19 +2620,6 @@ function clearFilter() {
 }
 
 function renderHome() {
-  const grid = document.getElementById('products-grid');
-  if (grid && grid.innerHTML === '') {
-    grid.innerHTML = [1,2,3,4].map(() => `
-      <div class="skeleton-card">
-        <div class="skeleton-img"></div>
-        <div style="padding:10px;">
-          <div class="skeleton-line" style="width:80%;"></div>
-          <div class="skeleton-line" style="width:50%; margin-top:6px;"></div>
-          <div class="skeleton-line" style="width:60%; margin-top:8px; height:18px;"></div>
-        </div>
-      </div>
-    `).join('');
-  }
   const query = document.getElementById('search-input').value.trim().toLowerCase();
   const worldIds = WORLD_CATEGORIES[currentWorld] || [];
   let list = PRODUCTS.filter(p => p.stock > 0 && worldIds.includes(p.category));
@@ -2652,7 +2645,7 @@ function renderHome() {
   const showFilter = query || activeCategory;
   document.getElementById('products-title').textContent = title;
   document.getElementById('btn-clear').style.display = showFilter ? 'inline' : 'none';
-  document.getElementById('categories-grid').style.display = (query || activeCategory) ? 'none' : 'grid';
+  document.getElementById('categories-grid').style.display = (query || activeCategory) ? 'none' : 'flex';
 
   const productsGrid = document.getElementById('products-grid');
   if (list.length === 0) {
