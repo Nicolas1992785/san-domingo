@@ -22,20 +22,24 @@
 
     :root {
       --navy:      #0B3B75;
-      --blue:      #1E73BE;
-      --lightBlue: #F8F9FC;
+      --blue:      #1E5AA8;
+      --blue2:     #2E86DE;
+      --lightBlue: #E8F1FC;
       --white:     #FFFFFF;
-      --lightGray: #F8F9FC;
+      --lightGray: #F4F6F8;
       --gray:      #6B7280;
       --darkGray:  #1F2937;
       --green:     #1D9E75;
       --greenDark: #0F6E56;
       --greenLight:#E1F5EE;
-      --red:       #D85A30;
+      --red:       #E53E3E;
+      --orange:    #F59E0B;
       --border:    #E5E7EB;
       --accent:    #25D366;
-      --surface:   #F8F9FC;
+      --surface:   #F4F6F8;
       --text:      #1F2937;
+      --shadow:    0 2px 12px rgba(11,59,117,0.10);
+      --shadow-lg: 0 4px 24px rgba(11,59,117,0.14);
     }
 
     body {
@@ -213,6 +217,79 @@
       background: var(--white);
       padding: 10px 16px 10px;
       border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .header-premium {
+      background: var(--white);
+      padding: 12px 16px 10px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+    .header-premium-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .header-brand {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+    .header-brand-sub {
+      font-size: 10px;
+      color: var(--gray);
+      margin: 0;
+    }
+    .header-icon-btn {
+      width: 36px;
+      height: 36px;
+      background: var(--lightGray);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      color: var(--navy);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: opacity 0.2s;
+    }
+    .header-icon-btn:active { opacity: 0.7; }
+    .icon-btn-plain {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .header-search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--lightGray);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+    }
+    .header-search-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+    }
+    .header-search-input::placeholder { color: var(--gray); }
+    .banner-hero {
+      height: 180px;
+      overflow: hidden;
       flex-shrink: 0;
     }
     .header-top {
@@ -1119,23 +1196,26 @@
       border-top: 1px solid var(--border);
       display: flex;
       flex-shrink: 0;
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
     }
     .tab-item {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 10px 0 8px;
+      padding: 8px 0 6px;
       cursor: pointer;
       background: none;
       border: none;
-      gap: 3px;
+      gap: 2px;
       color: var(--gray);
-      font-size: 11px;
-      font-weight: 600;
+      font-family: inherit;
+      transition: color 0.2s;
     }
-    .tab-item i { font-size: 20px; }
-    .tab-item.active { color: var(--blue); }
+    .tab-item i { font-size: 22px; }
+    .tab-item span { font-size: 10px; font-weight: 500; }
+    .tab-item.active { color: var(--navy); }
+    .tab-item.active i { color: var(--navy); }
 
     .footer-block {
       flex-shrink: 0;
@@ -1162,6 +1242,278 @@
     }
 
     .content::-webkit-scrollbar { display: none; }
+
+    /* ── HERO BANNER ── */
+    .banner-hero { height: 180px; overflow: hidden; flex-shrink: 0; }
+    .banner-track { position: relative; height: 100%; }
+    .banner-slide { position: relative; height: 180px; }
+    .hero-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px 20px;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--orange);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+      width: fit-content;
+      letter-spacing: 0.5px;
+    }
+    .hero-main-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+      margin: 0 0 4px;
+      line-height: 1.2;
+    }
+    .hero-main-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+      margin: 0 0 14px;
+    }
+    .hero-cta-btn {
+      background: white;
+      color: var(--navy);
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      width: fit-content;
+      letter-spacing: 0.3px;
+      transition: opacity 0.2s;
+    }
+    .hero-cta-btn:active { opacity: 0.8; }
+
+    /* ── CIRCULAR CATEGORIES ── */
+    .categories-circular {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding: 4px 0 12px;
+      scrollbar-width: none;
+      margin-bottom: 4px;
+    }
+    .categories-circular::-webkit-scrollbar { display: none; }
+    .cat-circle-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: opacity 0.2s;
+    }
+    .cat-circle-item:active { opacity: 0.7; }
+    .cat-circle-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--lightBlue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: var(--navy);
+      border: 2px solid var(--border);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .cat-circle-item:active .cat-circle-icon {
+      background: var(--navy);
+      color: white;
+      border-color: var(--navy);
+    }
+    .cat-circle-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--darkGray);
+      text-align: center;
+      max-width: 56px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── PRODUCT CARDS PREMIUM ── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .product-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      transition: opacity 0.2s;
+    }
+    .product-card:active { opacity: 0.85; }
+    .product-icon-wrap {
+      background: var(--lightGray);
+      aspect-ratio: 1/1;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .offer-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: var(--red);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .save-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--gray);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+      transition: color 0.2s;
+    }
+    .save-btn.saved { color: var(--red); }
+    .product-info { padding: 10px 10px 12px; flex: 1; display: flex; flex-direction: column; }
+    .product-name { font-size: 12px; font-weight: 600; color: var(--darkGray); margin-bottom: 2px; line-height: 1.3; }
+    .product-brand { font-size: 10px; color: var(--gray); margin-bottom: 4px; }
+    .product-price { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .in-stock { font-size: 10px; color: var(--green); font-weight: 500; margin-bottom: 8px; }
+    .low-stock { font-size: 10px; color: var(--orange); font-weight: 500; margin-bottom: 8px; }
+    .ver-info-link {
+      background: none;
+      border: none;
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 0;
+      margin-bottom: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .product-actions-row { display: flex; gap: 6px; margin-top: auto; }
+    .btn-wa-consulta {
+      width: 34px;
+      flex-shrink: 0;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: white;
+      font-size: 16px;
+    }
+    .btn-buy {
+      flex: 1;
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 9px;
+      font-size: 12px;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+    .btn-buy:active { background: var(--blue); }
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--navy);
+      border-radius: 8px;
+      padding: 3px;
+      width: 100%;
+    }
+    .qty-stepper-btn {
+      background: rgba(255,255,255,0.18);
+      border: none;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qty-stepper-num { color: white; font-size: 14px; font-weight: 700; flex: 1; text-align: center; }
+
+    /* ── SECTION HEADERS ── */
+    .section-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .section-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--darkGray);
+      margin-bottom: 12px;
+    }
+    .clear-link {
+      font-size: 13px;
+      color: var(--blue);
+      font-weight: 600;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+    }
+
+    /* ── SKELETON LOADERS ── */
+    @keyframes skeletonPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+    .skeleton-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      animation: skeletonPulse 1.4s ease-in-out infinite;
+    }
+    .skeleton-img { width: 100%; aspect-ratio: 1/1; background: var(--border); }
+    .skeleton-line { height: 11px; background: var(--border); border-radius: 6px; margin-bottom: 4px; }
+
   </style>
 </head>
 <body>
@@ -1388,54 +1740,61 @@
 
   <div id="screen-main" class="screen" style="flex-direction:column; position:relative;">
 
-    <div class="banner-fullscreen" id="banner-carousel">
+    <div class="header-premium">
+      <div class="header-premium-top">
+        <button class="icon-btn-plain" onclick="goToHub()" aria-label="Inicio">
+          <svg viewBox="0 0 100 100" width="32" height="32">
+            <circle cx="50" cy="50" r="48" fill="#1E5AA8"/>
+            <path d="M18 50 C 28 32 60 30 78 42 C 66 47 60 50 78 58 C 60 70 28 68 18 50 Z" fill="white"/>
+            <circle cx="32" cy="46" r="3" fill="#0B3B75"/>
+          </svg>
+        </button>
+        <div>
+          <p class="header-brand">SAN DOMINGO</p>
+          <p class="header-brand-sub">Artículos para la pesca</p>
+        </div>
+        <div style="display:flex; gap:6px; margin-left:auto;">
+          <button class="header-icon-btn" onclick="showTab('saved')" aria-label="Favoritos">
+            <i class="ti ti-heart"></i>
+          </button>
+          <button class="header-icon-btn" onclick="showTab('cart')" aria-label="Carrito" style="position:relative;">
+            <i class="ti ti-shopping-cart"></i>
+            <span class="badge" id="cart-badge">0</span>
+          </button>
+        </div>
+      </div>
+      <div class="header-search-wrap">
+        <i class="ti ti-search" style="font-size:16px; color:var(--gray);"></i>
+        <input class="header-search-input" id="search-input" type="search" placeholder="Buscar productos..." oninput="renderHome()" />
+      </div>
+    </div>
+
+    <div class="banner-hero" id="banner-carousel">
       <div class="banner-track" id="banner-track"></div>
     </div>
 
-    <div class="header header-floating">
-      <div class="header-top">
-        <button class="icon-btn" onclick="goToHub()" aria-label="Volver al inicio">
-          <i class="ti ti-home"></i>
-        </button>
-        <svg viewBox="0 0 100 100" width="28" height="28">
-          <circle cx="50" cy="50" r="48" fill="#E6F1FB"/>
-          <path d="M18 50 C 28 32 60 30 78 42 C 66 47 60 50 78 58 C 60 70 28 68 18 50 Z" fill="#185FA5"/>
-          <circle cx="32" cy="46" r="3" fill="#042C53"/>
-        </svg>
-        <div class="header-text-block">
-          <div class="header-title">San Domingo</div>
-        </div>
-        <button class="icon-btn" onclick="showTab('saved')" aria-label="Guardados">
-          <i class="ti ti-bookmark"></i>
-        </button>
-        <button class="icon-btn" onclick="showTab('cart')" aria-label="Carrito">
-          <i class="ti ti-shopping-cart"></i>
-          <span class="badge" id="cart-badge">0</span>
-        </button>
-      </div>
-      <input class="search-input" id="search-input" type="search" placeholder="Buscar por nombre, marca o categoría" oninput="renderHome()" />
-    </div>
-
-    <div id="tab-home" class="content" style="margin-top:56.25vw;">
-      <div class="banner-dots" id="banner-dots"></div>
-      <div class="trust-bar" style="margin-bottom:14px;">
-        <div class="trust-item"><i class="ti ti-award" style="color:#FAC775;"></i><span>+20 años</span></div>
+    <div id="tab-home" class="content" style="padding-top:0;">
+      <div class="banner-dots" id="banner-dots" style="padding:8px 0 4px;"></div>
+      <div class="trust-bar" style="margin:8px 0 14px;">
+        <div class="trust-item"><i class="ti ti-truck-delivery" style="color:#1D9E75;"></i><span>Envíos a domicilio</span></div>
         <div class="trust-divider"></div>
-        <div class="trust-item"><i class="ti ti-truck-delivery" style="color:#1D9E75;"></i><span>Envío gratis GBA</span></div>
+        <div class="trust-item"><i class="ti ti-brand-whatsapp" style="color:#25D366;"></i><span>WhatsApp directo</span></div>
         <div class="trust-divider"></div>
         <div class="trust-item"><i class="ti ti-shield-check" style="color:#1D9E75;"></i><span>Pago seguro</span></div>
         <div class="trust-divider"></div>
-        <div class="trust-item"><i class="ti ti-headset" style="color:#1E73BE;"></i><span>Atención personal</span></div>
+        <div class="trust-item"><i class="ti ti-award" style="color:#F59E0B;"></i><span>+20 años</span></div>
       </div>
-      <div class="quick-access-grid" id="quick-access-grid"></div>
       <div class="section-header-row">
-        <p class="section-label" id="products-title" style="margin-bottom:0;">Destacados</p>
-        <button class="clear-link" id="btn-clear" style="display:none;" onclick="clearFilter()">Ver destacados</button>
+        <p class="section-label" style="margin-bottom:0;">Categorías principales</p>
+        <button class="clear-link" onclick="clearFilter()">Ver todas</button>
+      </div>
+      <div class="categories-circular" id="categories-grid"></div>
+      <div class="section-header-row" style="margin-top:8px;">
+        <p class="section-label" id="products-title" style="margin-bottom:0;">Productos destacados</p>
+        <button class="clear-link" id="btn-clear" style="display:none;" onclick="clearFilter()">Ver todos</button>
       </div>
       <div class="products-grid" id="products-grid"></div>
-      <p class="section-label">Categorías</p>
-      <div class="categories-grid" id="categories-grid"></div>
-      <p class="section-label">Comunidad San Domingo</p>
+      <p class="section-label" style="margin-top:4px;">Comunidad</p>
       <div class="community-grid" id="community-grid"></div>
       <div id="tools-section" style="display:none;">
         <p class="section-label">Herramientas</p>
@@ -1542,28 +1901,33 @@
 
     <div class="tab-bar">
       <button class="tab-item active" id="tab-btn-home" onclick="showTab('home'); clearFilter();">
-        <i class="ti ti-home"></i> Inicio
+        <i class="ti ti-home"></i>
+        <span>Inicio</span>
       </button>
       <button class="tab-item" id="tab-btn-ofertas" onclick="showTab('home'); filterByCategory('ofertas');">
-        <i class="ti ti-flame"></i> Ofertas
+        <i class="ti ti-layout-grid"></i>
+        <span>Categorías</span>
       </button>
       <button class="tab-item" id="tab-btn-comunidad" onclick="goToComunidad()">
-        <i class="ti ti-users"></i> Comunidad
+        <i class="ti ti-users"></i>
+        <span>Comunidad</span>
       </button>
-      <button class="tab-item" id="tab-btn-cart" onclick="showTab('cart')">
-        <i class="ti ti-shopping-cart"></i> Carrito
+      <button class="tab-item" id="tab-btn-cart" onclick="showTab('cart')" style="position:relative;">
+        <i class="ti ti-shopping-cart"></i>
+        <span>Carrito</span>
       </button>
       <button class="tab-item" id="tab-btn-mas" onclick="showTab('saved')">
-        <i class="ti ti-dots"></i> Más
+        <i class="ti ti-user"></i>
+        <span>Perfil</span>
       </button>
       <button class="tab-item" id="tab-btn-foro" style="display:none;" onclick="showTab('foro')">
-        <i class="ti ti-users"></i> Foro
+        <i class="ti ti-users"></i><span>Foro</span>
       </button>
       <button class="tab-item" id="tab-btn-bitacora" style="display:none;" onclick="showTab('bitacora')">
-        <i class="ti ti-book"></i> Bitácora
+        <i class="ti ti-book"></i><span>Bitácora</span>
       </button>
       <button class="tab-item" id="tab-btn-saved" style="display:none;" onclick="showTab('saved')">
-        <i class="ti ti-bookmark"></i> Guardados
+        <i class="ti ti-bookmark"></i><span>Guardados</span>
       </button>
     </div>
 
@@ -2174,54 +2538,47 @@ function renderCommunity() {
   `).join('');
 }
 
-const BANNER_SLIDES_BY_WORLD = {
-  acuariofilia: [{ video: 'imagenes/banner-destacado.mp4' }],
-  pesca: [{ video: 'imagenes/pescando.mp4' }],
-};
-
-const HERO_SUBTITLE_BY_WORLD = {
-  acuariofilia: 'Todo para tu acuario',
-  pesca: 'Todo para tu próxima salida',
+const BANNER_CONFIG_BY_WORLD = {
+  acuariofilia: {
+    video: 'imagenes/banner-destacado.mp4',
+    badge: '🐠 NOVEDAD',
+    title: 'Todo para tu acuario',
+    sub: 'Peces, filtros y accesorios premium',
+    btn: 'VER PRODUCTOS',
+    btnAction: "showTab('home')",
+  },
+  pesca: {
+    video: 'imagenes/pescando.mp4',
+    badge: '🔥 OFERTA DE LA SEMANA',
+    title: 'Equipamiento completo',
+    sub: 'Cañas, reeles y señuelos top',
+    btn: 'VER OFERTAS',
+    btnAction: "filterByCategory('ofertas')",
+  },
 };
 
 function renderBanner() {
-  const slides = BANNER_SLIDES_BY_WORLD[currentWorld];
-  if (!slides) {
+  const cfg = BANNER_CONFIG_BY_WORLD[currentWorld];
+  if (!cfg) {
     document.getElementById('banner-carousel').style.display = 'none';
-    document.getElementById('banner-dots').style.display = 'none';
     return;
   }
-  document.getElementById('banner-carousel').style.display = 'flex';
+  document.getElementById('banner-carousel').style.display = 'block';
   document.getElementById('banner-dots').style.display = 'none';
   const track = document.getElementById('banner-track');
-  const subtitle = HERO_SUBTITLE_BY_WORLD[currentWorld] || '';
-  track.innerHTML = slides.map(s => `
-    <div class="banner-slide">
-      ${s.video
-        ? `<video src="${s.video}" autoplay muted loop playsinline></video>`
-        : `<img src="${s.img}" alt="" />`}
-      <div class="hero-text-block">
-        <p class="hero-title">SAN DOMINGO</p>
-        <p class="hero-subtitle">${subtitle}</p>
-        <div class="hero-buttons">
-          <button class="hero-btn hero-btn-primary" onclick="showTab('home')">Ver catálogo</button>
-          <button class="hero-btn hero-btn-secondary" onclick="filterByCategory('ofertas')">Ver ofertas</button>
-        </div>
+  track.innerHTML = `
+    <div class="banner-slide" style="width:100%; height:180px; position:relative;">
+      <video src="${cfg.video}" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; display:block;"></video>
+      <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(11,59,117,0.82) 0%, rgba(11,59,117,0.35) 100%);"></div>
+      <div class="hero-content">
+        <span class="hero-badge">${cfg.badge}</span>
+        <p class="hero-main-title">${cfg.title}</p>
+        <p class="hero-main-sub">${cfg.sub}</p>
+        <button class="hero-cta-btn" onclick="${cfg.btnAction}">${cfg.btn}</button>
       </div>
     </div>
-  `).join('');
-  const carousel = document.getElementById('banner-carousel');
-  carousel.addEventListener('scroll', () => {
-    const i = Math.round(carousel.scrollLeft / carousel.offsetWidth);
-    document.querySelectorAll('.banner-dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
-  });
-
+  `;
   if (window.bannerAutoInterval) clearInterval(window.bannerAutoInterval);
-
-  requestAnimationFrame(() => {
-    const realHeight = carousel.offsetHeight;
-    document.getElementById('tab-home').style.marginTop = realHeight + 'px';
-  });
 }
 
 function renderCategories() {
@@ -2229,9 +2586,11 @@ function renderCategories() {
   const cats = CATEGORIES.filter(c => ids.includes(c.id));
   const grid = document.getElementById('categories-grid');
   grid.innerHTML = cats.map(cat => `
-    <div class="category-card" onclick="filterByCategory('${cat.id}')">
-      <i class="ti ${CAT_ICONS[cat.id] || 'ti-box'}"></i>
-      ${cat.name}
+    <div class="cat-circle-item" onclick="filterByCategory('${cat.id}')">
+      <div class="cat-circle-icon">
+        <i class="ti ${CAT_ICONS[cat.id] || 'ti-box'}"></i>
+      </div>
+      <span class="cat-circle-label">${cat.name.split(' ')[0]}</span>
     </div>
   `).join('');
 }
