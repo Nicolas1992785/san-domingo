@@ -234,8 +234,8 @@
       margin-bottom: 10px;
     }
     .header-brand {
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 17px;
+      font-weight: 800;
       color: var(--navy);
       letter-spacing: 0.5px;
       margin: 0;
@@ -1328,16 +1328,75 @@
     .products-grid::-webkit-scrollbar { display: none; }
     .product-card {
       background: var(--white);
-      border-radius: 16px;
+      border-radius: 14px;
       overflow: hidden;
-      box-shadow: var(--shadow);
+      box-shadow: 0 2px 10px rgba(11,59,117,0.10);
       border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       transition: opacity 0.2s;
       flex-shrink: 0;
-      width: 150px;
+      width: 148px;
     }
+    .product-card:active { opacity: 0.85; }
+    .product-img-wrap {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: var(--lightGray);
+      position: relative;
+      overflow: hidden;
+    }
+    .offer-badge {
+      position: absolute; top: 6px; left: 6px; z-index: 2;
+      background: var(--red); color: white;
+      font-size: 9px; font-weight: 700;
+      padding: 3px 7px; border-radius: 6px;
+    }
+    .product-info { padding: 8px 10px 10px; flex: 1; display: flex; flex-direction: column; }
+    .product-name {
+      font-size: 12px; font-weight: 600; color: var(--darkGray);
+      line-height: 1.3; margin: 0 0 4px;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .product-price { font-size: 16px; font-weight: 700; color: var(--navy); margin: 0 0 3px; }
+    .in-stock { font-size: 10px; color: var(--green); font-weight: 500; margin: 0 0 8px; }
+    .low-stock { font-size: 10px; color: var(--orange); font-weight: 600; margin: 0 0 8px; }
+    .product-bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    .btn-heart {
+      width: 30px; height: 30px;
+      background: var(--lightGray); border: none; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 16px; color: var(--gray);
+      transition: color 0.2s, background 0.2s;
+    }
+    .btn-heart.saved { color: var(--red); background: #FFF0F0; }
+    .btn-cart-circle {
+      width: 34px; height: 34px;
+      background: var(--navy); border: none; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 16px; color: white;
+      transition: background 0.2s;
+    }
+    .btn-cart-circle:active { background: var(--blue2); }
+    .qty-stepper-mini {
+      display: flex; align-items: center;
+      background: var(--navy); border-radius: 20px;
+      padding: 3px 6px; gap: 4px;
+    }
+    .qty-mini-btn {
+      background: none; border: none; color: white;
+      font-size: 16px; font-weight: 700; cursor: pointer;
+      width: 20px; height: 20px; display: flex;
+      align-items: center; justify-content: center;
+      line-height: 1;
+    }
+    .qty-mini-num { color: white; font-size: 13px; font-weight: 700; min-width: 14px; text-align: center; }
     .product-card:active { opacity: 0.85; }
     .product-icon-wrap {
       background: var(--lightGray);
@@ -2675,42 +2734,36 @@ function productCardHTML(p) {
   const isSaved = !!saved[p.id];
   const lowStock = p.stock > 0 && p.stock <= 3;
   const priceHTML = p.consultar
-    ? `<div class="product-price" style="font-size:14px;">Consultar precio</div>`
-    : `<div class="product-price">${fmt(p.price)}</div>`;
+    ? `<p class="product-price">Consultar</p>`
+    : `<p class="product-price">${fmt(p.price)}</p>`;
   const imageHTML = p.img
-    ? `<img src="${p.img}" alt="${p.name}" style="width:100%; height:100%; object-fit:cover;" />`
-    : `<div class="product-icon-circle"><i class="ti ${icon}"></i></div>`;
+    ? `<img src="${p.img}" alt="${p.name}" style="width:100%; height:100%; object-fit:cover; display:block;" />`
+    : `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:36px; color:var(--navy); opacity:0.25;"><i class="ti ${icon}"></i></div>`;
   const qtyInCart = cart[p.id] || 0;
-  const buyControlHTML = qtyInCart > 0
-    ? `
-      <div class="qty-stepper" id="stepper-${p.id}">
-        <button class="qty-stepper-btn" onclick="changeQty('${p.id}',-1); refreshCardStepper('${p.id}')">−</button>
-        <span class="qty-stepper-num">${qtyInCart}</span>
-        <button class="qty-stepper-btn" onclick="changeQty('${p.id}',1); refreshCardStepper('${p.id}')">+</button>
-      </div>
-    `
-    : `<button class="btn-buy" data-add-btn="${p.id}" onclick="addToCart('${p.id}')"><i class="ti ti-shopping-cart-plus" style="font-size:15px;"></i> Agregar</button>`;
-  const waMsg = encodeURIComponent(`Hola San Domingo, te consulto por: ${p.name}`);
+  const cartBtn = qtyInCart > 0
+    ? `<div class="qty-stepper-mini" id="stepper-${p.id}">
+        <button class="qty-mini-btn" onclick="changeQty('${p.id}',-1); refreshCardStepper('${p.id}')">−</button>
+        <span class="qty-mini-num">${qtyInCart}</span>
+        <button class="qty-mini-btn" onclick="changeQty('${p.id}',1); refreshCardStepper('${p.id}')">+</button>
+       </div>`
+    : `<button class="btn-cart-circle" data-add-btn="${p.id}" onclick="addToCart('${p.id}')">
+        <i class="ti ti-shopping-cart-plus"></i>
+       </button>`;
   return `
     <div class="product-card">
-      <div class="product-icon-wrap">
+      <div class="product-img-wrap">
         ${p.offer ? '<span class="offer-badge">Oferta</span>' : ''}
-        <button class="save-btn ${isSaved ? 'saved' : ''}" onclick="toggleSaved('${p.id}')" aria-label="Guardar">
-          <i class="ti ${isSaved ? 'ti-bookmark-filled' : 'ti-bookmark'}"></i>
-        </button>
         ${imageHTML}
       </div>
       <div class="product-info">
-        <div class="product-name">${p.name}</div>
-        <div class="product-brand">${p.brand}</div>
+        <p class="product-name">${p.name}</p>
         ${priceHTML}
-        <div class="${lowStock ? 'low-stock' : 'in-stock'}">${lowStock ? `Quedan ${p.stock}` : 'En stock'}</div>
-        ${p.info ? `<button class="ver-info-link" onclick="abrirInfoPez('${p.id}')"><i class="ti ti-info-circle" style="margin-right:4px;"></i>Cuidados y consejos</button>` : ''}
-        <div class="product-actions-row">
-          <a href="https://wa.me/5492616109829?text=${waMsg}" target="_blank" class="btn-wa-consulta" aria-label="Consultar por WhatsApp">
-            <i class="ti ti-brand-whatsapp"></i>
-          </a>
-          <div id="buy-control-${p.id}" style="flex:1;">${buyControlHTML}</div>
+        <p class="${lowStock ? 'low-stock' : 'in-stock'}">${lowStock ? `Quedan ${p.stock}` : 'En stock'}</p>
+        <div class="product-bottom-row">
+          <button class="btn-heart ${isSaved ? 'saved' : ''}" onclick="toggleSaved('${p.id}')">
+            <i class="ti ${isSaved ? 'ti-heart-filled' : 'ti-heart'}"></i>
+          </button>
+          <div id="buy-control-${p.id}">${cartBtn}</div>
         </div>
       </div>
     </div>
@@ -2722,14 +2775,14 @@ function refreshCardStepper(id) {
   if (!wrap) return;
   const qty = cart[id] || 0;
   wrap.innerHTML = qty > 0
-    ? `
-      <div class="qty-stepper" id="stepper-${id}">
-        <button class="qty-stepper-btn" onclick="changeQty('${id}',-1); refreshCardStepper('${id}')">−</button>
-        <span class="qty-stepper-num">${qty}</span>
-        <button class="qty-stepper-btn" onclick="changeQty('${id}',1); refreshCardStepper('${id}')">+</button>
-      </div>
-    `
-    : `<button class="btn-buy" data-add-btn="${id}" onclick="addToCart('${id}')"><i class="ti ti-shopping-cart-plus" style="font-size:15px;"></i> Agregar</button>`;
+    ? `<div class="qty-stepper-mini" id="stepper-${id}">
+        <button class="qty-mini-btn" onclick="changeQty('${id}',-1); refreshCardStepper('${id}')">−</button>
+        <span class="qty-mini-num">${qty}</span>
+        <button class="qty-mini-btn" onclick="changeQty('${id}',1); refreshCardStepper('${id}')">+</button>
+       </div>`
+    : `<button class="btn-cart-circle" data-add-btn="${id}" onclick="addToCart('${id}')">
+        <i class="ti ti-shopping-cart-plus"></i>
+       </button>`;
 }
 
 function abrirInfoPez(id) {
