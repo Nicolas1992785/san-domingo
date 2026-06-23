@@ -197,21 +197,84 @@
       position: relative;
     }
 
+    @keyframes waPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(37,211,102,0.5); }
+      70%  { box-shadow: 0 0 0 12px rgba(37,211,102,0); }
+      100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+    }
     .whatsapp-float-btn {
       position: absolute;
       bottom: 80px;
-      right: 16px;
-      width: 52px;
-      height: 52px;
+      right: 14px;
       background: #25D366;
-      border-radius: 50%;
+      border-radius: 30px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      gap: 8px;
+      padding: 12px 16px 12px 12px;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.45);
       z-index: 999;
       text-decoration: none;
+      animation: waPulse 2.5s ease-out infinite;
     }
+    .wa-float-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .trust-block {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px 14px;
+      margin: 16px 0;
+    }
+    .trust-block-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .trust-block-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .trust-block-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+    }
+    .trust-block-icon {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .trust-block-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--darkGray);
+      line-height: 1.3;
+      margin: 0;
+    }
+    .offers-fire-badge {
+      background: #FEF3C7;
+      color: #D97706;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .bestseller-badge-header {
+      font-size: 16px;
+    }
+    .home-access-historia { background: linear-gradient(135deg, #6B46C1, #9F7AEA); }
 
     .header {
       background: var(--white);
@@ -1898,14 +1961,57 @@
         <p class="home-hero-title">Todo para Pesca y Acuariofilia</p>
         <p class="home-hero-sub">Más de 20 años acompañando a pescadores de Mendoza</p>
         <div class="home-hero-btns">
-          <button class="home-btn-primary" onclick="filterByCategory(null); clearFilter();">Ver Catálogo</button>
-          <button class="home-btn-secondary" onclick="filterByCategory('ofertas')">Ofertas</button>
+          <button class="home-btn-primary" onclick="clearFilter();">Ver Catálogo</button>
+          <button class="home-btn-secondary" onclick="filterByCategory('ofertas')">Ver Ofertas</button>
         </div>
       </div>
 
-      <!-- 2. ACCESOS PRINCIPALES -->
-      <div class="section-header-row" style="margin-top:20px;">
-        <p class="section-label" style="margin-bottom:0;">¿Qué buscás?</p>
+      <!-- 2. BLOQUE DE CONFIANZA -->
+      <div class="trust-block">
+        <p class="trust-block-title">¿Por qué elegir San Domingo?</p>
+        <div class="trust-block-grid">
+          <div class="trust-block-item">
+            <div class="trust-block-icon" style="background:#E8F1FC;"><i class="ti ti-award" style="color:#0B3B75;"></i></div>
+            <p class="trust-block-label">+20 años de experiencia</p>
+          </div>
+          <div class="trust-block-item">
+            <div class="trust-block-icon" style="background:#E8F5E9;"><i class="ti ti-headset" style="color:#2E7D32;"></i></div>
+            <p class="trust-block-label">Atención personalizada</p>
+          </div>
+          <div class="trust-block-item">
+            <div class="trust-block-icon" style="background:#E3F2FD;"><i class="ti ti-truck-delivery" style="color:#1565C0;"></i></div>
+            <p class="trust-block-label">Envíos en Mendoza</p>
+          </div>
+          <div class="trust-block-item">
+            <div class="trust-block-icon" style="background:#FFF8E1;"><i class="ti ti-users" style="color:#D97706;"></i></div>
+            <p class="trust-block-label">Comunidad activa</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. OFERTAS DE LA SEMANA -->
+      <div class="section-header-row offers-header">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span class="offers-fire-badge">🔥 OFERTA</span>
+          <p class="section-label" style="margin:0;">Ofertas de la semana</p>
+        </div>
+        <button class="clear-link" onclick="filterByCategory('ofertas')">Ver todas</button>
+      </div>
+      <div class="products-grid" id="offers-grid"></div>
+
+      <!-- 4. MÁS VENDIDOS -->
+      <div class="section-header-row" style="margin-top:8px;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span class="bestseller-badge-header">⭐</span>
+          <p class="section-label" id="products-title" style="margin:0;">Los favoritos de nuestros clientes</p>
+        </div>
+        <button class="clear-link" id="btn-clear" style="display:none;" onclick="clearFilter()">Ver todos</button>
+      </div>
+      <div class="products-grid" id="products-grid"></div>
+
+      <!-- 5. ACCESOS PRINCIPALES -->
+      <div class="section-header-row" style="margin-top:16px;">
+        <p class="section-label" style="margin-bottom:0;">Explorar por categoría</p>
       </div>
       <div class="home-access-grid">
         <div class="home-access-card home-access-pesca" onclick="enterWorld('pesca')">
@@ -1920,55 +2026,17 @@
           <i class="ti ti-map-pin"></i>
           <p>Lugares de Pesca</p>
         </div>
-        <div class="home-access-card home-access-comunidad" onclick="goToComunidad()">
-          <i class="ti ti-users"></i>
-          <p>Comunidad</p>
-        </div>
-      </div>
-
-      <!-- 3. OFERTAS DE LA SEMANA -->
-      <div class="section-header-row" style="margin-top:24px;">
-        <p class="section-label" style="margin-bottom:0;">🔥 Ofertas de la semana</p>
-        <button class="clear-link" onclick="filterByCategory('ofertas')">Ver todas</button>
-      </div>
-      <div class="products-grid" id="offers-grid"></div>
-
-      <!-- 4. LOS MÁS BUSCADOS -->
-      <div class="section-header-row" style="margin-top:8px;">
-        <p class="section-label" id="products-title" style="margin-bottom:0;">Los más buscados</p>
-        <button class="clear-link" id="btn-clear" style="display:none;" onclick="clearFilter()">Ver todos</button>
-      </div>
-      <div class="products-grid" id="products-grid"></div>
-
-      <!-- 5. BENEFICIOS -->
-      <div class="home-benefits">
-        <div class="home-benefit-item">
-          <div class="home-benefit-icon" style="background:#E8F5E9;"><i class="ti ti-award" style="color:#2E7D32;"></i></div>
-          <p class="home-benefit-title">+20 años</p>
-          <p class="home-benefit-sub">de experiencia</p>
-        </div>
-        <div class="home-benefit-item">
-          <div class="home-benefit-icon" style="background:#E3F2FD;"><i class="ti ti-truck-delivery" style="color:#1565C0;"></i></div>
-          <p class="home-benefit-title">Envíos</p>
-          <p class="home-benefit-sub">en Mendoza</p>
-        </div>
-        <div class="home-benefit-item">
-          <div class="home-benefit-icon" style="background:#E8F5E9;"><i class="ti ti-brand-whatsapp" style="color:#25D366;"></i></div>
-          <p class="home-benefit-title">WhatsApp</p>
-          <p class="home-benefit-sub">directo</p>
-        </div>
-        <div class="home-benefit-item">
-          <div class="home-benefit-icon" style="background:#FFF8E1;"><i class="ti ti-users" style="color:#F9A825;"></i></div>
-          <p class="home-benefit-title">Comunidad</p>
-          <p class="home-benefit-sub">de pescadores</p>
+        <div class="home-access-card home-access-historia" onclick="openTool('historia')">
+          <i class="ti ti-book"></i>
+          <p>Nuestra Historia</p>
         </div>
       </div>
 
       <!-- 6. COMUNIDAD -->
-      <p class="section-label" style="margin-top:8px;">Comunidad</p>
+      <p class="section-label" style="margin-top:20px;">Comunidad</p>
       <div class="community-grid" id="community-grid"></div>
 
-      <!-- categorías y herramientas ocultas (usadas internamente) -->
+      <!-- ocultos internamente -->
       <div style="display:none;" id="categories-grid"></div>
       <div id="tools-section" style="display:none;">
         <div class="tools-grid" id="tools-grid"></div>
@@ -2104,8 +2172,9 @@
       </button>
     </div>
 
-    <a href="https://wa.me/5492616109829" target="_blank" class="whatsapp-float-btn">
-      <i class="ti ti-brand-whatsapp" style="font-size:28px; color:white;"></i>
+    <a href="https://wa.me/5492616109829?text=Hola%20San%20Domingo%2C%20necesito%20ayuda" target="_blank" class="whatsapp-float-btn" id="wa-float">
+      <i class="ti ti-brand-whatsapp" style="font-size:26px; color:white; flex-shrink:0;"></i>
+      <span class="wa-float-text">¿Necesitás ayuda?</span>
     </a>
     <div class="footer-block">
       <a href="https://maps.google.com/?q=Chacabuco+711+y+Congreso,+Rodeo+de+la+Cruz,+Guaymallén,+Mendoza" target="_blank" class="footer-address">
@@ -3044,6 +3113,7 @@ function openTool(tool) {
     clima: 'Clima y pronóstico',
     luna: 'Fase lunar',
     lugares: 'Lugares recomendados',
+    historia: 'Nuestra Historia',
   };
   document.getElementById('tool-modal-title').textContent = titles[tool] || '';
   document.getElementById('tool-modal-body').innerHTML = TOOL_BODIES[tool]();
@@ -3059,6 +3129,46 @@ function closeTool() {
 }
 
 const TOOL_BODIES = {
+  historia: () => `
+    <div style="text-align:center; padding:8px 0 20px;">
+      <div style="width:72px; height:72px; background:var(--lightBlue); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:32px; color:var(--navy);">
+        <i class="ti ti-fish"></i>
+      </div>
+      <p style="font-size:22px; font-weight:800; color:var(--navy); margin-bottom:4px;">San Domingo</p>
+      <p style="font-size:12px; color:var(--gray); letter-spacing:2px; text-transform:uppercase;">Mendoza, Argentina</p>
+    </div>
+    <div style="background:var(--lightBlue); border-radius:14px; padding:18px; margin-bottom:14px;">
+      <p style="font-size:14px; line-height:1.7; color:var(--darkGray); text-align:center; font-style:italic;">"Desde hace más de 20 años acompañamos a pescadores y aficionados a la acuariofilia en Mendoza. Nuestro compromiso es ofrecer productos seleccionados, asesoramiento real y una comunidad donde compartir experiencias."</p>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+      <div style="background:var(--white); border:1px solid var(--border); border-radius:12px; padding:14px; text-align:center;">
+        <p style="font-size:28px; font-weight:800; color:var(--navy); margin:0;">+20</p>
+        <p style="font-size:11px; color:var(--gray); margin:4px 0 0;">años de trayectoria</p>
+      </div>
+      <div style="background:var(--white); border:1px solid var(--border); border-radius:12px; padding:14px; text-align:center;">
+        <p style="font-size:28px; font-weight:800; color:var(--navy); margin:0;">100%</p>
+        <p style="font-size:11px; color:var(--gray); margin:4px 0 0;">atención personalizada</p>
+      </div>
+    </div>
+    <div style="background:var(--white); border:1px solid var(--border); border-radius:14px; padding:16px; margin-bottom:14px;">
+      <p style="font-size:13px; font-weight:700; color:var(--navy); margin:0 0 12px;">Nuestros valores</p>
+      ${[
+        {icon:'ti-map-pin', text:'Chacabuco 711 y Congreso, Rodeo de la Cruz'},
+        {icon:'ti-fish-hook', text:'Especialistas en pesca deportiva y acuariofilia'},
+        {icon:'ti-truck-delivery', text:'Envíos a domicilio en el Gran Mendoza'},
+        {icon:'ti-brand-whatsapp', text:'Atención personalizada por WhatsApp'},
+      ].map(i=>`
+        <div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border);">
+          <i class="ti ${i.icon}" style="font-size:18px; color:var(--blue); width:24px; flex-shrink:0;"></i>
+          <span style="font-size:13px; color:var(--darkGray);">${i.text}</span>
+        </div>
+      `).join('')}
+    </div>
+    <a href="https://wa.me/5492616109829?text=Hola%20San%20Domingo%2C%20quiero%20conocer%20m%C3%A1s" target="_blank"
+       style="display:flex; align-items:center; justify-content:center; gap:10px; background:var(--accent); color:white; border-radius:14px; padding:16px; text-decoration:none; font-weight:700; font-size:15px;">
+      <i class="ti ti-brand-whatsapp" style="font-size:22px;"></i> Hablar con un asesor
+    </a>
+  `,
   misPuntos: () => `
     <div id="puntos-resultado"></div>
   `,
