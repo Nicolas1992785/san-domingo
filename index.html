@@ -606,6 +606,61 @@
     .hub-quick-btn:active { opacity: 0.8; }
     .hub-quick-puntos { background: rgba(250,199,117,0.18); color: #854F0B; }
     .hub-quick-ofertas { background: rgba(29,158,117,0.12); color: #0F6E56; }
+
+    /* ── HOME HERO ── */
+    .home-hero { padding: 20px 0 4px; text-align: center; }
+    .home-hero-title { font-size: 22px; font-weight: 800; color: var(--navy); line-height: 1.2; margin-bottom: 8px; }
+    .home-hero-sub { font-size: 13px; color: var(--gray); margin-bottom: 18px; line-height: 1.5; }
+    .home-hero-btns { display: flex; gap: 10px; justify-content: center; }
+    .home-btn-primary {
+      background: var(--navy); color: white; border: none;
+      border-radius: 12px; padding: 13px 28px;
+      font-size: 14px; font-weight: 700; font-family: inherit;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .home-btn-primary:active { opacity: 0.8; }
+    .home-btn-secondary {
+      background: transparent; color: var(--navy);
+      border: 2px solid var(--navy); border-radius: 12px;
+      padding: 13px 24px; font-size: 14px; font-weight: 700;
+      font-family: inherit; cursor: pointer; transition: opacity 0.2s;
+    }
+    .home-btn-secondary:active { opacity: 0.8; }
+
+    /* ── HOME ACCESS GRID ── */
+    .home-access-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; margin-bottom: 4px;
+    }
+    .home-access-card {
+      border-radius: 18px; padding: 24px 16px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px; cursor: pointer;
+      transition: opacity 0.2s; min-height: 120px;
+    }
+    .home-access-card:active { opacity: 0.8; }
+    .home-access-card i { font-size: 32px; color: white; }
+    .home-access-card p { font-size: 13px; font-weight: 700; color: white; text-align: center; margin: 0; line-height: 1.3; }
+    .home-access-pesca   { background: linear-gradient(135deg, #0B3B75, #1E5AA8); }
+    .home-access-acuario { background: linear-gradient(135deg, #1E5AA8, #2E86DE); }
+    .home-access-lugares { background: linear-gradient(135deg, #1D9E75, #27AE7A); }
+    .home-access-comunidad { background: linear-gradient(135deg, #F59E0B, #D97706); }
+
+    /* ── HOME BENEFITS ── */
+    .home-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0 16px; }
+    .home-benefit-item {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px 10px; text-align: center;
+    }
+    .home-benefit-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin: 0 auto 8px;
+    }
+    .home-benefit-title { font-size: 13px; font-weight: 700; color: var(--navy); margin: 0 0 2px; }
+    .home-benefit-sub { font-size: 11px; color: var(--gray); margin: 0; }
+
     .trust-bar {
       display: flex;
       align-items: center;
@@ -1836,48 +1891,86 @@
     </div>
 
     <div id="tab-home" class="content" style="padding-top:0;">
-      <div class="banner-dots" id="banner-dots" style="padding:8px 0 4px;"></div>
-      <div class="trust-bar" style="margin:8px 0 14px;">
-        <div class="trust-item"><i class="ti ti-truck-delivery" style="color:#1D9E75;"></i><span>Envíos a domicilio</span></div>
-        <div class="trust-divider"></div>
-        <div class="trust-item"><i class="ti ti-brand-whatsapp" style="color:#25D366;"></i><span>WhatsApp directo</span></div>
-        <div class="trust-divider"></div>
-        <div class="trust-item"><i class="ti ti-shield-check" style="color:#1D9E75;"></i><span>Pago seguro</span></div>
-        <div class="trust-divider"></div>
-        <div class="trust-item"><i class="ti ti-award" style="color:#F59E0B;"></i><span>+20 años</span></div>
+      <div class="banner-dots" id="banner-dots" style="padding:6px 0 2px;"></div>
+
+      <!-- 1. HERO -->
+      <div class="home-hero">
+        <p class="home-hero-title">Todo para Pesca y Acuariofilia</p>
+        <p class="home-hero-sub">Más de 20 años acompañando a pescadores de Mendoza</p>
+        <div class="home-hero-btns">
+          <button class="home-btn-primary" onclick="filterByCategory(null); clearFilter();">Ver Catálogo</button>
+          <button class="home-btn-secondary" onclick="filterByCategory('ofertas')">Ofertas</button>
+        </div>
       </div>
-      <div class="section-header-row">
-        <p class="section-label" style="margin-bottom:0;">Categorías principales</p>
-        <button class="clear-link" onclick="clearFilter()">Ver todas</button>
+
+      <!-- 2. ACCESOS PRINCIPALES -->
+      <div class="section-header-row" style="margin-top:20px;">
+        <p class="section-label" style="margin-bottom:0;">¿Qué buscás?</p>
       </div>
-      <div class="categories-circular" id="categories-grid"></div>
+      <div class="home-access-grid">
+        <div class="home-access-card home-access-pesca" onclick="enterWorld('pesca')">
+          <i class="ti ti-fish-hook"></i>
+          <p>Productos de Pesca</p>
+        </div>
+        <div class="home-access-card home-access-acuario" onclick="enterWorld('acuariofilia')">
+          <i class="ti ti-fish"></i>
+          <p>Acuariofilia</p>
+        </div>
+        <div class="home-access-card home-access-lugares" onclick="enterWorld('pesca'); setTimeout(()=>openTool('lugares'),400);">
+          <i class="ti ti-map-pin"></i>
+          <p>Lugares de Pesca</p>
+        </div>
+        <div class="home-access-card home-access-comunidad" onclick="goToComunidad()">
+          <i class="ti ti-users"></i>
+          <p>Comunidad</p>
+        </div>
+      </div>
+
+      <!-- 3. OFERTAS DE LA SEMANA -->
+      <div class="section-header-row" style="margin-top:24px;">
+        <p class="section-label" style="margin-bottom:0;">🔥 Ofertas de la semana</p>
+        <button class="clear-link" onclick="filterByCategory('ofertas')">Ver todas</button>
+      </div>
+      <div class="products-grid" id="offers-grid"></div>
+
+      <!-- 4. LOS MÁS BUSCADOS -->
       <div class="section-header-row" style="margin-top:8px;">
-        <p class="section-label" id="products-title" style="margin-bottom:0;">Productos destacados</p>
+        <p class="section-label" id="products-title" style="margin-bottom:0;">Los más buscados</p>
         <button class="clear-link" id="btn-clear" style="display:none;" onclick="clearFilter()">Ver todos</button>
       </div>
       <div class="products-grid" id="products-grid"></div>
-      <p class="section-label" style="margin-top:4px;">Comunidad</p>
-      <div class="community-grid" id="community-grid"></div>
-      <div class="trust-section">
-        <div class="trust-big-item">
-          <div class="trust-big-icon" style="background:#E8F5E9;"><i class="ti ti-truck-delivery" style="color:#2E7D32;"></i></div>
-          <p class="trust-big-label">Envíos a domicilio en Mendoza</p>
+
+      <!-- 5. BENEFICIOS -->
+      <div class="home-benefits">
+        <div class="home-benefit-item">
+          <div class="home-benefit-icon" style="background:#E8F5E9;"><i class="ti ti-award" style="color:#2E7D32;"></i></div>
+          <p class="home-benefit-title">+20 años</p>
+          <p class="home-benefit-sub">de experiencia</p>
         </div>
-        <div class="trust-big-item">
-          <div class="trust-big-icon" style="background:#E8F5E9;"><i class="ti ti-brand-whatsapp" style="color:#25D366;"></i></div>
-          <p class="trust-big-label">Atención personalizada por WhatsApp</p>
+        <div class="home-benefit-item">
+          <div class="home-benefit-icon" style="background:#E3F2FD;"><i class="ti ti-truck-delivery" style="color:#1565C0;"></i></div>
+          <p class="home-benefit-title">Envíos</p>
+          <p class="home-benefit-sub">en Mendoza</p>
         </div>
-        <div class="trust-big-item">
-          <div class="trust-big-icon" style="background:#E3F2FD;"><i class="ti ti-shield-check" style="color:#1565C0;"></i></div>
-          <p class="trust-big-label">Pagos seguros y confiables</p>
+        <div class="home-benefit-item">
+          <div class="home-benefit-icon" style="background:#E8F5E9;"><i class="ti ti-brand-whatsapp" style="color:#25D366;"></i></div>
+          <p class="home-benefit-title">WhatsApp</p>
+          <p class="home-benefit-sub">directo</p>
         </div>
-        <div class="trust-big-item">
-          <div class="trust-big-icon" style="background:#FFF8E1;"><i class="ti ti-award" style="color:#F9A825;"></i></div>
-          <p class="trust-big-label">Más de 20 años de experiencia en el rubro</p>
+        <div class="home-benefit-item">
+          <div class="home-benefit-icon" style="background:#FFF8E1;"><i class="ti ti-users" style="color:#F9A825;"></i></div>
+          <p class="home-benefit-title">Comunidad</p>
+          <p class="home-benefit-sub">de pescadores</p>
         </div>
       </div>
+
+      <!-- 6. COMUNIDAD -->
+      <p class="section-label" style="margin-top:8px;">Comunidad</p>
+      <div class="community-grid" id="community-grid"></div>
+
+      <!-- categorías y herramientas ocultas (usadas internamente) -->
+      <div style="display:none;" id="categories-grid"></div>
       <div id="tools-section" style="display:none;">
-        <p class="section-label">Herramientas</p>
         <div class="tools-grid" id="tools-grid"></div>
       </div>
     </div>
@@ -2538,6 +2631,7 @@ function enterWorld(world) {
   renderBanner();
   renderQuickAccess();
   renderCommunity();
+  renderOffers();
 }
 
 function showTab(tab) {
@@ -2695,6 +2789,21 @@ function clearFilter() {
   renderHome();
   document.getElementById('tab-btn-ofertas').classList.remove('active');
   document.getElementById('tab-btn-home').classList.add('active');
+}
+
+function renderOffers() {
+  const offersGrid = document.getElementById('offers-grid');
+  if (!offersGrid) return;
+  const worldIds = WORLD_CATEGORIES[currentWorld] || [];
+  const offers = PRODUCTS.filter(p => p.stock > 0 && p.offer && worldIds.includes(p.category));
+  if (offers.length === 0) {
+    offersGrid.parentElement.previousElementSibling.style.display = 'none';
+    offersGrid.style.display = 'none';
+  } else {
+    offersGrid.parentElement.previousElementSibling.style.display = 'flex';
+    offersGrid.style.display = 'flex';
+    offersGrid.innerHTML = offers.map(p => productCardHTML(p)).join('');
+  }
 }
 
 function renderHome() {
