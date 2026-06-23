@@ -1333,6 +1333,204 @@
 
     .content::-webkit-scrollbar { display: none; }
 
+    /* ════════════════════════════════════
+       SISTEMA VISUAL PREMIUM — OVERRIDE
+       ════════════════════════════════════ */
+
+    /* ── Animaciones ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+      from { transform: scale(0.96); opacity: 0.7; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+
+    /* ── Tipografía de secciones ── */
+    .section-label {
+      font-size: 17px !important;
+      font-weight: 800 !important;
+      color: var(--darkGray) !important;
+      letter-spacing: -0.3px;
+    }
+    .section-header-row { margin-bottom: 12px; }
+    .clear-link { font-size: 13px; font-weight: 600; color: var(--blue2); }
+
+    /* ── Hero ── */
+    .home-hero {
+      padding: 22px 0 8px !important;
+      text-align: center;
+    }
+    .home-hero-title {
+      font-size: 24px !important;
+      font-weight: 900 !important;
+      color: var(--navy) !important;
+      line-height: 1.15 !important;
+      letter-spacing: -0.5px;
+    }
+    .home-hero-sub {
+      font-size: 13px !important;
+      color: var(--gray) !important;
+      margin-bottom: 20px !important;
+    }
+    .home-btn-primary {
+      background: var(--navy) !important;
+      border-radius: 14px !important;
+      padding: 14px 30px !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      box-shadow: 0 4px 14px rgba(11,59,117,0.28) !important;
+    }
+    .home-btn-secondary {
+      border-radius: 14px !important;
+      padding: 14px 24px !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+    }
+
+    /* ── Bloque de confianza ── */
+    .trust-block {
+      background: linear-gradient(135deg, #0B3B75 0%, #1E5AA8 100%) !important;
+      border: none !important;
+      border-radius: 20px !important;
+      padding: 20px 16px !important;
+      margin: 16px 0 !important;
+    }
+    .trust-block-title {
+      color: white !important;
+      font-size: 16px !important;
+      font-weight: 800 !important;
+    }
+    .trust-block-icon {
+      width: 50px !important;
+      height: 50px !important;
+      background: rgba(255,255,255,0.15) !important;
+      border-radius: 14px !important;
+    }
+    .trust-block-icon i { color: white !important; font-size: 22px !important; }
+    .trust-block-label { color: rgba(255,255,255,0.9) !important; font-size: 12px !important; font-weight: 600 !important; }
+
+    /* ── Accesos principales ── */
+    .home-access-card {
+      border-radius: 20px !important;
+      min-height: 130px !important;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
+      animation: fadeInUp 0.4s ease both;
+    }
+    .home-access-card i { font-size: 36px !important; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+    .home-access-card p { font-size: 14px !important; font-weight: 700 !important; }
+    .home-access-card:active { transform: scale(0.96); opacity: 0.9; }
+
+    /* ── Tarjetas de producto ── */
+    .product-card {
+      border-radius: 18px !important;
+      border: none !important;
+      box-shadow: 0 4px 16px rgba(11,59,117,0.10) !important;
+      animation: fadeInUp 0.35s ease both;
+    }
+    .product-img-wrap {
+      border-radius: 18px 18px 0 0 !important;
+      background: linear-gradient(180deg, #F0F5FF 0%, #E8F1FC 100%) !important;
+    }
+    .product-name {
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      color: var(--darkGray) !important;
+    }
+    .product-price {
+      font-size: 18px !important;
+      font-weight: 800 !important;
+      color: var(--navy) !important;
+    }
+    .btn-cart-circle {
+      width: 36px !important;
+      height: 36px !important;
+      background: var(--navy) !important;
+      box-shadow: 0 3px 10px rgba(11,59,117,0.3) !important;
+    }
+
+    /* ── Etiquetas sobre productos ── */
+    .offer-badge {
+      font-size: 10px !important;
+      font-weight: 800 !important;
+      padding: 4px 10px !important;
+      border-radius: 8px !important;
+      background: #EF4444 !important;
+      letter-spacing: 0.3px;
+    }
+    .product-tag-new {
+      position: absolute; top: 6px; left: 6px; z-index: 2;
+      background: #0B3B75; color: white;
+      font-size: 10px; font-weight: 800;
+      padding: 4px 10px; border-radius: 8px;
+    }
+    .product-tag-best {
+      position: absolute; top: 6px; left: 6px; z-index: 2;
+      background: #F59E0B; color: white;
+      font-size: 10px; font-weight: 800;
+      padding: 4px 10px; border-radius: 8px;
+    }
+    .product-tag-rec {
+      position: absolute; top: 6px; left: 6px; z-index: 2;
+      background: #1D9E75; color: white;
+      font-size: 10px; font-weight: 800;
+      padding: 4px 10px; border-radius: 8px;
+    }
+
+    /* ── Contador de confianza ── */
+    .trust-counter {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .trust-counter-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 12px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(11,59,117,0.06);
+    }
+    .trust-counter-num {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--navy);
+      margin: 0 0 2px;
+      letter-spacing: -1px;
+    }
+    .trust-counter-label {
+      font-size: 11px;
+      color: var(--gray);
+      margin: 0;
+      font-weight: 500;
+    }
+
+    /* ── Comunidad cards ── */
+    .community-card {
+      border-radius: 16px !important;
+      box-shadow: 0 3px 12px rgba(11,59,117,0.08) !important;
+    }
+
+    /* ── Hub premium ── */
+    .hub-world-card {
+      border-radius: 20px !important;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
+      height: 130px !important;
+    }
+    .hub-world-card:active { transform: scale(0.97); opacity: 0.9; }
+    .hub-world-name { font-size: 16px !important; font-weight: 800 !important; }
+
+    /* ── Tool cards ── */
+    .tool-card {
+      border-radius: 18px !important;
+      box-shadow: 0 3px 12px rgba(11,59,117,0.08) !important;
+      padding: 16px !important;
+    }
+    .tool-card span { font-size: 13px !important; font-weight: 700 !important; }
+
+
     /* ── HERO BANNER ── */
     .banner-hero { height: 180px; overflow: hidden; flex-shrink: 0; }
     .banner-track { position: relative; height: 100%; }
@@ -1971,21 +2169,41 @@
         <p class="trust-block-title">¿Por qué elegir San Domingo?</p>
         <div class="trust-block-grid">
           <div class="trust-block-item">
-            <div class="trust-block-icon" style="background:#E8F1FC;"><i class="ti ti-award" style="color:#0B3B75;"></i></div>
+            <div class="trust-block-icon"><i class="ti ti-award"></i></div>
             <p class="trust-block-label">+20 años de experiencia</p>
           </div>
           <div class="trust-block-item">
-            <div class="trust-block-icon" style="background:#E8F5E9;"><i class="ti ti-headset" style="color:#2E7D32;"></i></div>
+            <div class="trust-block-icon"><i class="ti ti-headset"></i></div>
             <p class="trust-block-label">Atención personalizada</p>
           </div>
           <div class="trust-block-item">
-            <div class="trust-block-icon" style="background:#E3F2FD;"><i class="ti ti-truck-delivery" style="color:#1565C0;"></i></div>
+            <div class="trust-block-icon"><i class="ti ti-truck-delivery"></i></div>
             <p class="trust-block-label">Envíos en Mendoza</p>
           </div>
           <div class="trust-block-item">
-            <div class="trust-block-icon" style="background:#FFF8E1;"><i class="ti ti-users" style="color:#D97706;"></i></div>
+            <div class="trust-block-icon"><i class="ti ti-users"></i></div>
             <p class="trust-block-label">Comunidad activa</p>
           </div>
+        </div>
+      </div>
+
+      <!-- CONTADOR DE CONFIANZA -->
+      <div class="trust-counter">
+        <div class="trust-counter-item">
+          <p class="trust-counter-num">+20</p>
+          <p class="trust-counter-label">años de trayectoria</p>
+        </div>
+        <div class="trust-counter-item">
+          <p class="trust-counter-num">+1000</p>
+          <p class="trust-counter-label">clientes atendidos</p>
+        </div>
+        <div class="trust-counter-item">
+          <p class="trust-counter-num">+500</p>
+          <p class="trust-counter-label">productos disponibles</p>
+        </div>
+        <div class="trust-counter-item">
+          <p class="trust-counter-num">100%</p>
+          <p class="trust-counter-label">atención personalizada</p>
         </div>
       </div>
 
@@ -2920,7 +3138,7 @@ function productCardHTML(p) {
     : `<p class="product-price">${fmt(p.price)}</p>`;
   const imageHTML = p.img
     ? `<img src="${p.img}" alt="${p.name}" style="width:100%; height:100%; object-fit:cover; display:block;" />`
-    : `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:36px; color:var(--navy); opacity:0.25;"><i class="ti ${icon}"></i></div>`;
+    : `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:36px; color:var(--navy); opacity:0.2;"><i class="ti ${icon}"></i></div>`;
   const qtyInCart = cart[p.id] || 0;
   const cartBtn = qtyInCart > 0
     ? `<div class="qty-stepper-mini" id="stepper-${p.id}">
@@ -2931,16 +3149,22 @@ function productCardHTML(p) {
     : `<button class="btn-cart-circle" data-add-btn="${p.id}" onclick="addToCart('${p.id}')">
         <i class="ti ti-shopping-cart-plus"></i>
        </button>`;
+  // Smart tag logic
+  let tag = '';
+  if (p.offer)         tag = '<span class="offer-badge">🔥 Oferta</span>';
+  else if (p.featured) tag = '<span class="product-tag-best">⭐ Más vendido</span>';
+  else if (p.new)      tag = '<span class="product-tag-new">🆕 Nuevo</span>';
+  else if (p.recommended) tag = '<span class="product-tag-rec">🏆 Recomendado</span>';
   return `
     <div class="product-card">
       <div class="product-img-wrap">
-        ${p.offer ? '<span class="offer-badge">Oferta</span>' : ''}
+        ${tag}
         ${imageHTML}
       </div>
       <div class="product-info">
         <p class="product-name">${p.name}</p>
         ${priceHTML}
-        <p class="${lowStock ? 'low-stock' : 'in-stock'}">${lowStock ? `Quedan ${p.stock}` : 'En stock'}</p>
+        <p class="${lowStock ? 'low-stock' : 'in-stock'}">${lowStock ? `⚠ Quedan ${p.stock}` : '✓ En stock'}</p>
         <div class="product-bottom-row">
           <button class="btn-heart ${isSaved ? 'saved' : ''}" onclick="toggleSaved('${p.id}')">
             <i class="ti ${isSaved ? 'ti-heart-filled' : 'ti-heart'}"></i>
